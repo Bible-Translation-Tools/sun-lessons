@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context=".ui.activity.TestSentencesActivity">
 
     <include android:id="@+id/top_nav_bar" layout="@layout/top_navigation" />

@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context=".ui.activity.HomeActivity">
 
     <LinearLayout
