@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context=".ui.activity.SectionCompleteActivity">
 
     <include android:id="@+id/top_nav_bar"
