@@ -9,10 +9,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.bibletranslationtools.sun.data.AppDatabase
-import org.bibletranslationtools.sun.data.repositories.CardRepository
 import org.bibletranslationtools.sun.data.model.Card
 import org.bibletranslationtools.sun.data.model.Setting
+import org.bibletranslationtools.sun.data.repositories.CardRepository
+import org.bibletranslationtools.sun.data.repositories.CardRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
+import org.bibletranslationtools.sun.data.repositories.SettingsRepositoryImpl
 import org.bibletranslationtools.sun.ui.model.LessonMode
 import org.bibletranslationtools.sun.utils.Section
 import kotlin.math.min
@@ -30,9 +32,9 @@ class LearnSymbolViewModel(application: Application) : AndroidViewModel(applicat
 
     init {
         val dao = AppDatabase.getDatabase(application).getCardDao()
-        repository = CardRepository(dao)
+        repository = CardRepositoryImpl(dao)
         val settingDao = AppDatabase.getDatabase(application).getSettingDao()
-        settingsRepository = SettingsRepository(settingDao)
+        settingsRepository = SettingsRepositoryImpl(settingDao)
     }
 
     fun loadCards(): Job {

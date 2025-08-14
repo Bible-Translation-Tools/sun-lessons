@@ -3,33 +3,41 @@ package org.bibletranslationtools.sun.data.repositories
 import org.bibletranslationtools.sun.data.dao.LessonDao
 import org.bibletranslationtools.sun.data.model.Lesson
 import org.bibletranslationtools.sun.data.model.LessonWithData
-
-class LessonRepository(private val lessonDao: LessonDao) {
-    suspend fun insert(lesson: Lesson) {
+interface LessonRepository {
+    suspend fun insert(lesson: Lesson)
+    suspend fun delete(lesson: Lesson)
+    suspend fun update(lesson: Lesson)
+    suspend fun getAll(): List<Lesson>
+    suspend fun getAllWithData(): List<LessonWithData>
+    suspend fun getWithData(id: Int): LessonWithData?
+    suspend fun get(id: Int): Lesson?
+}
+class LessonRepositoryImpl(private val lessonDao: LessonDao) : LessonRepository {
+    override suspend fun insert(lesson: Lesson) {
         return lessonDao.insert(lesson)
     }
 
-    suspend fun delete(lesson: Lesson) {
+    override suspend fun delete(lesson: Lesson) {
         lessonDao.delete(lesson)
     }
 
-    suspend fun update(lesson: Lesson) {
+    override suspend fun update(lesson: Lesson) {
         lessonDao.update(lesson)
     }
 
-    suspend fun getAll(): List<Lesson> {
+    override suspend fun getAll(): List<Lesson> {
         return lessonDao.getAll()
     }
 
-    suspend fun getAllWithData(): List<LessonWithData> {
+    override suspend fun getAllWithData(): List<LessonWithData> {
         return lessonDao.getAllWithData()
     }
 
-    suspend fun getWithData(id: Int): LessonWithData? {
+    override suspend fun getWithData(id: Int): LessonWithData? {
         return lessonDao.getWithData(id)
     }
 
-    suspend fun get(id: Int): Lesson? {
+    override suspend fun get(id: Int): Lesson? {
         return lessonDao.get(id)
     }
 

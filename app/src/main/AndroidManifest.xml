@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application
+        android:name=".SunApplication"
             android:allowBackup="true"
             android:dataExtractionRules="@xml/data_extraction_rules"
             android:fullBackupContent="@xml/backup_rules"
@@ -16,6 +17,9 @@
             android:enableOnBackInvokedCallback="true"
             android:theme="@style/Theme.SUN"
             tools:targetApi="33">
+        <activity
+            android:name=".ui.activity.HomeActivity"
+            android:exported="false"/>
         <activity
                 android:name=".ui.activity.LessonListActivity"
                 android:exported="false"/>
@@ -41,7 +45,7 @@
             android:name=".ui.activity.TrackProgressActivity"
             android:exported="false"/>
         <activity
-                android:name=".ui.activity.HomeActivity"
+                android:name=".MainActivity"
                 android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

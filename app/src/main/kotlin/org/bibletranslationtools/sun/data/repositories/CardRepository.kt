@@ -3,61 +3,77 @@ package org.bibletranslationtools.sun.data.repositories
 import org.bibletranslationtools.sun.data.dao.CardDao
 import org.bibletranslationtools.sun.data.model.Card
 
-class CardRepository(private val cardDao: CardDao) {
+interface CardRepository {
+    suspend fun insert(card: Card)
+    suspend fun delete(card: Card)
+    suspend fun update(card: Card)
+    suspend fun get(id: String): Card?
+    suspend fun getByLesson(lessonId: Int): List<Card>
+    suspend fun getAllLearned(): List<Card>
+    suspend fun countAllLearned(): Int
+    suspend fun getAllTested(): List<Card>
+    suspend fun countAllTested(): Int
+    suspend fun getByLessonCount(lessonId: Int): Int
+    suspend fun getLearnedByLesson(lessonId: Int): List<Card>
+    suspend fun getLearnedByLessonCount(lessonId: Int): Int
+    suspend fun getTestedByLesson(lessonId: Int): List<Card>
+    suspend fun getTestedByLessonCount(lessonId: Int): Int
+}
+class CardRepositoryImpl(private val cardDao: CardDao) : CardRepository {
 
-    suspend fun insert(card: Card) {
+    override suspend fun insert(card: Card) {
         cardDao.insert(card)
     }
 
-    suspend fun delete(card: Card) {
+    override suspend fun delete(card: Card) {
         cardDao.delete(card)
     }
 
-    suspend fun update(card: Card) {
+    override suspend fun update(card: Card) {
         cardDao.update(card)
     }
 
-    suspend fun get(id: String): Card? {
+    override suspend fun get(id: String): Card? {
         return cardDao.get(id)
     }
 
-    suspend fun getByLesson(lessonId: Int): List<Card> {
+    override suspend fun getByLesson(lessonId: Int): List<Card> {
         return cardDao.getByLesson(lessonId)
     }
 
-    suspend fun getAllLearned(): List<Card> {
+    override suspend fun getAllLearned(): List<Card> {
         return cardDao.getAllLearned()
     }
 
-    suspend fun countAllLearned(): Int {
+    override suspend fun countAllLearned(): Int {
         return cardDao.allLearnedCount()
     }
 
-    suspend fun getAllTested(): List<Card> {
+    override suspend fun getAllTested(): List<Card> {
         return cardDao.getAllTested()
     }
 
-    suspend fun countAllTested(): Int {
+    override suspend fun countAllTested(): Int {
         return cardDao.allTestedCount()
     }
 
-    suspend fun getByLessonCount(lessonId: Int): Int {
+    override suspend fun getByLessonCount(lessonId: Int): Int {
         return cardDao.getByLessonCount(lessonId)
     }
 
-    suspend fun getLearnedByLesson(lessonId: Int): List<Card> {
+    override suspend fun getLearnedByLesson(lessonId: Int): List<Card> {
         return cardDao.getLearnedByLesson(lessonId)
     }
 
-    suspend fun getLearnedByLessonCount(lessonId: Int): Int {
+    override suspend fun getLearnedByLessonCount(lessonId: Int): Int {
         return cardDao.getLearnedByLessonCount(lessonId)
     }
 
-    suspend fun getTestedByLesson(lessonId: Int): List<Card> {
+    override suspend fun getTestedByLesson(lessonId: Int): List<Card> {
         return cardDao.getTestedByLesson(lessonId)
     }
 
-    suspend fun getTestedByLessonCount(lessonId: Int): Int {
+    override suspend fun getTestedByLessonCount(lessonId: Int): Int {
         return cardDao.getTestedByLessonCount(lessonId)
     }
 
