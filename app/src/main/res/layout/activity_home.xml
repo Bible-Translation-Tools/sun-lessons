@@ -19,7 +19,7 @@
             android:layout_width="@dimen/_36dp"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
-            android:src="@drawable/ic_home_24" />
+            android:src="@drawable/home" />
 
         <LinearLayout
             android:layout_width="wrap_content"

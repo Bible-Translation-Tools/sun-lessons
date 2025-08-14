@@ -5,9 +5,13 @@ import androidx.lifecycle.AndroidViewModel
 import org.bibletranslationtools.sun.data.AppDatabase
 import org.bibletranslationtools.sun.data.model.Setting
 import org.bibletranslationtools.sun.data.repositories.CardRepository
+import org.bibletranslationtools.sun.data.repositories.CardRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
+import org.bibletranslationtools.sun.data.repositories.LessonRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.SentenceRepository
+import org.bibletranslationtools.sun.data.repositories.SentenceRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
+import org.bibletranslationtools.sun.data.repositories.SettingsRepositoryImpl
 import org.bibletranslationtools.sun.ui.mapper.LessonMapper
 import org.bibletranslationtools.sun.utils.Section
 
@@ -19,14 +23,14 @@ class SectionStatusViewModel(application: Application) : AndroidViewModel(applic
 
     init {
         val lessonDao = AppDatabase.getDatabase(application).getLessonDao()
-        lessonRepository = LessonRepository(lessonDao)
+        lessonRepository = LessonRepositoryImpl(lessonDao)
         val settingsDao = AppDatabase.getDatabase(application).getSettingDao()
-        settingsRepository = SettingsRepository(settingsDao)
+        settingsRepository = SettingsRepositoryImpl(settingsDao)
         val symbolDao = AppDatabase.getDatabase(application).getSymbolDao()
         val sentenceDao = AppDatabase.getDatabase(application).getSentenceDao()
-        sentenceRepository = SentenceRepository(sentenceDao, symbolDao)
+        sentenceRepository = SentenceRepositoryImpl(sentenceDao, symbolDao)
         val cardDao = AppDatabase.getDatabase(application).getCardDao()
-        cardRepository = CardRepository(cardDao)
+        cardRepository = CardRepositoryImpl(cardDao)
     }
 
     suspend fun getNextLesson(id: Int): Int {

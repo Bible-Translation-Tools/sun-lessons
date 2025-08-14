@@ -11,9 +11,13 @@ import org.bibletranslationtools.sun.data.AppDatabase
 import org.bibletranslationtools.sun.data.repositories.CardRepository
 import org.bibletranslationtools.sun.data.model.Card
 import org.bibletranslationtools.sun.data.model.Setting
+import org.bibletranslationtools.sun.data.repositories.CardRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
+import org.bibletranslationtools.sun.data.repositories.LessonRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.SentenceRepository
+import org.bibletranslationtools.sun.data.repositories.SentenceRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
+import org.bibletranslationtools.sun.data.repositories.SettingsRepositoryImpl
 import org.bibletranslationtools.sun.ui.model.LessonMode
 import org.bibletranslationtools.sun.utils.Section
 
@@ -32,14 +36,14 @@ class TestSymbolsViewModel(application: Application) : AndroidViewModel(applicat
 
     init {
         val cardDao = AppDatabase.getDatabase(application).getCardDao()
-        repository = CardRepository(cardDao)
+        repository = CardRepositoryImpl(cardDao)
         val sentenceDao = AppDatabase.getDatabase(application).getSentenceDao()
         val symbolDao = AppDatabase.getDatabase(application).getSymbolDao()
-        sentenceRepository = SentenceRepository(sentenceDao, symbolDao)
+        sentenceRepository = SentenceRepositoryImpl(sentenceDao, symbolDao)
         val lessonDao = AppDatabase.getDatabase(application).getLessonDao()
-        lessonRepository = LessonRepository(lessonDao)
+        lessonRepository = LessonRepositoryImpl(lessonDao)
         val settingDao = AppDatabase.getDatabase(application).getSettingDao()
-        settingsRepository = SettingsRepository(settingDao)
+        settingsRepository = SettingsRepositoryImpl(settingDao)
     }
 
     fun loadLessonCards() {

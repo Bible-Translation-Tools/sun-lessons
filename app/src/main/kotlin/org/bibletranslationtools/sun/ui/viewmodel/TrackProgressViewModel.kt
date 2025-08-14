@@ -9,7 +9,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.bibletranslationtools.sun.data.AppDatabase
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
+import org.bibletranslationtools.sun.data.repositories.LessonRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
+import org.bibletranslationtools.sun.data.repositories.SettingsRepositoryImpl
 import org.bibletranslationtools.sun.ui.mapper.LessonMapper
 import org.bibletranslationtools.sun.ui.model.LessonModel
 
@@ -22,9 +24,9 @@ class TrackProgressViewModel(application: Application) : AndroidViewModel(applic
 
     init {
         val lessonDao = AppDatabase.getDatabase(application).getLessonDao()
-        lessonRepository = LessonRepository(lessonDao)
+        lessonRepository = LessonRepositoryImpl(lessonDao)
         val settingsDao = AppDatabase.getDatabase(application).getSettingDao()
-        settingsRepository = SettingsRepository(settingsDao)
+        settingsRepository = SettingsRepositoryImpl(settingsDao)
     }
 
     fun loadLessons(): Job {

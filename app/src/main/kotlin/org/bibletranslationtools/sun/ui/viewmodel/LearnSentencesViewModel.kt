@@ -12,7 +12,9 @@ import org.bibletranslationtools.sun.data.AppDatabase
 import org.bibletranslationtools.sun.data.model.SentenceWithSymbols
 import org.bibletranslationtools.sun.data.model.Setting
 import org.bibletranslationtools.sun.data.repositories.SentenceRepository
+import org.bibletranslationtools.sun.data.repositories.SentenceRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
+import org.bibletranslationtools.sun.data.repositories.SettingsRepositoryImpl
 import org.bibletranslationtools.sun.ui.model.LessonMode
 import org.bibletranslationtools.sun.utils.Section
 import kotlin.math.min
@@ -30,9 +32,9 @@ class LearnSentencesViewModel(application: Application) : AndroidViewModel(appli
     init {
         val sentenceDao = AppDatabase.getDatabase(application).getSentenceDao()
         val symbolDao = AppDatabase.getDatabase(application).getSymbolDao()
-        repository = SentenceRepository(sentenceDao, symbolDao)
+        repository = SentenceRepositoryImpl(sentenceDao, symbolDao)
         val settingDao = AppDatabase.getDatabase(application).getSettingDao()
-        settingsRepository = SettingsRepository(settingDao)
+        settingsRepository = SettingsRepositoryImpl(settingDao)
     }
 
     fun loadSentences(): Job {

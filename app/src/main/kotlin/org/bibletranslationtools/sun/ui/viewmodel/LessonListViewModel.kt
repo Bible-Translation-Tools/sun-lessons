@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.bibletranslationtools.sun.data.AppDatabase
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
+import org.bibletranslationtools.sun.data.repositories.LessonRepositoryImpl
 import org.bibletranslationtools.sun.ui.mapper.LessonMapper
 import org.bibletranslationtools.sun.ui.model.LessonModel
 
@@ -22,7 +23,7 @@ class LessonListViewModel(application: Application) : AndroidViewModel(applicati
 
     init {
         val lessonDao = AppDatabase.getDatabase(application).getLessonDao()
-        lessonRepository = LessonRepository(lessonDao)
+        lessonRepository = LessonRepositoryImpl(lessonDao)
     }
 
     fun loadLessons(): Job {

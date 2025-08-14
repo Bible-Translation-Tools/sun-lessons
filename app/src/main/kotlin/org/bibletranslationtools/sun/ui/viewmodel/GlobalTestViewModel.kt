@@ -8,7 +8,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.bibletranslationtools.sun.data.AppDatabase
 import org.bibletranslationtools.sun.data.repositories.CardRepository
+import org.bibletranslationtools.sun.data.repositories.CardRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.SentenceRepository
+import org.bibletranslationtools.sun.data.repositories.SentenceRepositoryImpl
 
 class GlobalTestViewModel(application: Application) : AndroidViewModel(application) {
     private val cardRepository: CardRepository
@@ -22,10 +24,10 @@ class GlobalTestViewModel(application: Application) : AndroidViewModel(applicati
 
     init {
         val cardDao = AppDatabase.getDatabase(application).getCardDao()
-        cardRepository = CardRepository(cardDao)
+        cardRepository = CardRepositoryImpl(cardDao)
         val sentenceDao = AppDatabase.getDatabase(application).getSentenceDao()
         val symbolDao = AppDatabase.getDatabase(application).getSymbolDao()
-        sentenceRepository = SentenceRepository(sentenceDao, symbolDao)
+        sentenceRepository = SentenceRepositoryImpl(sentenceDao, symbolDao)
     }
 
     fun loadAllTestedCardsCount() {

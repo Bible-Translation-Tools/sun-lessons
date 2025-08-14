@@ -16,11 +16,15 @@ import org.bibletranslationtools.sun.data.model.Sentence
 import org.bibletranslationtools.sun.data.model.Setting
 import org.bibletranslationtools.sun.data.model.Symbol
 import org.bibletranslationtools.sun.data.repositories.CardRepository
+import org.bibletranslationtools.sun.data.repositories.CardRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
+import org.bibletranslationtools.sun.data.repositories.LessonRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.SentenceRepository
+import org.bibletranslationtools.sun.data.repositories.SentenceRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
+import org.bibletranslationtools.sun.data.repositories.SettingsRepositoryImpl
 import org.bibletranslationtools.sun.ui.mapper.LessonMapper
-import org.bibletranslationtools.sun.utils.AssetsProvider
+import org.bibletranslationtools.sun.utils.AssetReaderImpl
 import org.bibletranslationtools.sun.utils.Section
 
 class HomeViewModel(private val application: Application) : AndroidViewModel(application) {
@@ -31,21 +35,22 @@ class HomeViewModel(private val application: Application) : AndroidViewModel(app
 
     init {
         val cardDao = AppDatabase.getDatabase(application).getCardDao()
-        cardRepository = CardRepository(cardDao)
+        cardRepository = CardRepositoryImpl(cardDao)
         val lessonDao = AppDatabase.getDatabase(application).getLessonDao()
-        lessonRepository = LessonRepository(lessonDao)
+        lessonRepository = LessonRepositoryImpl(lessonDao)
         val sentenceDao = AppDatabase.getDatabase(application).getSentenceDao()
         val symbolDao = AppDatabase.getDatabase(application).getSymbolDao()
-        sentenceRepository = SentenceRepository(sentenceDao, symbolDao)
+        sentenceRepository = SentenceRepositoryImpl(sentenceDao, symbolDao)
         val settingsDao = AppDatabase.getDatabase(application).getSettingDao()
-        settingsRepository = SettingsRepository(settingsDao)
+        settingsRepository = SettingsRepositoryImpl(settingsDao)
     }
 
     fun importLessons(): Job {
         return viewModelScope.launch {
             val mapper = ObjectMapper().registerKotlinModule()
             val reference = object : TypeReference<LessonSuite>() {}
-            val json = AssetsProvider.readText(application, "lessons.json")
+            val assetProvider = AssetReaderImpl(application)
+            val json = assetProvider.readText("lessons.json")
 
             val dbVersion = getVersion() ?: 0
 
