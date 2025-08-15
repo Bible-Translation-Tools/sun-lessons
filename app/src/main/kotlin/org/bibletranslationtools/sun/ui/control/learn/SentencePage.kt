@@ -14,11 +14,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
-import org.bibletranslationtools.sun.data.model.SentenceWithSymbols
+import org.bibletranslationtools.sun.ui.model.SentenceItem
 
 @Composable
 fun SentencePage(
-    sentence: SentenceWithSymbols,
+    sentence: SentenceItem,
     onFrontFlipped: () -> Unit
 ) {
     var isFlipped by remember { mutableStateOf(false) }
@@ -46,7 +46,7 @@ fun SentencePage(
             }
         } else {
             SentenceBack(
-                sentence = sentence.sentence,
+                sentence = sentence,
                 modifier = Modifier.graphicsLayer { rotationY = 180f }
             ) {
                 isFlipped = false

@@ -10,13 +10,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.bibletranslationtools.sun.data.model.Card
-import org.bibletranslationtools.sun.data.model.Setting
+import org.bibletranslationtools.sun.data.model.SettingEntity
 import org.bibletranslationtools.sun.data.repositories.CardRepository
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
+import org.bibletranslationtools.sun.ui.model.CardItem
 import org.bibletranslationtools.sun.ui.model.LessonMode
+import org.bibletranslationtools.sun.ui.model.toEntity
+import org.bibletranslationtools.sun.ui.model.toItem
 import org.bibletranslationtools.sun.utils.Section
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -27,13 +29,14 @@ interface LearnSymbolComponent : ParentContext {
 
     data class Model(
         val lessonId: Int = 1,
-        val cards: List<Card> = emptyList(),
+        val cards: List<CardItem> = emptyList(),
         val mode: LessonMode = LessonMode.NORMAL,
         val lastPosition: Int = 0
     )
 
     fun saveLastPosition(position: Int)
-    fun saveCard(position: Int)
+    fun setPassed(card: CardItem)
+    fun saveCard(card: CardItem)
     fun finishLesson()
 }
 
@@ -59,37 +62,46 @@ class DefaultLearnSymbolComponent(
     init {
         backHandler.register(backCallback)
 
-        initializeLessonMode()
-        loadCards()
+        componentScope.launch {
+            initializeLessonMode()
+            loadCards()
+        }
     }
 
     override fun saveLastPosition(position: Int) {
         componentScope.launch {
-            val lastSymbol = Setting(Setting.LAST_SYMBOL, position.toString())
-            settingsRepository.insertOrUpdate(lastSymbol)
+            if (model.value.mode == LessonMode.NORMAL) {
+                val lastSymbol = SettingEntity(SettingEntity.LAST_SYMBOL, position.toString())
+                settingsRepository.insertOrUpdate(lastSymbol)
+            }
         }
     }
 
-    override fun saveCard(position: Int) {
+    override fun setPassed(card: CardItem) {
         componentScope.launch {
-            if (position >= 0) {
-                val card = _model.value.cards[position]
-                if (!card.learned) {
-                    card.learned = true
+            _model.update { state ->
+                state.copy(cards = state.cards.map {
+                    if (it == card) card.copy(passed = true) else it
+                })
+            }
+        }
+    }
 
-                    cardRepository.update(card)
+    override fun saveCard(card: CardItem) {
+        componentScope.launch {
+            if (!card.learned) {
+                cardRepository.update(card.copy(learned = true).toEntity())
 
-                    val lastSection = Setting(
-                        Setting.LAST_SECTION,
-                        Section.LEARN_SYMBOLS.id
-                    )
-                    val lastLesson = Setting(
-                        Setting.LAST_LESSON,
-                        lessonId.toString()
-                    )
-                    settingsRepository.insertOrUpdate(lastSection)
-                    settingsRepository.insertOrUpdate(lastLesson)
-                }
+                val lastSection = SettingEntity(
+                    SettingEntity.LAST_SECTION,
+                    Section.LEARN_SYMBOLS.id
+                )
+                val lastLesson = SettingEntity(
+                    SettingEntity.LAST_LESSON,
+                    lessonId.toString()
+                )
+                settingsRepository.insertOrUpdate(lastSection)
+                settingsRepository.insertOrUpdate(lastLesson)
             }
         }
     }
@@ -99,39 +111,33 @@ class DefaultLearnSymbolComponent(
     }
 
     private suspend fun getLastPosition(): Int {
-        val pos = settingsRepository.get(Setting.LAST_SYMBOL)?.value?.toInt() ?: 0
+        val pos = settingsRepository.get(SettingEntity.LAST_SYMBOL)?.value?.toInt() ?: 0
         return min(pos, _model.value.cards.size - 1)
     }
 
-    private fun loadCards() {
-        componentScope.launch {
-            val cards = cardRepository.getByLesson(lessonId)
-            _model.update { it.copy(cards = cards) }
+    private suspend fun loadCards() {
+        val cards = cardRepository.getByLesson(lessonId).map { it.toItem() }
+        _model.update { it.copy(cards = cards) }
 
-            if (_model.value.mode == LessonMode.NORMAL) {
-                launch(Dispatchers.Main) {
-                    delay(100)
+        if (_model.value.mode == LessonMode.NORMAL) {
+            delay(100)
 
-                    val lastPosition = getLastPosition()
-                    _model.update { it.copy(lastPosition = lastPosition) }
-                }
-            }
+            val lastPosition = getLastPosition()
+            _model.update { it.copy(lastPosition = lastPosition) }
         }
     }
 
-    private fun initializeLessonMode() {
-        componentScope.launch {
-            val all = cardRepository.getByLessonCount(lessonId)
-            val done = cardRepository.getLearnedByLessonCount(lessonId)
+    private suspend fun initializeLessonMode() {
+        val all = cardRepository.getByLessonCount(lessonId)
+        val done = cardRepository.getLearnedByLessonCount(lessonId)
 
-            val mode = if (all == done) {
-                LessonMode.REPEAT
-            } else {
-                LessonMode.NORMAL
-            }
-
-            _model.update { it.copy(mode = mode) }
+        val mode = if (all == done) {
+            LessonMode.REPEAT
+        } else {
+            LessonMode.NORMAL
         }
+
+        _model.update { it.copy(mode = mode) }
     }
 
     private fun onNavigateBack() {

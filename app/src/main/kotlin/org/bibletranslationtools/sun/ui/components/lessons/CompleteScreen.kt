@@ -79,7 +79,7 @@ fun CompleteScreen(component: CompleteComponent) {
                 )
 
                 Text(
-                    text = stringResource(model.sectionTitle),
+                    text = stringResource(model.sectionTitle, model.lessonId),
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.tertiary,

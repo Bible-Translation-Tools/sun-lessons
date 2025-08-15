@@ -22,15 +22,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.bibletranslationtools.sun.R
-import org.bibletranslationtools.sun.data.model.Card
+import org.bibletranslationtools.sun.ui.model.CardItem
 import org.bibletranslationtools.sun.ui.sunFontFamily
 
 @Composable
-fun SymbolCardItem(
-    card: Card,
+fun TestSymbolCard(
+    card: CardItem,
     modifier: Modifier = Modifier,
     showStatusIcon: Boolean = false,
-    onCardSelected: (Card) -> Unit
+    onCardSelected: (CardItem) -> Unit = {}
 ) {
     val cardStateColor = when (card.correct) {
         true -> MaterialTheme.colorScheme.tertiary

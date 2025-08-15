@@ -8,10 +8,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.bibletranslationtools.sun.data.AppDatabase
-import org.bibletranslationtools.sun.data.model.Card
-import org.bibletranslationtools.sun.data.model.Sentence
+import org.bibletranslationtools.sun.data.model.CardEntity
+import org.bibletranslationtools.sun.data.model.SentenceEntity
 import org.bibletranslationtools.sun.data.model.SentenceWithSymbols
-import org.bibletranslationtools.sun.data.model.Setting
+import org.bibletranslationtools.sun.data.model.SettingEntity
 import org.bibletranslationtools.sun.data.repositories.CardRepository
 import org.bibletranslationtools.sun.data.repositories.CardRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
@@ -36,8 +36,8 @@ class TestSentencesViewModel(application: Application) : AndroidViewModel(applic
     private val _sentences = MutableStateFlow<List<SentenceWithSymbols>>(listOf())
     val sentences: StateFlow<List<SentenceWithSymbols>> = _sentences
 
-    private val _cards = MutableStateFlow<List<Card>>(listOf())
-    val cards: StateFlow<List<Card>> = _cards
+    private val _cards = MutableStateFlow<List<CardEntity>>(listOf())
+    val cards: StateFlow<List<CardEntity>> = _cards
 
     init {
         val lessonDao = AppDatabase.getDatabase(application).getLessonDao()
@@ -60,16 +60,16 @@ class TestSentencesViewModel(application: Application) : AndroidViewModel(applic
         }
     }
 
-    suspend fun updateSentence(sentence: Sentence) {
+    suspend fun updateSentence(sentence: SentenceEntity) {
         sentenceRepository.update(sentence)
 
-        val lastSection = Setting(Setting.LAST_SECTION, Section.TEST_SENTENCES.id)
-        val lastLesson = Setting(Setting.LAST_LESSON, lessonId.value.toString())
+        val lastSection = SettingEntity(SettingEntity.LAST_SECTION, Section.TEST_SENTENCES.id)
+        val lastLesson = SettingEntity(SettingEntity.LAST_LESSON, lessonId.value.toString())
         settingsRepository.insertOrUpdate(lastSection)
         settingsRepository.insertOrUpdate(lastLesson)
     }
 
-    suspend fun getAllCards(): List<Card> {
+    suspend fun getAllCards(): List<CardEntity> {
         return cardsRepository.getByLesson(lessonId.value)
     }
 

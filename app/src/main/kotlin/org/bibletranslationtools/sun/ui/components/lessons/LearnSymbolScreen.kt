@@ -31,11 +31,11 @@ import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import kotlinx.coroutines.launch
 import org.bibletranslationtools.sun.R
+import org.bibletranslationtools.sun.ui.control.TallyText
+import org.bibletranslationtools.sun.ui.control.TopAppBar
 import org.bibletranslationtools.sun.ui.control.learn.PagerIndicator
 import org.bibletranslationtools.sun.ui.control.learn.PagerNavButton
 import org.bibletranslationtools.sun.ui.control.learn.SymbolPage
-import org.bibletranslationtools.sun.ui.control.TallyText
-import org.bibletranslationtools.sun.ui.control.TopAppBar
 import org.bibletranslationtools.sun.ui.model.LessonMode
 
 @Composable
@@ -72,9 +72,7 @@ fun LearnSymbolScreen(component: LearnSymbolComponent) {
                 val card = cards[pagerState.currentPage]
                 val done = if (model.mode == LessonMode.REPEAT) {
                     card.passed
-                } else {
-                    card.learned
-                }
+                } else card.learned
                 nextEnabled = done
             }
             if (pagerState.currentPage > 0) {
@@ -84,7 +82,7 @@ fun LearnSymbolScreen(component: LearnSymbolComponent) {
     }
 
     LaunchedEffect(model.lastPosition) {
-        if (model.lastPosition > 0) {
+        if (model.mode == LessonMode.NORMAL && model.lastPosition > 0) {
             pagerState.scrollToPage(model.lastPosition)
         }
     }
@@ -127,9 +125,9 @@ fun LearnSymbolScreen(component: LearnSymbolComponent) {
                         model.cards.let { cards ->
                             val card = cards[pagerState.currentPage]
                             if (model.mode == LessonMode.REPEAT) {
-                                card.passed = true
+                                component.setPassed(card)
                             } else {
-                                component.saveCard(pagerState.currentPage)
+                                component.saveCard(card)
                             }
                             nextEnabled = true
                         }

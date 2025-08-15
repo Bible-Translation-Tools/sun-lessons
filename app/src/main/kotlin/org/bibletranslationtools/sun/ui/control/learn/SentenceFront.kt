@@ -30,13 +30,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.bibletranslationtools.sun.R
-import org.bibletranslationtools.sun.data.model.Symbol
+import org.bibletranslationtools.sun.ui.model.SymbolItem
 import org.bibletranslationtools.sun.ui.sunFontFamily
 import kotlin.math.ceil
 import kotlin.math.max
 
 @Composable
-fun SentenceFront(symbols: List<Symbol>, onFlip: () -> Unit) {
+fun SentenceFront(symbols: List<SymbolItem>, onFlip: () -> Unit) {
 
     val symbolsCount = symbols.size
     val maxSymbols = 4

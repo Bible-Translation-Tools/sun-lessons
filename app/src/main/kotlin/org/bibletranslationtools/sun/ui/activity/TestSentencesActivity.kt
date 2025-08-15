@@ -11,25 +11,21 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.bibletranslationtools.sun.R
 import org.bibletranslationtools.sun.ui.adapter.TestSentenceAdapter
 import org.bibletranslationtools.sun.data.model.SentenceWithSymbols
-import org.bibletranslationtools.sun.data.model.Symbol
+import org.bibletranslationtools.sun.data.model.SymbolEntity
 import org.bibletranslationtools.sun.databinding.ActivityTestSentencesBinding
 import org.bibletranslationtools.sun.ui.adapter.GridItemOffsetDecoration
 import org.bibletranslationtools.sun.ui.adapter.LinearItemOffsetDecoration
-import org.bibletranslationtools.sun.ui.control.SymbolState
 import org.bibletranslationtools.sun.ui.model.LessonMode
 import org.bibletranslationtools.sun.ui.viewmodel.TestSentencesViewModel
-import org.bibletranslationtools.sun.utils.AnswerType
 import org.bibletranslationtools.sun.utils.Section
 import org.bibletranslationtools.sun.utils.TallyMarkConverter
 import org.bibletranslationtools.sun.utils.putEnumExtra
-import kotlin.math.max
 import kotlin.math.min
 
 class TestSentencesActivity : AppCompatActivity(), TestSentenceAdapter.OnSymbolSelectedListener {
@@ -54,9 +50,9 @@ class TestSentencesActivity : AppCompatActivity(), TestSentenceAdapter.OnSymbolS
     private var isAnswerCorrect = false
     private var correctAnswerShown = false
 
-    private val optionSymbols = arrayListOf<Symbol>()
-    private val answerSymbols = arrayListOf<Symbol>()
-    private val correctSymbols = arrayListOf<Symbol>()
+    private val optionSymbols = arrayListOf<SymbolEntity>()
+    private val answerSymbols = arrayListOf<SymbolEntity>()
+    private val correctSymbols = arrayListOf<SymbolEntity>()
 
     companion object {
         const val OPTIONS_SHORT = 4
@@ -154,7 +150,7 @@ class TestSentencesActivity : AppCompatActivity(), TestSentenceAdapter.OnSymbolS
         val allSentences = viewModel.sentences.value.toMutableList()
         val inProgressSentences = allSentences.filter {
             if (viewModel.mode.value == LessonMode.REPEAT) {
-                !it.sentence.passed
+                !it.sentence.tested
             } else !it.sentence.tested
         }
 
@@ -172,7 +168,7 @@ class TestSentencesActivity : AppCompatActivity(), TestSentenceAdapter.OnSymbolS
 
         lifecycleScope.launch {
             val cards = viewModel.getAllCards()
-            val cardSymbols = cards.map { Symbol(id = 0, name = it.symbol, sort = 0) }
+            val cardSymbols = cards.map { SymbolEntity(id = 0, name = it.symbol, sort = 0) }
             val totalOptions =
                 if (correctSentence.symbols.size > OPTIONS_SHORT) OPTIONS_LONG else OPTIONS_SHORT
 
@@ -197,14 +193,14 @@ class TestSentencesActivity : AppCompatActivity(), TestSentenceAdapter.OnSymbolS
         }
     }
 
-    override fun onSymbolSelected(symbol: Symbol, position: Int) {
+    override fun onSymbolSelected(symbol: SymbolEntity, position: Int) {
         if (!viewModel.sentenceDone.value) {
-            symbol.selected = true
+            //symbol.selected = true
             optionsAdapter.refreshItem(position)
 
             val answerSymbol = symbol.copy()
-            answerSymbol.type = AnswerType.ANSWER
-            answerSymbol.selected = true
+            //answerSymbol.type = AnswerType.ANSWER
+            //answerSymbol.selected = true
 
             lastAnswerPosition++
             answerSymbols[lastAnswerPosition] = answerSymbol
@@ -235,7 +231,7 @@ class TestSentencesActivity : AppCompatActivity(), TestSentenceAdapter.OnSymbolS
                 isAnswerCorrect = true
                 lifecycleScope.launch(Dispatchers.IO) {
                     if (viewModel.mode.value == LessonMode.REPEAT) {
-                        correctSentence.sentence.passed = true
+                        //correctSentence.sentence.passed = true
                     } else {
                         correctSentence.sentence.tested = true
                         viewModel.updateSentence(correctSentence.sentence)
@@ -278,11 +274,11 @@ class TestSentencesActivity : AppCompatActivity(), TestSentenceAdapter.OnSymbolS
         viewModel.sentenceDone.value = false
     }
 
-    private fun setOptions(symbols: List<Symbol>) {
+    private fun setOptions(symbols: List<SymbolEntity>) {
         symbols.forEach {
-            it.selected = false
-            it.correct = null
-            it.type = AnswerType.OPTION
+            //it.selected = false
+            //it.correct = null
+            //it.type = AnswerType.OPTION
         }
 
         optionSymbols.clear()
@@ -291,11 +287,11 @@ class TestSentencesActivity : AppCompatActivity(), TestSentenceAdapter.OnSymbolS
         optionsAdapter.refresh()
     }
 
-    private fun setAnswers(symbols: List<Symbol>) {
+    private fun setAnswers(symbols: List<SymbolEntity>) {
         symbols.forEach {
-            it.selected = false
-            it.correct = null
-            it.type = AnswerType.ANSWER
+            //it.selected = false
+            //it.correct = null
+            //it.type = AnswerType.ANSWER
         }
 
         answerSymbols.clear()
@@ -304,11 +300,11 @@ class TestSentencesActivity : AppCompatActivity(), TestSentenceAdapter.OnSymbolS
         answersAdapter.refresh()
     }
 
-    private fun setIncorrectSymbols(correctSymbols: List<Symbol>) {
+    private fun setIncorrectSymbols(correctSymbols: List<SymbolEntity>) {
         answerSymbols.zip(correctSymbols).forEach { pair ->
-            pair.first.selected = false
-            pair.first.correct = pair.first.name == pair.second.name
-            pair.first.type = AnswerType.RESULT
+            //pair.first.selected = false
+            //pair.first.correct = pair.first.name == pair.second.name
+            //pair.first.type = AnswerType.RESULT
         }
         val spanCount = min(answerSymbols.size, 5)
         incorrectAdapter.submitList(answerSymbols)
@@ -316,11 +312,11 @@ class TestSentencesActivity : AppCompatActivity(), TestSentenceAdapter.OnSymbolS
         (binding.incorrectList.layoutManager as GridLayoutManager).spanCount = spanCount
     }
 
-    private fun setCorrectSymbols(symbols: List<Symbol>) {
+    private fun setCorrectSymbols(symbols: List<SymbolEntity>) {
         symbols.forEach {
-            it.selected = false
-            it.correct = true
-            it.type = AnswerType.RESULT
+            //it.selected = false
+            //it.correct = true
+            //it.type = AnswerType.RESULT
         }
 
         correctSymbols.clear()

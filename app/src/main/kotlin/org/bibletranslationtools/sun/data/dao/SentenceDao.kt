@@ -7,27 +7,27 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import org.bibletranslationtools.sun.data.model.Sentence
+import org.bibletranslationtools.sun.data.model.SentenceEntity
 import org.bibletranslationtools.sun.data.model.SentenceWithSymbols
 
 @Dao
 interface SentenceDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(sentence: Sentence)
+    suspend fun insert(sentence: SentenceEntity)
 
     @Delete
-    suspend fun delete(sentence: Sentence)
+    suspend fun delete(sentence: SentenceEntity)
 
     @Update
-    suspend fun update(sentence: Sentence)
+    suspend fun update(sentence: SentenceEntity)
 
     @Transaction
     @Query("SELECT * FROM sentences WHERE id = :id")
-    suspend fun get(id: String): Sentence?
+    suspend fun get(id: String): SentenceEntity?
 
     @Transaction
     @Query("SELECT * FROM sentences WHERE lesson_id = :lessonId")
-    suspend fun getByLesson(lessonId: Int): List<Sentence>
+    suspend fun getByLesson(lessonId: Int): List<SentenceEntity>
 
     @Transaction
     @Query("SELECT * FROM sentences WHERE lesson_id = :lessonId")
@@ -51,7 +51,7 @@ interface SentenceDao {
 
     @Transaction
     @Query("SELECT * FROM sentences WHERE learned = 1 AND lesson_id = :lessonId")
-    suspend fun getLearnedByLesson(lessonId: Int): List<Sentence>
+    suspend fun getLearnedByLesson(lessonId: Int): List<SentenceEntity>
 
     @Transaction
     @Query("SELECT COUNT(*) FROM sentences WHERE lesson_id = :lessonId")

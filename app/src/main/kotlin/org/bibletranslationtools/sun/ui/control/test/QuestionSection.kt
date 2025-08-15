@@ -18,7 +18,7 @@ import org.bibletranslationtools.sun.R
 
 @Composable
 fun QuestionSection(
-    imageName: String,
+    imageUri: String,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -26,7 +26,7 @@ fun QuestionSection(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AsyncImage(
-            model = "file:///android_asset/images/symbols/${imageName}",
+            model = imageUri,
             contentDescription = stringResource(R.string.test_symbols_hint),
             modifier = Modifier
                 .fillMaxWidth()

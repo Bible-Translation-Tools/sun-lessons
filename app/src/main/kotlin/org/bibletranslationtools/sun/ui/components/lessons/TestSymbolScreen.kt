@@ -17,15 +17,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import org.bibletranslationtools.sun.R
+import org.bibletranslationtools.sun.ui.control.TallyText
+import org.bibletranslationtools.sun.ui.control.TopAppBar
 import org.bibletranslationtools.sun.ui.control.test.AnswerGrid
 import org.bibletranslationtools.sun.ui.control.test.NextButtonSection
 import org.bibletranslationtools.sun.ui.control.test.QuestionSection
-import org.bibletranslationtools.sun.ui.control.TallyText
-import org.bibletranslationtools.sun.ui.control.TopAppBar
 
 @Composable
 fun TestSymbolScreen(component: TestSymbolComponent) {
     val model by component.model.subscribeAsState()
+
+    val imageUri = "file:///android_asset/images/symbols/" +
+            (model.currentCard?.secondary ?: "0.jpg")
 
     LaunchedEffect(Unit) {
         component.setTopAppBar {
@@ -51,12 +54,13 @@ fun TestSymbolScreen(component: TestSymbolComponent) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         QuestionSection(
-            imageName = model.correctCard?.secondary ?: "0.jpg",
+            imageUri = imageUri,
             modifier = Modifier.weight(1f)
         )
 
         AnswerGrid(
-            choices = model.answerChoices,
+            choices = model.choices,
+            answer = model.answer,
             onCardSelected = { selectedCard ->
                 component.checkAnswer(selectedCard)
             },

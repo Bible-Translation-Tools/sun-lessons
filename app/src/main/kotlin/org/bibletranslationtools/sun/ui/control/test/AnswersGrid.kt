@@ -9,14 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.bibletranslationtools.sun.data.model.Answer
-import org.bibletranslationtools.sun.data.model.Card
-import org.bibletranslationtools.sun.data.model.TestCard
+import org.bibletranslationtools.sun.ui.model.CardItem
 
 @Composable
 fun AnswerGrid(
-    choices: List<TestCard>,
-    onCardSelected: (Card) -> Unit,
+    choices: List<CardItem>,
+    answer: List<CardItem>,
+    onCardSelected: (CardItem) -> Unit,
     modifier: Modifier = Modifier,
     showStatusIcon: Boolean = false
 ) {
@@ -32,14 +31,27 @@ fun AnswerGrid(
             Alignment.CenterVertically
         )
     ) {
-        items(choices, key = { it.id }) { testCard ->
-            when (testCard) {
-                is Card -> SymbolCardItem(
-                    card = testCard,
+        if (answer.isEmpty()) {
+            items(choices, key = { it.id }) { choice ->
+                TestSymbolCard(
+                    card = choice,
                     showStatusIcon = showStatusIcon,
                     onCardSelected = onCardSelected
                 )
-                is Answer -> AnswerResultItem(answer = testCard)
+            }
+        } else {
+            answer.forEach { item ->
+                when (item.correct) {
+                    false -> {
+                        item { AnswerResultItem(isCorrect = false) }
+                        item { TestSymbolCard(card = item) }
+                    }
+                    true -> {
+                        item { AnswerResultItem(isCorrect = true) }
+                        item { TestSymbolCard(card = item) }
+                    }
+                    else -> {}
+                }
             }
         }
     }

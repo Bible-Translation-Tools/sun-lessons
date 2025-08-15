@@ -14,11 +14,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
-import org.bibletranslationtools.sun.data.model.Card
+import org.bibletranslationtools.sun.ui.model.CardItem
 
 @Composable
 fun SymbolPage(
-    card: Card,
+    card: CardItem,
     onFrontFlipped: () -> Unit
 ) {
     var isFlipped by remember { mutableStateOf(false) }

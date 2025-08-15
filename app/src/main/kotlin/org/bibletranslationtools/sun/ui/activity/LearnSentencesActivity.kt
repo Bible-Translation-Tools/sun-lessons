@@ -62,7 +62,7 @@ class LearnSentencesActivity : AppCompatActivity(), OnFlipAnimationListener {
             viewModel.sentences.value.let { sentences ->
                 val sentence = sentences[pagerCurrentItem]
                 if (viewModel.mode.value == LessonMode.REPEAT) {
-                    sentence.sentence.passed = true
+                    //sentence.sentence.passed = true
                 } else {
                     saveSentence(pagerCurrentItem)
                 }
@@ -123,7 +123,7 @@ class LearnSentencesActivity : AppCompatActivity(), OnFlipAnimationListener {
         val currentItem = binding.viewPager.currentItem
         val unlearnedItem = viewModel.sentences.value.indexOfFirst {
             if (viewModel.mode.value == LessonMode.REPEAT) {
-                !it.sentence.passed
+                !it.sentence.learned
             } else !it.sentence.learned
         }
 
@@ -167,7 +167,7 @@ class LearnSentencesActivity : AppCompatActivity(), OnFlipAnimationListener {
             viewModel.sentences.value.let { sentences ->
                 val sentence = sentences[position]
                 val done = if (viewModel.mode.value == LessonMode.REPEAT) {
-                    sentence.sentence.passed
+                    sentence.sentence.learned
                 } else {
                     sentence.sentence.learned
                 }

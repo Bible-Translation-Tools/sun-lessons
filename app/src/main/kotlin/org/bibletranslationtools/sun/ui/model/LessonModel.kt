@@ -1,14 +1,14 @@
 package org.bibletranslationtools.sun.ui.model
 
-import org.bibletranslationtools.sun.data.model.Card
-import org.bibletranslationtools.sun.data.model.Lesson
-import org.bibletranslationtools.sun.data.model.Sentence
+import org.bibletranslationtools.sun.data.model.CardEntity
+import org.bibletranslationtools.sun.data.model.LessonEntity
+import org.bibletranslationtools.sun.data.model.SentenceEntity
 import java.util.Objects
 
 data class LessonModel(
-    val lesson: Lesson,
-    val cards: List<Card>,
-    val sentences: List<Sentence>
+    val lesson: LessonEntity,
+    val cards: List<CardEntity>,
+    val sentences: List<SentenceEntity>
 ) {
     var isAvailable = false
     var isSelected = false

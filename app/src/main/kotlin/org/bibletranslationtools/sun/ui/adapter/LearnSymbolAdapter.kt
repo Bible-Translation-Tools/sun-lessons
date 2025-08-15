@@ -8,13 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.wajahatkarim3.easyflipview.EasyFlipView.FlipState
 import com.wajahatkarim3.easyflipview.EasyFlipView.OnFlipAnimationListener
-import org.bibletranslationtools.sun.data.model.Card
+import org.bibletranslationtools.sun.data.model.CardEntity
 import org.bibletranslationtools.sun.databinding.ItemSymbolLearnBinding
 import androidx.core.net.toUri
 
 class LearnSymbolAdapter(
     private val onFlipListener: OnFlipAnimationListener
-): ListAdapter<Card, LearnSymbolAdapter.ViewHolder>(callback) {
+): ListAdapter<CardEntity, LearnSymbolAdapter.ViewHolder>(callback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -28,11 +28,11 @@ class LearnSymbolAdapter(
     }
 
     companion object {
-        val callback = object : DiffUtil.ItemCallback<Card>() {
-            override fun areItemsTheSame(oldItem: Card, newItem: Card): Boolean {
+        val callback = object : DiffUtil.ItemCallback<CardEntity>() {
+            override fun areItemsTheSame(oldItem: CardEntity, newItem: CardEntity): Boolean {
                 return oldItem.id == newItem.id
             }
-            override fun areContentsTheSame(oldItem: Card, newItem: Card): Boolean {
+            override fun areContentsTheSame(oldItem: CardEntity, newItem: CardEntity): Boolean {
                 return oldItem == newItem
             }
         }
@@ -41,7 +41,7 @@ class LearnSymbolAdapter(
     inner class ViewHolder(
         val binding: ItemSymbolLearnBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(card: Card) {
+        fun bind(card: CardEntity) {
             binding.apply {
                 itemText.text = card.symbol
 

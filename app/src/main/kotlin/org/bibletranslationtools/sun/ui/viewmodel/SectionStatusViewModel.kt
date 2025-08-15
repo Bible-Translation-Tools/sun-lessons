@@ -3,7 +3,7 @@ package org.bibletranslationtools.sun.ui.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import org.bibletranslationtools.sun.data.AppDatabase
-import org.bibletranslationtools.sun.data.model.Setting
+import org.bibletranslationtools.sun.data.model.SettingEntity
 import org.bibletranslationtools.sun.data.repositories.CardRepository
 import org.bibletranslationtools.sun.data.repositories.CardRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
@@ -44,8 +44,8 @@ class SectionStatusViewModel(application: Application) : AndroidViewModel(applic
     }
 
     suspend fun saveSectionStatus(lessonId: Int, section: Section) {
-        val lastSection = Setting(Setting.LAST_SECTION, section.id)
-        val lastLesson = Setting(Setting.LAST_LESSON, lessonId.toString())
+        val lastSection = SettingEntity(SettingEntity.LAST_SECTION, section.id)
+        val lastLesson = SettingEntity(SettingEntity.LAST_LESSON, lessonId.toString())
         settingsRepository.insertOrUpdate(lastSection)
         settingsRepository.insertOrUpdate(lastLesson)
     }

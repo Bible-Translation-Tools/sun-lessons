@@ -10,13 +10,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.bibletranslationtools.sun.data.model.SentenceWithSymbols
-import org.bibletranslationtools.sun.data.model.Setting
+import org.bibletranslationtools.sun.data.model.SettingEntity
 import org.bibletranslationtools.sun.data.repositories.SentenceRepository
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
 import org.bibletranslationtools.sun.ui.model.LessonMode
+import org.bibletranslationtools.sun.ui.model.SentenceItem
+import org.bibletranslationtools.sun.ui.model.toEntity
+import org.bibletranslationtools.sun.ui.model.toItem
 import org.bibletranslationtools.sun.utils.Section
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -27,13 +29,14 @@ interface LearnSentenceComponent : ParentContext {
 
     data class Model(
         val lessonId: Int = 1,
-        val sentences: List<SentenceWithSymbols> = emptyList(),
+        val sentences: List<SentenceItem> = emptyList(),
         val mode: LessonMode = LessonMode.NORMAL,
         val lastPosition: Int = 0
     )
 
     fun saveLastPosition(position: Int)
-    fun saveSentence(position: Int)
+    fun setPassed(sentence: SentenceItem)
+    fun saveSentence(sentence: SentenceItem)
     fun finishLesson()
 }
 
@@ -59,37 +62,48 @@ class DefaultLearnSentenceComponent(
     init {
         backHandler.register(backCallback)
 
-        initializeLessonMode()
-        loadSentences()
+        componentScope.launch {
+            initializeLessonMode()
+            loadSentences()
+        }
     }
 
     override fun saveLastPosition(position: Int) {
         componentScope.launch {
-            val lastSentence = Setting(Setting.LAST_SENTENCE, position.toString())
-            settingsRepository.insertOrUpdate(lastSentence)
+            if (_model.value.mode == LessonMode.NORMAL) {
+                val lastSentence = SettingEntity(SettingEntity.LAST_SENTENCE, position.toString())
+                settingsRepository.insertOrUpdate(lastSentence)
+            }
         }
     }
 
-    override fun saveSentence(position: Int) {
-        componentScope.launch {
-            if (position >= 0) {
-                val sentence = model.value.sentences[position]
-                if (!sentence.sentence.learned) {
-                    sentence.sentence.learned = true
-
-                    sentenceRepository.update(sentence.sentence)
-
-                    val lastSection = Setting(
-                        Setting.LAST_SECTION,
-                        Section.LEARN_SENTENCES.id
-                    )
-                    val lastLesson = Setting(
-                        Setting.LAST_LESSON,
-                        lessonId.toString()
-                    )
-                    settingsRepository.insertOrUpdate(lastSection)
-                    settingsRepository.insertOrUpdate(lastLesson)
+    override fun setPassed(sentence: SentenceItem) {
+        _model.update { state ->
+            state.copy(
+                sentences = state.sentences.map {
+                    if (it.id == sentence.id) {
+                        it.copy(passed = true)
+                    } else it
                 }
+            )
+        }
+    }
+
+    override fun saveSentence(sentence: SentenceItem) {
+        componentScope.launch {
+            if (!sentence.learned) {
+                sentenceRepository.update(sentence.copy(learned = true).toEntity())
+
+                val lastSection = SettingEntity(
+                    SettingEntity.LAST_SECTION,
+                    Section.LEARN_SENTENCES.id
+                )
+                val lastLesson = SettingEntity(
+                    SettingEntity.LAST_LESSON,
+                    lessonId.toString()
+                )
+                settingsRepository.insertOrUpdate(lastSection)
+                settingsRepository.insertOrUpdate(lastLesson)
             }
         }
     }
@@ -98,39 +112,37 @@ class DefaultLearnSentenceComponent(
         onFinishSection(lessonId, Section.LEARN_SENTENCES, _model.value.mode)
     }
 
-    private fun initializeLessonMode() {
-        componentScope.launch {
-            val all = sentenceRepository.getByLessonCount(lessonId)
-            val done = sentenceRepository.getLearnedByLessonCount(lessonId)
+    private suspend fun initializeLessonMode() {
+        val all = sentenceRepository.getByLessonCount(lessonId)
+        val done = sentenceRepository.getLearnedByLessonCount(lessonId)
 
-            val mode = if (all == done) {
-                LessonMode.REPEAT
-            } else {
-                LessonMode.NORMAL
-            }
-
-            _model.update { it.copy(mode = mode) }
+        val mode = if (all == done) {
+            LessonMode.REPEAT
+        } else {
+            LessonMode.NORMAL
         }
+
+        _model.update { it.copy(mode = mode) }
     }
 
-    private fun loadSentences() {
-        componentScope.launch {
-            val sentences = sentenceRepository.getAllWithSymbols(lessonId)
-            _model.update { it.copy(sentences = sentences) }
+    private suspend fun loadSentences() {
+        val sentencesWithSymbols = sentenceRepository.getAllWithSymbols(lessonId)
+        val sentences = sentencesWithSymbols.map {
+            it.sentence.toItem().copy(symbols = it.symbols.map { symbol -> symbol.toItem() })
+        }
 
-            if (_model.value.mode == LessonMode.NORMAL) {
-                launch(Dispatchers.Main) {
-                    delay(100)
+        _model.update { it.copy(sentences = sentences) }
 
-                    val lastPosition = getLastPosition()
-                    _model.update { it.copy(lastPosition = lastPosition) }
-                }
-            }
+        if (_model.value.mode == LessonMode.NORMAL) {
+            delay(100)
+
+            val lastPosition = getLastPosition()
+            _model.update { it.copy(lastPosition = lastPosition) }
         }
     }
 
     private suspend fun getLastPosition(): Int {
-        val pos = settingsRepository.get(Setting.LAST_SENTENCE)?.value?.toInt() ?: 0
+        val pos = settingsRepository.get(SettingEntity.LAST_SENTENCE)?.value?.toInt() ?: 0
         return min(pos, model.value.sentences.size - 1)
     }
 
