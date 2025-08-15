@@ -3,18 +3,14 @@ package org.bibletranslationtools.sun.ui.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.bibletranslationtools.sun.data.AppDatabase
-import org.bibletranslationtools.sun.data.model.Card
-import org.bibletranslationtools.sun.data.model.Lesson
-import org.bibletranslationtools.sun.data.model.LessonSuite
-import org.bibletranslationtools.sun.data.model.Sentence
-import org.bibletranslationtools.sun.data.model.Setting
-import org.bibletranslationtools.sun.data.model.Symbol
+import org.bibletranslationtools.sun.data.model.CardEntity
+import org.bibletranslationtools.sun.data.model.LessonEntity
+import org.bibletranslationtools.sun.data.model.SentenceEntity
+import org.bibletranslationtools.sun.data.model.SettingEntity
+import org.bibletranslationtools.sun.data.model.SymbolEntity
 import org.bibletranslationtools.sun.data.repositories.CardRepository
 import org.bibletranslationtools.sun.data.repositories.CardRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
@@ -24,7 +20,6 @@ import org.bibletranslationtools.sun.data.repositories.SentenceRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.data.repositories.SettingsRepositoryImpl
 import org.bibletranslationtools.sun.ui.mapper.LessonMapper
-import org.bibletranslationtools.sun.utils.AssetReaderImpl
 import org.bibletranslationtools.sun.utils.Section
 
 class HomeViewModel(private val application: Application) : AndroidViewModel(application) {
@@ -47,58 +42,58 @@ class HomeViewModel(private val application: Application) : AndroidViewModel(app
 
     fun importLessons(): Job {
         return viewModelScope.launch {
-            val mapper = ObjectMapper().registerKotlinModule()
-            val reference = object : TypeReference<LessonSuite>() {}
-            val assetProvider = AssetReaderImpl(application)
-            val json = assetProvider.readText("lessons.json")
-
-            val dbVersion = getVersion() ?: 0
-
-            json?.let {
-                val lessonSuite = mapper.readValue(it, reference)
-
-                if (lessonSuite.version > dbVersion) {
-                    for (lesson in lessonSuite.lessons) {
-                        insertLesson(lesson)
-
-                        for (card in lesson.cards) {
-                            card.lessonId = lesson.id
-                            insertCard(card)
-                        }
-
-                        for (sentence in lesson.sentences) {
-                            sentence.lessonId = lesson.id
-                            insertSentence(sentence)
-                            for (symbol in sentence.symbols) {
-                                symbol.sentenceId = sentence.id
-                                insertSymbol(symbol)
-                            }
-                        }
-                    }
-
-                    insertSetting(
-                        Setting(Setting.VERSION, lessonSuite.version.toString())
-                    )
-                }
-            }
+//            val mapper = ObjectMapper().registerKotlinModule()
+//            val reference = object : TypeReference<LessonSuite>() {}
+//            val assetProvider = AssetReaderImpl(application)
+//            val json = assetProvider.readText("lessons.json")
+//
+//            val dbVersion = getVersion() ?: 0
+//
+//            json?.let {
+//                val lessonSuite = mapper.readValue(it, reference)
+//
+//                if (lessonSuite.version > dbVersion) {
+//                    for (lesson in lessonSuite.lessons) {
+//                        insertLesson(lesson)
+//
+//                        for (card in lesson.cards) {
+//                            card.lessonId = lesson.id
+//                            insertCard(card)
+//                        }
+//
+//                        for (sentence in lesson.sentences) {
+//                            sentence.lessonId = lesson.id
+//                            insertSentence(sentence)
+//                            for (symbol in sentence.symbols) {
+//                                symbol.sentenceId = sentence.id
+//                                insertSymbol(symbol)
+//                            }
+//                        }
+//                    }
+//
+//                    insertSetting(
+//                        Setting(Setting.VERSION, lessonSuite.version.toString())
+//                    )
+//                }
+//            }
         }
     }
 
-    private suspend fun insertLesson(lesson: Lesson) {
+    private suspend fun insertLesson(lesson: LessonEntity) {
         lessonRepository.insert(lesson)
     }
 
-    private suspend fun insertCard(card: Card) {
+    private suspend fun insertCard(card: CardEntity) {
         cardRepository.insert(card)
     }
 
-    private fun insertSentence(sentence: Sentence) {
+    private fun insertSentence(sentence: SentenceEntity) {
         viewModelScope.launch {
             sentenceRepository.insert(sentence)
         }
     }
 
-    private fun insertSymbol(symbol: Symbol) {
+    private fun insertSymbol(symbol: SymbolEntity) {
         viewModelScope.launch {
             sentenceRepository.insert(symbol)
         }
@@ -108,7 +103,7 @@ class HomeViewModel(private val application: Application) : AndroidViewModel(app
         return settingsRepository.get("version")?.value?.toInt()
     }
 
-    private suspend fun insertSetting(setting: Setting) {
+    private suspend fun insertSetting(setting: SettingEntity) {
         settingsRepository.insert(setting)
     }
 

@@ -56,7 +56,6 @@ class SectionStartActivity : AppCompatActivity() {
                 binding.lessonTitle.text = getString(R.string.lesson_name, id)
                 binding.image.setImageResource(R.drawable.ic_test_large)
                 binding.startButton.setOnClickListener {
-                    startNextSection<TestSymbolsActivity>()
                 }
             }
             Section.LEARN_SENTENCES -> {

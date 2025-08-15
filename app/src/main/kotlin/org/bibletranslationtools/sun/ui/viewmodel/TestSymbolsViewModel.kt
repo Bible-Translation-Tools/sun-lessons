@@ -9,8 +9,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.bibletranslationtools.sun.data.AppDatabase
 import org.bibletranslationtools.sun.data.repositories.CardRepository
-import org.bibletranslationtools.sun.data.model.Card
-import org.bibletranslationtools.sun.data.model.Setting
+import org.bibletranslationtools.sun.data.model.CardEntity
+import org.bibletranslationtools.sun.data.model.SettingEntity
 import org.bibletranslationtools.sun.data.repositories.CardRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.data.repositories.LessonRepositoryImpl
@@ -27,8 +27,8 @@ class TestSymbolsViewModel(application: Application) : AndroidViewModel(applicat
     private val lessonRepository: LessonRepository
     private val settingsRepository: SettingsRepository
 
-    private val _cards = MutableStateFlow<List<Card>>(listOf())
-    val cards: StateFlow<List<Card>> = _cards
+    private val _cards = MutableStateFlow<List<CardEntity>>(listOf())
+    val cards: StateFlow<List<CardEntity>> = _cards
 
     val questionDone = MutableStateFlow(false)
     val lessonId = MutableStateFlow(1)
@@ -56,11 +56,11 @@ class TestSymbolsViewModel(application: Application) : AndroidViewModel(applicat
         return sentenceRepository.getByLessonCount(lessonId.value)
     }
 
-    suspend fun updateCard(card: Card) {
+    suspend fun updateCard(card: CardEntity) {
         repository.update(card)
 
-        val lastSection = Setting(Setting.LAST_SECTION, Section.TEST_SYMBOLS.id)
-        val lastLesson = Setting(Setting.LAST_LESSON, lessonId.value.toString())
+        val lastSection = SettingEntity(SettingEntity.LAST_SECTION, Section.TEST_SYMBOLS.id)
+        val lastLesson = SettingEntity(SettingEntity.LAST_LESSON, lessonId.value.toString())
         settingsRepository.insertOrUpdate(lastSection)
         settingsRepository.insertOrUpdate(lastLesson)
     }

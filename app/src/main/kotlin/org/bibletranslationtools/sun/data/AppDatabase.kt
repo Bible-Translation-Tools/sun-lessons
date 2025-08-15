@@ -10,20 +10,20 @@ import org.bibletranslationtools.sun.data.dao.LessonDao
 import org.bibletranslationtools.sun.data.dao.SentenceDao
 import org.bibletranslationtools.sun.data.dao.SettingsDao
 import org.bibletranslationtools.sun.data.dao.SymbolDao
-import org.bibletranslationtools.sun.data.model.Card
-import org.bibletranslationtools.sun.data.model.Lesson
-import org.bibletranslationtools.sun.data.model.Sentence
-import org.bibletranslationtools.sun.data.model.Setting
-import org.bibletranslationtools.sun.data.model.Symbol
+import org.bibletranslationtools.sun.data.model.CardEntity
+import org.bibletranslationtools.sun.data.model.LessonEntity
+import org.bibletranslationtools.sun.data.model.SentenceEntity
+import org.bibletranslationtools.sun.data.model.SettingEntity
+import org.bibletranslationtools.sun.data.model.SymbolEntity
 import kotlin.concurrent.Volatile
 
 @Database(
     entities = [
-        Card::class,
-        Lesson::class,
-        Setting::class,
-        Sentence::class,
-        Symbol::class
+        CardEntity::class,
+        LessonEntity::class,
+        SettingEntity::class,
+        SentenceEntity::class,
+        SymbolEntity::class
     ],
     version = 1,
     exportSchema = true

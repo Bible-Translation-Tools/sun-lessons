@@ -1,20 +1,18 @@
 package org.bibletranslationtools.sun.ui.components.home
 
 import com.arkivanov.decompose.ComponentContext
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import org.bibletranslationtools.sun.data.model.Card
-import org.bibletranslationtools.sun.data.model.Lesson
+import org.bibletranslationtools.sun.data.model.CardData
+import org.bibletranslationtools.sun.data.model.LessonData
 import org.bibletranslationtools.sun.data.model.LessonSuite
-import org.bibletranslationtools.sun.data.model.Sentence
-import org.bibletranslationtools.sun.data.model.Setting
-import org.bibletranslationtools.sun.data.model.Symbol
+import org.bibletranslationtools.sun.data.model.SentenceData
+import org.bibletranslationtools.sun.data.model.SettingEntity
+import org.bibletranslationtools.sun.data.model.SymbolData
+import org.bibletranslationtools.sun.data.model.toEntity
 import org.bibletranslationtools.sun.data.repositories.CardRepository
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.data.repositories.SentenceRepository
@@ -23,6 +21,7 @@ import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
 import org.bibletranslationtools.sun.utils.AssetReader
 import org.bibletranslationtools.sun.utils.Section
+import org.bibletranslationtools.sun.utils.Utils
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -58,57 +57,52 @@ class DefaultHomeComponent(
 
     private fun importLessons(): Job {
         return componentScope.launch {
-            val mapper = ObjectMapper().registerKotlinModule()
-            val reference = object : TypeReference<LessonSuite>() {}
             val json = assetReader.readText("lessons.json")
 
             val dbVersion = getVersion() ?: 0
 
-            val lessonSuite = mapper.readValue(json, reference)
+            val lessonSuite: LessonSuite = Utils.JsonLenient.decodeFromString(json)
 
             if (lessonSuite.version > dbVersion) {
                 for (lesson in lessonSuite.lessons) {
                     insertLesson(lesson)
 
                     for (card in lesson.cards) {
-                        card.lessonId = lesson.id
-                        insertCard(card)
+                        insertCard(card.copy(lessonId = lesson.id))
                     }
 
                     for (sentence in lesson.sentences) {
-                        sentence.lessonId = lesson.id
-                        insertSentence(sentence)
+                        insertSentence(sentence.copy(lessonId = lesson.id))
                         for (symbol in sentence.symbols) {
-                            symbol.sentenceId = sentence.id
-                            insertSymbol(symbol)
+                            insertSymbol(symbol.copy(sentenceId = sentence.id))
                         }
                     }
                 }
 
                 insertSetting(
-                    Setting(Setting.VERSION, lessonSuite.version.toString())
+                    SettingEntity(SettingEntity.VERSION, lessonSuite.version.toString())
                 )
             }
         }
     }
 
-    private suspend fun insertLesson(lesson: Lesson) {
-        lessonRepository.insert(lesson)
+    private suspend fun insertLesson(lesson: LessonData) {
+        lessonRepository.insert(lesson.toEntity())
     }
 
-    private suspend fun insertCard(card: Card) {
-        cardRepository.insert(card)
+    private suspend fun insertCard(card: CardData) {
+        cardRepository.insert(card.toEntity())
     }
 
-    private fun insertSentence(sentence: Sentence) {
+    private fun insertSentence(sentence: SentenceData) {
         componentScope.launch {
-            sentenceRepository.insert(sentence)
+            sentenceRepository.insert(sentence.toEntity())
         }
     }
 
-    private fun insertSymbol(symbol: Symbol) {
+    private fun insertSymbol(symbol: SymbolData) {
         componentScope.launch {
-            sentenceRepository.insert(symbol)
+            sentenceRepository.insert(symbol.toEntity())
         }
     }
 
@@ -116,7 +110,7 @@ class DefaultHomeComponent(
         return settingsRepository.get("version")?.value?.toInt()
     }
 
-    private suspend fun insertSetting(setting: Setting) {
+    private suspend fun insertSetting(setting: SettingEntity) {
         settingsRepository.insert(setting)
     }
 

@@ -9,16 +9,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import org.bibletranslationtools.sun.data.model.Answer
-import org.bibletranslationtools.sun.data.model.Card
-import org.bibletranslationtools.sun.data.model.Setting
-import org.bibletranslationtools.sun.data.model.TestCard
+import org.bibletranslationtools.sun.data.model.SettingEntity
 import org.bibletranslationtools.sun.data.repositories.CardRepository
 import org.bibletranslationtools.sun.data.repositories.SentenceRepository
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
+import org.bibletranslationtools.sun.ui.model.CardItem
 import org.bibletranslationtools.sun.ui.model.LessonMode
+import org.bibletranslationtools.sun.ui.model.toEntity
+import org.bibletranslationtools.sun.ui.model.toItem
 import org.bibletranslationtools.sun.utils.Section
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -28,15 +28,16 @@ interface TestSymbolComponent : ParentContext {
 
     data class Model(
         val lessonId: Int = 1,
-        val correctCard: Card? = null,
-        val cards: List<Card> = emptyList(),
-        val answerChoices: List<TestCard> = emptyList(),
+        val currentCard: CardItem? = null,
+        val cards: List<CardItem> = emptyList(),
+        val choices: List<CardItem> = emptyList(),
+        val answer: List<CardItem> = emptyList(),
         val questionDone: Boolean = false,
         val mode: LessonMode = LessonMode.NORMAL
     )
 
     fun setNextQuestion()
-    fun checkAnswer(card: Card)
+    fun checkAnswer(card: CardItem)
 }
 
 class DefaultTestSymbolComponent(
@@ -94,51 +95,51 @@ class DefaultTestSymbolComponent(
 
         val finalChoices = (listOf(correctCard) + incorrectCards)
             .shuffled()
-            .onEach { it.correct = null }
+            .onEach { it.copy(correct = null) }
 
         _model.update {
             it.copy(
-                correctCard = correctCard,
-                answerChoices = finalChoices,
-                questionDone = false
+                currentCard = correctCard,
+                choices = finalChoices,
+                questionDone = false,
+                answer = emptyList()
             )
         }
     }
 
-    override fun checkAnswer(card: Card) {
+    override fun checkAnswer(card: CardItem) {
         componentScope.launch {
             if (model.value.questionDone) return@launch
 
-            model.value.correctCard?.let { correctCard ->
-                val isCorrect = card.id == correctCard.id
+            model.value.currentCard?.let { currentCard ->
+                var updatedCard = currentCard
+                val isCorrect = card.id == currentCard.id
 
                 if (isCorrect) {
                     if (model.value.mode == LessonMode.REPEAT) {
-                        correctCard.passed = true
+                        updatedCard = currentCard.copy(passed = true)
                     } else {
-                        correctCard.tested = true
-                        updateCard(correctCard)
+                        updatedCard = currentCard.copy(tested = true)
+                        updateCard(updatedCard)
                     }
                 }
 
-                val choices = if (isCorrect) {
-                    listOf(
-                        Answer(correct = true),
-                        correctCard.also { it.correct = true }
-                    )
+                val answer = if (isCorrect) {
+                    listOf(currentCard.copy(correct = true))
                 } else {
                     listOf(
-                        Answer(correct = false),
-                        card.also { it.correct = false },
-                        Answer(correct = true),
-                        correctCard.also { it.correct = true }
+                        card.copy(correct = false),
+                        currentCard.copy(correct = true)
                     )
                 }
 
-                _model.update {
-                    it.copy(
-                        answerChoices = choices,
-                        questionDone = true
+                _model.update { state ->
+                    state.copy(
+                        answer = answer,
+                        questionDone = true,
+                        cards = state.cards.map {
+                            if (it.id == updatedCard.id) updatedCard else it
+                        }
                     )
                 }
             }
@@ -149,11 +150,11 @@ class DefaultTestSymbolComponent(
         return sentenceRepository.getByLessonCount(lessonId)
     }
 
-    private suspend fun updateCard(card: Card) {
-        cardRepository.update(card)
+    private suspend fun updateCard(card: CardItem) {
+        cardRepository.update(card.toEntity())
 
-        val lastSection = Setting(Setting.LAST_SECTION, Section.TEST_SYMBOLS.id)
-        val lastLesson = Setting(Setting.LAST_LESSON, lessonId.toString())
+        val lastSection = SettingEntity(SettingEntity.LAST_SECTION, Section.TEST_SYMBOLS.id)
+        val lastLesson = SettingEntity(SettingEntity.LAST_LESSON, lessonId.toString())
         settingsRepository.insertOrUpdate(lastSection)
         settingsRepository.insertOrUpdate(lastLesson)
     }
@@ -167,7 +168,7 @@ class DefaultTestSymbolComponent(
     }
 
     private suspend fun loadLessonCards() {
-        val cards = cardRepository.getByLesson(lessonId)
+        val cards = cardRepository.getByLesson(lessonId).map { it.toItem() }
         _model.update { it.copy(cards = cards) }
     }
 

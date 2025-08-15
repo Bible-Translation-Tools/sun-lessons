@@ -26,11 +26,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.bibletranslationtools.sun.R
-import org.bibletranslationtools.sun.data.model.Card
+import org.bibletranslationtools.sun.ui.model.CardItem
 
 @Composable
 fun CardBack(
-    card: Card,
+    card: CardItem,
     modifier: Modifier = Modifier,
     onFlip: () -> Unit
 ) {

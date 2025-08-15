@@ -4,17 +4,17 @@ import androidx.room.Embedded
 import androidx.room.Relation
 
 data class LessonWithData(
-    @Embedded val lesson: Lesson,
+    @Embedded val lesson: LessonEntity,
     @Relation(
-        entity = Card::class,
+        entity = CardEntity::class,
         parentColumn = "id",
         entityColumn = "lesson_id"
     )
-    val cards: List<Card>,
+    val cards: List<CardEntity>,
     @Relation(
-        entity = Sentence::class,
+        entity = SentenceEntity::class,
         parentColumn = "id",
         entityColumn = "lesson_id"
     )
-    val sentences: List<Sentence>
+    val sentences: List<SentenceEntity>
 )

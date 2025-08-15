@@ -26,11 +26,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.bibletranslationtools.sun.R
-import org.bibletranslationtools.sun.data.model.Sentence
+import org.bibletranslationtools.sun.ui.model.SentenceItem
 
 @Composable
 fun SentenceBack(
-    sentence: Sentence,
+    sentence: SentenceItem,
     modifier: Modifier = Modifier,
     onFlip: () -> Unit
 ) {

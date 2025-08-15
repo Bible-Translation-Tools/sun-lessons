@@ -6,13 +6,14 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.Orientation
 import com.arkivanov.decompose.extensions.compose.stack.animation.StackAnimator
 import com.arkivanov.decompose.extensions.compose.stack.animation.slide
+import kotlinx.serialization.json.Json
 
 object Utils {
-//    val JsonLenient = Json {
-//        JsonBuilder.isLenient = true
-//        JsonBuilder.ignoreUnknownKeys = true
-//        JsonBuilder.coerceInputValues = true
-//    }
+    val JsonLenient = Json {
+        isLenient = true
+        ignoreUnknownKeys = true
+        coerceInputValues = true
+    }
 
     fun slideHorizontally(): StackAnimator {
         return slide(

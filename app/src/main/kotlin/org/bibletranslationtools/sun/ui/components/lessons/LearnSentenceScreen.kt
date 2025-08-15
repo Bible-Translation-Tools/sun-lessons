@@ -71,10 +71,8 @@ fun LearnSentenceScreen(component: LearnSentenceComponent) {
             model.sentences.let { sentences ->
                 val sentence = sentences[pagerState.currentPage]
                 val done = if (model.mode == LessonMode.REPEAT) {
-                    sentence.sentence.passed
-                } else {
-                    sentence.sentence.learned
-                }
+                    sentence.passed
+                } else sentence.learned
                 nextEnabled = done
             }
             if (pagerState.currentPage > 0) {
@@ -84,7 +82,7 @@ fun LearnSentenceScreen(component: LearnSentenceComponent) {
     }
 
     LaunchedEffect(model.lastPosition) {
-        if (model.lastPosition > 0) {
+        if (model.mode == LessonMode.NORMAL && model.lastPosition > 0) {
             pagerState.scrollToPage(model.lastPosition)
         }
     }
@@ -127,9 +125,9 @@ fun LearnSentenceScreen(component: LearnSentenceComponent) {
                         model.sentences.let { sentences ->
                             val sentence = sentences[pagerState.currentPage]
                             if (model.mode == LessonMode.REPEAT) {
-                                sentence.sentence.passed = true
+                                component.setPassed(sentence)
                             } else {
-                                component.saveSentence(pagerState.currentPage)
+                                component.saveSentence(sentence)
                             }
                             nextEnabled = true
                         }
@@ -143,7 +141,7 @@ fun LearnSentenceScreen(component: LearnSentenceComponent) {
                 enabled = nextEnabled
             ) {
                 val unlearnedItem = model.sentences.indexOfFirst {
-                    if (model.mode == LessonMode.REPEAT) !it.sentence.passed else !it.sentence.learned
+                    if (model.mode == LessonMode.REPEAT) !it.passed else !it.learned
                 }
 
                 when {

@@ -1,34 +1,34 @@
 package org.bibletranslationtools.sun.data.repositories
 
 import org.bibletranslationtools.sun.data.dao.SettingsDao
-import org.bibletranslationtools.sun.data.model.Setting
+import org.bibletranslationtools.sun.data.model.SettingEntity
 
 interface SettingsRepository {
-    suspend fun insert(setting: Setting)
-    suspend fun delete(setting: Setting)
-    suspend fun update(setting: Setting)
-    suspend fun insertOrUpdate(setting: Setting)
-    suspend fun get(name: String): Setting?
+    suspend fun insert(setting: SettingEntity)
+    suspend fun delete(setting: SettingEntity)
+    suspend fun update(setting: SettingEntity)
+    suspend fun insertOrUpdate(setting: SettingEntity)
+    suspend fun get(name: String): SettingEntity?
 }
 
 class SettingsRepositoryImpl(private val settingDao: SettingsDao) : SettingsRepository {
-    override suspend fun insert(setting: Setting) {
+    override suspend fun insert(setting: SettingEntity) {
         settingDao.insert(setting)
     }
 
-    override suspend fun delete(setting: Setting) {
+    override suspend fun delete(setting: SettingEntity) {
         settingDao.delete(setting)
     }
 
-    override suspend fun update(setting: Setting) {
+    override suspend fun update(setting: SettingEntity) {
         settingDao.update(setting)
     }
 
-    override suspend fun insertOrUpdate(setting: Setting) {
+    override suspend fun insertOrUpdate(setting: SettingEntity) {
         settingDao.get(setting.name)?.let { update(setting) } ?: insert(setting)
     }
 
-    override suspend fun get(name: String): Setting? {
+    override suspend fun get(name: String): SettingEntity? {
         return settingDao.get(name)
     }
 }

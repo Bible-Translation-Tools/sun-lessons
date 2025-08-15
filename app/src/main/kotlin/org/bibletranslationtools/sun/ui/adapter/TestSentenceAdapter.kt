@@ -15,17 +15,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.bibletranslationtools.sun.R
-import org.bibletranslationtools.sun.data.model.Symbol
+import org.bibletranslationtools.sun.data.model.SymbolEntity
 import org.bibletranslationtools.sun.databinding.ItemSentenceTestBinding
-import org.bibletranslationtools.sun.ui.control.SymbolState
 import org.bibletranslationtools.sun.utils.AnswerType
 
 class TestSentenceAdapter(
     private val listener: OnSymbolSelectedListener? = null
-) : ListAdapter<Symbol, TestSentenceAdapter.ViewHolder>(callback) {
+) : ListAdapter<SymbolEntity, TestSentenceAdapter.ViewHolder>(callback) {
 
     interface OnSymbolSelectedListener {
-        fun onSymbolSelected(symbol: Symbol, position: Int)
+        fun onSymbolSelected(symbol: SymbolEntity, position: Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -40,7 +39,7 @@ class TestSentenceAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return getItem(position).type.ordinal
+        return 0/*getItem(position).type.ordinal*/
     }
 
     companion object {
@@ -51,16 +50,16 @@ class TestSentenceAdapter(
         private val CARD_SPACING = R.dimen._10dp
         private val CONTAINER_MARGINS = R.dimen._40dp
 
-        private val callback = object : DiffUtil.ItemCallback<Symbol>() {
-            override fun areItemsTheSame(oldItem: Symbol, newItem: Symbol): Boolean {
+        private val callback = object : DiffUtil.ItemCallback<SymbolEntity>() {
+            override fun areItemsTheSame(oldItem: SymbolEntity, newItem: SymbolEntity): Boolean {
                 return oldItem.id == newItem.id &&
                         oldItem.name == newItem.name &&
-                        oldItem.sort == newItem.sort &&
-                        oldItem.correct == newItem.correct &&
+                        oldItem.sort == newItem.sort
+                        /*oldItem.correct == newItem.correct &&
                         oldItem.selected == newItem.selected &&
-                        oldItem.type == newItem.type
+                        oldItem.type == newItem.type*/
             }
-            override fun areContentsTheSame(oldItem: Symbol, newItem: Symbol): Boolean {
+            override fun areContentsTheSame(oldItem: SymbolEntity, newItem: SymbolEntity): Boolean {
                 return oldItem == newItem
             }
         }
@@ -69,7 +68,7 @@ class TestSentenceAdapter(
     inner class ViewHolder(
         private val binding: ItemSentenceTestBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(symbol: Symbol) {
+        fun bind(symbol: SymbolEntity) {
             binding.apply {
                 val itemSize = calculateItemSize(root, itemViewType)
                 root.layoutParams.width = itemSize
@@ -77,28 +76,28 @@ class TestSentenceAdapter(
 
                 cardText.text = symbol.name
 
-                when(symbol.correct) {
-                    true -> cardFrame.state = SymbolState.CORRECT
-                    false -> cardFrame.state = SymbolState.INCORRECT
-                    else -> {
-                        cardFrame.state = SymbolState.DEFAULT
-                    }
-                }
-
-                if (symbol.selected) {
-                    cardFrame.state = SymbolState.SELECTED
-                }
-
-                if (symbol.type == AnswerType.ANSWER) {
-                    autoScaleAnswerCard(cardFrame, root)
-                }
-
-                root.setOnClickListener {
-                    val selectedSymbol = getItem(bindingAdapterPosition)
-                    if (!selectedSymbol.selected) {
-                        listener?.onSymbolSelected(selectedSymbol, bindingAdapterPosition)
-                    }
-                }
+//                when(symbol.correct) {
+//                    true -> cardFrame.state = SymbolState.CORRECT
+//                    false -> cardFrame.state = SymbolState.INCORRECT
+//                    else -> {
+//                        cardFrame.state = SymbolState.DEFAULT
+//                    }
+//                }
+//
+//                if (symbol.selected) {
+//                    cardFrame.state = SymbolState.SELECTED
+//                }
+//
+//                if (symbol.type == AnswerType.ANSWER) {
+//                    autoScaleAnswerCard(cardFrame, root)
+//                }
+//
+//                root.setOnClickListener {
+//                    val selectedSymbol = getItem(bindingAdapterPosition)
+//                    if (!selectedSymbol.selected) {
+//                        listener?.onSymbolSelected(selectedSymbol, bindingAdapterPosition)
+//                    }
+//                }
             }
         }
     }

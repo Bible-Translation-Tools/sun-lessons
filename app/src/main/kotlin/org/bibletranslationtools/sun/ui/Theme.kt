@@ -45,7 +45,7 @@ val LightColorScheme = lightColorScheme(
     inverseSurface = Color(0xFF303030),
     inverseOnSurface = Color(0xFFF5F5F5),
 
-    outline = Color(0xFFBDBDBD),
+    outline = Color(0xff8f8f8f),
     outlineVariant = Color(0xFFE0E0E0),
 
     scrim = Color(0xFF000000)

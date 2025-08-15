@@ -35,7 +35,6 @@ class HomeActivity : AppCompatActivity() {
                         HomeViewModel.SectionState.IN_PROGRESS -> {
                             when (lastSection) {
                                 Section.LEARN_SYMBOLS -> LearnSymbolsActivity::class.java
-                                Section.TEST_SYMBOLS -> TestSymbolsActivity::class.java
                                 Section.LEARN_SENTENCES -> LearnSentencesActivity::class.java
                                 else -> TestSentencesActivity::class.java
                             }

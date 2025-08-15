@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.bibletranslationtools.sun.R
-import org.bibletranslationtools.sun.data.model.Setting
+import org.bibletranslationtools.sun.data.model.SettingEntity
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
@@ -84,8 +84,8 @@ class DefaultCompleteComponent(
     }
 
     private suspend fun saveSectionStatus(lessonId: Int, section: Section) {
-        val lastSection = Setting(Setting.LAST_SECTION, section.id)
-        val lastLesson = Setting(Setting.LAST_LESSON, lessonId.toString())
+        val lastSection = SettingEntity(SettingEntity.LAST_SECTION, section.id)
+        val lastLesson = SettingEntity(SettingEntity.LAST_LESSON, lessonId.toString())
         settingsRepository.insertOrUpdate(lastSection)
         settingsRepository.insertOrUpdate(lastLesson)
     }

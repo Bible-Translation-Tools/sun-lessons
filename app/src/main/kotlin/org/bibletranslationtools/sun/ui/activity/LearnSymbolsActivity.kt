@@ -62,7 +62,7 @@ class LearnSymbolsActivity : AppCompatActivity(), OnFlipAnimationListener {
             viewModel.cards.value.let { cards ->
                 val card = cards[pagerCurrentItem]
                 if (viewModel.mode.value == LessonMode.REPEAT) {
-                    card.passed = true
+                    //card.passed = true
                 } else {
                     saveCard(pagerCurrentItem)
                 }
@@ -122,7 +122,7 @@ class LearnSymbolsActivity : AppCompatActivity(), OnFlipAnimationListener {
     private fun setNextSymbol() {
         val currentItem = binding.viewPager.currentItem
         val unlearnedItem = viewModel.cards.value.indexOfFirst {
-            if (viewModel.mode.value == LessonMode.REPEAT) !it.passed else !it.learned
+           !it.learned
         }
 
         when {
@@ -164,11 +164,11 @@ class LearnSymbolsActivity : AppCompatActivity(), OnFlipAnimationListener {
             viewModel.cards.value.let { cards ->
                 val card = cards[position]
                 val done = if (viewModel.mode.value == LessonMode.REPEAT) {
-                    card.passed
+                    //card.passed
                 } else {
                     card.learned
                 }
-                enableNextButton(done)
+                //enableNextButton(done)
             }
             if (position > 0) {
                 viewModel.saveLastPosition(position)

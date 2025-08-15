@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.bibletranslationtools.sun.data.AppDatabase
 import org.bibletranslationtools.sun.data.model.SentenceWithSymbols
-import org.bibletranslationtools.sun.data.model.Setting
+import org.bibletranslationtools.sun.data.model.SettingEntity
 import org.bibletranslationtools.sun.data.repositories.SentenceRepository
 import org.bibletranslationtools.sun.data.repositories.SentenceRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
@@ -48,8 +48,8 @@ class LearnSentencesViewModel(application: Application) : AndroidViewModel(appli
             repository.update(sentence.sentence)
             _sentences.value = _sentences.value
 
-            val lastSection = Setting(Setting.LAST_SECTION, Section.LEARN_SENTENCES.id)
-            val lastLesson = Setting(Setting.LAST_LESSON, lessonId.value.toString())
+            val lastSection = SettingEntity(SettingEntity.LAST_SECTION, Section.LEARN_SENTENCES.id)
+            val lastLesson = SettingEntity(SettingEntity.LAST_LESSON, lessonId.value.toString())
             settingsRepository.insertOrUpdate(lastSection)
             settingsRepository.insertOrUpdate(lastLesson)
         }
@@ -57,14 +57,14 @@ class LearnSentencesViewModel(application: Application) : AndroidViewModel(appli
 
     fun saveLastPosition(position: Int) {
         runBlocking {
-            val lastSentence = Setting(Setting.LAST_SENTENCE, position.toString())
+            val lastSentence = SettingEntity(SettingEntity.LAST_SENTENCE, position.toString())
             settingsRepository.insertOrUpdate(lastSentence)
         }
     }
 
     fun getLastPosition(): Int {
         return runBlocking {
-            val pos = settingsRepository.get(Setting.LAST_SENTENCE)?.value?.toInt() ?: 0
+            val pos = settingsRepository.get(SettingEntity.LAST_SENTENCE)?.value?.toInt() ?: 0
             min(pos, _sentences.value.size - 1)
         }
     }

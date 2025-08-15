@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.bibletranslationtools.sun.data.AppDatabase
-import org.bibletranslationtools.sun.data.model.Card
-import org.bibletranslationtools.sun.data.model.Setting
+import org.bibletranslationtools.sun.data.model.CardEntity
+import org.bibletranslationtools.sun.data.model.SettingEntity
 import org.bibletranslationtools.sun.data.repositories.CardRepository
 import org.bibletranslationtools.sun.data.repositories.CardRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
@@ -24,8 +24,8 @@ class LearnSymbolViewModel(application: Application) : AndroidViewModel(applicat
     private val repository: CardRepository
     private val settingsRepository: SettingsRepository
 
-    private val _cards = MutableStateFlow<List<Card>>(listOf())
-    val cards: StateFlow<List<Card>> = _cards
+    private val _cards = MutableStateFlow<List<CardEntity>>(listOf())
+    val cards: StateFlow<List<CardEntity>> = _cards
 
     val lessonId = MutableStateFlow(1)
     val mode = MutableStateFlow(LessonMode.NORMAL)
@@ -43,13 +43,13 @@ class LearnSymbolViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    fun saveCard(card: Card): Job {
+    fun saveCard(card: CardEntity): Job {
         return viewModelScope.launch {
             repository.update(card)
             _cards.value = _cards.value
 
-            val lastSection = Setting(Setting.LAST_SECTION, Section.LEARN_SYMBOLS.id)
-            val lastLesson = Setting(Setting.LAST_LESSON, lessonId.value.toString())
+            val lastSection = SettingEntity(SettingEntity.LAST_SECTION, Section.LEARN_SYMBOLS.id)
+            val lastLesson = SettingEntity(SettingEntity.LAST_LESSON, lessonId.value.toString())
             settingsRepository.insertOrUpdate(lastSection)
             settingsRepository.insertOrUpdate(lastLesson)
         }
@@ -57,14 +57,14 @@ class LearnSymbolViewModel(application: Application) : AndroidViewModel(applicat
 
     fun saveLastPosition(position: Int) {
         runBlocking {
-            val lastSymbol = Setting(Setting.LAST_SYMBOL, position.toString())
+            val lastSymbol = SettingEntity(SettingEntity.LAST_SYMBOL, position.toString())
             settingsRepository.insertOrUpdate(lastSymbol)
         }
     }
 
     fun getLastPosition(): Int {
         return runBlocking {
-            val pos = settingsRepository.get(Setting.LAST_SYMBOL)?.value?.toInt() ?: 0
+            val pos = settingsRepository.get(SettingEntity.LAST_SYMBOL)?.value?.toInt() ?: 0
             min(pos, _cards.value.size - 1)
         }
     }

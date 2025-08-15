@@ -28,11 +28,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.bibletranslationtools.sun.R
-import org.bibletranslationtools.sun.data.model.Card
+import org.bibletranslationtools.sun.ui.model.CardItem
 import org.bibletranslationtools.sun.ui.sunFontFamily
 
 @Composable
-fun SymbolFront(card: Card, onFlip: () -> Unit) {
+fun SymbolFront(card: CardItem, onFlip: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()

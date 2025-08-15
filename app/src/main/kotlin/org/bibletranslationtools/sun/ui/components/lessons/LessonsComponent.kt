@@ -135,7 +135,17 @@ class DefaultLessonsComponent(
             is Config.TestSentence -> LessonsComponent.Child.TestSentence(
                 DefaultTestSentenceComponent(
                     componentContext = context,
-                    parentContext = this
+                    parentContext = this,
+                    lessonId = config.lessonId,
+                    onFinishSection = { lessonId, section, mode ->
+                        navigation.bringToFront(
+                            Config.Complete(lessonId, section, mode)
+                        )
+                    },
+                    onNavigateList = {
+                        navigation.replaceAll(Config.List(it))
+                    },
+                    onNavigateHome = onNavigateHome
                 )
             )
             is Config.Complete -> LessonsComponent.Child.Complete(

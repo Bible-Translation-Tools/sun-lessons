@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -21,11 +22,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.bibletranslationtools.sun.R
-import org.bibletranslationtools.sun.data.model.Answer
 
 @Composable
-fun AnswerResultItem(answer: Answer) {
-    val (text, color, icon) = if (answer.correct == true) {
+fun AnswerResultItem(isCorrect: Boolean) {
+    val (text, color, icon) = if (isCorrect) {
         Triple(
             stringResource(R.string.correct),
             MaterialTheme.colorScheme.tertiary,
@@ -35,7 +35,7 @@ fun AnswerResultItem(answer: Answer) {
         Triple(
             stringResource(R.string.incorrect),
             MaterialTheme.colorScheme.error,
-            Icons.Default.Check
+            Icons.Default.Close
         )
     }
 
