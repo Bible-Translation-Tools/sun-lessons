@@ -4,18 +4,17 @@ plugins {
     id 'org.jetbrains.kotlin.kapt'
     id 'org.jetbrains.kotlin.plugin.serialization'
     id 'org.jetbrains.kotlin.plugin.compose' version '2.2.0'
-    //    id "org.jlleitschuh.gradle.ktlint" version "12.1.2"
-    id("io.github.farimarwat.lokalenow") version "1.2"
+    // id "org.jlleitschuh.gradle.ktlint" version "12.1.2"
 }
 
 android {
     namespace 'org.bibletranslationtools.sun'
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId "org.bibletranslationtools.sun"
         minSdk 24
-        targetSdk 35
+        targetSdk 36
         versionCode 18
         versionName "0.2.7"
 
@@ -29,10 +28,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+
     kotlinOptions {
         jvmTarget = '17'
     }
@@ -42,6 +43,12 @@ android {
         dataBinding true
         compose true
     }
+
+//    lint {
+//        disable "NullSafeMutableLiveData"
+//        disable "RememberInComposition"
+//    }
+
     tasks.withType(JavaCompile).tap {
         configureEach {
             options.compilerArgs << "-Xlint:deprecation"
@@ -50,11 +57,6 @@ android {
 }
 
 dependencies {
-
-    implementation 'androidx.appcompat:appcompat:1.7.1'
-    implementation 'com.google.android.material:material:1.12.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
-    implementation 'androidx.core:core-ktx:1.16.0'
 
     // Compose BOM
     implementation platform('androidx.compose:compose-bom:2025.08.00')
@@ -65,9 +67,11 @@ dependencies {
     implementation 'androidx.compose.material3:material3'
     implementation 'androidx.compose.material3:material3'
     implementation 'androidx.compose.material:material-icons-extended'
+
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
 
+    // Koin
     implementation('io.insert-koin:koin-core:4.1.0')
     implementation('io.insert-koin:koin-android:4.1.0')
     implementation('io.insert-koin:koin-androidx-compose:4.1.0')
@@ -80,61 +84,18 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2"
 
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.3.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
-
-    //room database
+    // Room database
     implementation 'androidx.room:room-runtime:2.7.2'
     implementation 'androidx.room:room-ktx:2.7.2'
-    //noinspection KaptUsageInsteadOfKsp
+    // noinspection KaptUsageInsteadOfKsp
     kapt 'androidx.room:room-compiler:2.7.2'
 
-    //navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:2.9.3"
-    implementation "androidx.navigation:navigation-ui-ktx:2.9.3"
-
-    //material
-    implementation 'com.google.android.material:material:1.12.0'
-
-    //swipe to delete
-    implementation 'it.xabaras.android:recyclerview-swipedecorator:1.4'
-
-    //picasso
-    implementation 'com.squareup.picasso:picasso:2.71828'
-
-    //relativelayouts
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
-
-    //Support Library
-    implementation 'androidx.appcompat:appcompat:1.7.1'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.4.0'
-    implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.gridlayout:gridlayout:1.1.0'
-
-    //easy flip view
-    implementation 'com.wajahatkarim:EasyFlipView:3.0.3'
-
-    //coil image loading
+    // Coil image loading
     implementation "io.coil-kt.coil3:coil-compose:3.3.0"
     implementation("io.coil-kt.coil3:coil-gif:3.3.0")
 
-    //lottie
-    implementation 'com.airbnb.android:lottie:6.6.7'
-
-    //bottom sheet
-    implementation "com.github.Kennyc1012:BottomSheetMenu:5.1"
-
-    //popup dialog
-    implementation 'com.saadahmedev.popup-dialog:popup-dialog:2.0.0'
-
-    //glide image
-    implementation 'com.github.bumptech.glide:glide:4.16.0'
-    //noinspection KaptUsageInsteadOfKsp
-    kapt 'com.github.bumptech.glide:compiler:4.16.0'
-
-    //simple search view
-    implementation 'com.github.Ferfalk:SimpleSearchView:0.2.1'
-
+    // Testing
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
 }
