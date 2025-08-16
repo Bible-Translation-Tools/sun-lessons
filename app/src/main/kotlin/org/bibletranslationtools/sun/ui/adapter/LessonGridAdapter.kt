@@ -8,12 +8,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.bibletranslationtools.sun.databinding.GridLessonBinding
-import org.bibletranslationtools.sun.ui.model.LessonModel
+import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.utils.TallyMarkConverter
 
 class LessonGridAdapter(
     private val context: Context
-) : ListAdapter<LessonModel, LessonGridAdapter.ViewHolder>(callback) {
+) : ListAdapter<LessonItem, LessonGridAdapter.ViewHolder>(callback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(context)
@@ -51,17 +51,17 @@ class LessonGridAdapter(
     ) : RecyclerView.ViewHolder(binding.root)
 
     companion object {
-        val callback = object : DiffUtil.ItemCallback<LessonModel>() {
+        val callback = object : DiffUtil.ItemCallback<LessonItem>() {
             override fun areItemsTheSame(
-                oldItem: LessonModel,
-                newItem: LessonModel
+                oldItem: LessonItem,
+                newItem: LessonItem
             ): Boolean {
                 return oldItem.lesson.id == newItem.lesson.id
             }
 
             override fun areContentsTheSame(
-                oldItem: LessonModel,
-                newItem: LessonModel
+                oldItem: LessonItem,
+                newItem: LessonItem
             ): Boolean {
                 return oldItem == newItem
             }

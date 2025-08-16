@@ -12,15 +12,15 @@ import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.data.repositories.LessonRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.data.repositories.SettingsRepositoryImpl
-import org.bibletranslationtools.sun.ui.mapper.LessonMapper
-import org.bibletranslationtools.sun.ui.model.LessonModel
+import org.bibletranslationtools.sun.ui.model.LessonItem
+import org.bibletranslationtools.sun.ui.model.toItem
 
 class TrackProgressViewModel(application: Application) : AndroidViewModel(application) {
     private val lessonRepository: LessonRepository
     private val settingsRepository: SettingsRepository
 
-    val lessons: StateFlow<List<LessonModel>> get() = mutableLessons
-    private val mutableLessons = MutableStateFlow<List<LessonModel>>(listOf())
+    val lessons: StateFlow<List<LessonItem>> get() = mutableLessons
+    private val mutableLessons = MutableStateFlow<List<LessonItem>>(listOf())
 
     init {
         val lessonDao = AppDatabase.getDatabase(application).getLessonDao()
@@ -31,10 +31,10 @@ class TrackProgressViewModel(application: Application) : AndroidViewModel(applic
 
     fun loadLessons(): Job {
         return viewModelScope.launch {
-            val lessons = lessonRepository.getAllWithData().map(LessonMapper::map)
-            lessons.forEachIndexed { index, lesson ->
-                lesson.isAvailable = lessonAvailable(lessons, index)
-            }
+            val lessons = lessonRepository.getAllWithData().map { it.toItem() }
+//            lessons.forEachIndexed { index, lesson ->
+//                lesson.isAvailable = lessonAvailable(lessons, index)
+//            }
             mutableLessons.value = lessons
         }
     }
@@ -43,7 +43,7 @@ class TrackProgressViewModel(application: Application) : AndroidViewModel(applic
         return settingsRepository.get("last_lesson")?.value?.toInt() ?: 1
     }
 
-    private fun lessonAvailable(lessons: List<LessonModel>, position: Int): Boolean {
+    private fun lessonAvailable(lessons: List<LessonItem>, position: Int): Boolean {
         if (position == 0) return true
         val prevLesson = lessons[position - 1]
         return prevLesson.totalProgress == 100.0

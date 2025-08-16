@@ -17,7 +17,7 @@ import org.bibletranslationtools.sun.R
 import org.bibletranslationtools.sun.databinding.ActivityListLessonsBinding
 import org.bibletranslationtools.sun.ui.adapter.LessonListAdapter
 import org.bibletranslationtools.sun.ui.model.LessonMode
-import org.bibletranslationtools.sun.ui.model.LessonModel
+import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.ui.viewmodel.LessonListViewModel
 import org.bibletranslationtools.sun.utils.Section
 import org.bibletranslationtools.sun.utils.putEnumExtra
@@ -79,19 +79,19 @@ class LessonListActivity : AppCompatActivity(), LessonListAdapter.OnLessonSelect
         viewModel.setActiveLesson(selectedLessonId)
     }
 
-    override fun onLessonSelected(lesson: LessonModel, position: Int) {
+    override fun onLessonSelected(lesson: LessonItem, position: Int) {
         viewModel.setActiveLesson(lesson.lesson.id)
 
         viewModel.lessons.value.indexOfFirst { it.isSelected }.let { prevPosition ->
             if (prevPosition >= 0 && prevPosition != position) {
                 viewModel.lessons.value[prevPosition].let { prevLesson ->
-                    prevLesson.isSelected = false
+                    //prevLesson.isSelected = false
                     lessonsAdapter.refreshLesson(prevPosition)
                 }
             }
         }
 
-        lesson.isSelected = !lesson.isSelected
+        //lesson.isSelected = !lesson.isSelected
         lessonsAdapter.refreshLesson(position)
     }
 

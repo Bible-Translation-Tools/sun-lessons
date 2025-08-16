@@ -10,12 +10,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.bibletranslationtools.sun.R
-import org.bibletranslationtools.sun.ui.model.LessonModel
+import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.utils.Section
 
 @Composable
 fun LessonRooms(
-    lesson: LessonModel,
+    lesson: LessonItem,
     onAction: (Section) -> Unit
 ) {
 

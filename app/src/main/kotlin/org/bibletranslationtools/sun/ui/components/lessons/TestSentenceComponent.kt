@@ -231,7 +231,7 @@ class DefaultTestSentenceComponent(
 
     private suspend fun initializeLessonMode() {
         val all = sentenceRepository.getByLessonCount(lessonId)
-        val done = sentenceRepository.getLearnedByLessonCount(lessonId)
+        val done = sentenceRepository.getTestedByLessonCount(lessonId)
 
         val mode = if (all == done) {
             LessonMode.REPEAT

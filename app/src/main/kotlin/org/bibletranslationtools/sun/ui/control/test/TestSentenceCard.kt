@@ -70,7 +70,7 @@ fun TestSentenceCard(
                     ),
                     maxLines = 1,
                     autoSize = TextAutoSize.StepBased(
-                        minFontSize = 36.sp,
+                        minFontSize = 10.sp,
                         maxFontSize = 60.sp
                     )
                 )

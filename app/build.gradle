@@ -115,7 +115,8 @@ dependencies {
     implementation 'com.wajahatkarim:EasyFlipView:3.0.3'
 
     //coil image loading
-    implementation "io.coil-kt:coil-compose:2.7.0"
+    implementation "io.coil-kt.coil3:coil-compose:3.3.0"
+    implementation("io.coil-kt.coil3:coil-gif:3.3.0")
 
     //lottie
     implementation 'com.airbnb.android:lottie:6.6.7'

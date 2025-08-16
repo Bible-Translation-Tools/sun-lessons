@@ -10,17 +10,17 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.bibletranslationtools.sun.R
 import org.bibletranslationtools.sun.databinding.ItemLessonBinding
-import org.bibletranslationtools.sun.ui.model.LessonModel
+import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.utils.Section
 import org.bibletranslationtools.sun.utils.TallyMarkConverter
 
 class LessonListAdapter(
     private val context: Context,
     private val listener: OnLessonSelectedListener? = null
-) : ListAdapter<LessonModel, LessonListAdapter.ViewHolder>(callback) {
+) : ListAdapter<LessonItem, LessonListAdapter.ViewHolder>(callback) {
 
     interface OnLessonSelectedListener {
-        fun onLessonSelected(lesson: LessonModel, position: Int)
+        fun onLessonSelected(lesson: LessonItem, position: Int)
         fun onLessonAction(lessonId: Int, action: Section)
     }
 
@@ -62,17 +62,17 @@ class LessonListAdapter(
     ) : RecyclerView.ViewHolder(binding.root)
 
     companion object {
-        val callback = object : DiffUtil.ItemCallback<LessonModel>() {
+        val callback = object : DiffUtil.ItemCallback<LessonItem>() {
             override fun areItemsTheSame(
-                oldItem: LessonModel,
-                newItem: LessonModel
+                oldItem: LessonItem,
+                newItem: LessonItem
             ): Boolean {
                 return oldItem.lesson.id == newItem.lesson.id
             }
 
             override fun areContentsTheSame(
-                oldItem: LessonModel,
-                newItem: LessonModel
+                oldItem: LessonItem,
+                newItem: LessonItem
             ): Boolean {
                 return oldItem == newItem
             }
@@ -80,7 +80,7 @@ class LessonListAdapter(
     }
 
     private fun setLessonStatus(
-        lesson: LessonModel,
+        lesson: LessonItem,
         holder: ViewHolder
     ) {
         with(holder.binding) {

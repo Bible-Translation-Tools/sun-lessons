@@ -2,17 +2,17 @@ package org.bibletranslationtools.sun.ui.model
 
 import org.bibletranslationtools.sun.data.model.CardEntity
 import org.bibletranslationtools.sun.data.model.LessonEntity
+import org.bibletranslationtools.sun.data.model.LessonWithData
 import org.bibletranslationtools.sun.data.model.SentenceEntity
 import java.util.Objects
 
-data class LessonModel(
+data class LessonItem(
     val lesson: LessonEntity,
     val cards: List<CardEntity>,
-    val sentences: List<SentenceEntity>
+    val sentences: List<SentenceEntity>,
+    val isAvailable: Boolean,
+    val isSelected: Boolean
 ) {
-    var isAvailable = false
-    var isSelected = false
-
     val cardsLearned get() = cards.count { it.learned }
     val cardsLearnedProgress get() = cardsLearned.toDouble() / cards.size * 100
 
@@ -50,14 +50,24 @@ data class LessonModel(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || javaClass != other.javaClass) return false
-        val lessonModel = other as LessonModel
-        return lesson == lessonModel.lesson &&
-                totalProgress == lessonModel.totalProgress &&
-                isAvailable == lessonModel.isAvailable &&
-                isSelected == lessonModel.isSelected
+        val lessonItem = other as LessonItem
+        return lesson == lessonItem.lesson &&
+                totalProgress == lessonItem.totalProgress &&
+                isAvailable == lessonItem.isAvailable &&
+                isSelected == lessonItem.isSelected
     }
 
     override fun hashCode(): Int {
         return Objects.hash(lesson, totalProgress, isAvailable, isSelected)
     }
+}
+
+fun LessonWithData.toItem(): LessonItem {
+    return LessonItem(
+        lesson = lesson,
+        cards = cards,
+        sentences = sentences,
+        isAvailable = false,
+        isSelected = false
+    )
 }
