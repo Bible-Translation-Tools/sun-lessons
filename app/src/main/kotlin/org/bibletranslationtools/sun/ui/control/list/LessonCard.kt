@@ -15,7 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import org.bibletranslationtools.sun.ui.model.LessonModel
+import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.utils.Section
 
 enum class LessonStatus {
@@ -26,7 +26,7 @@ enum class LessonStatus {
 
 @Composable
 fun LessonCard(
-    lesson: LessonModel,
+    lesson: LessonItem,
     isExpanded: Boolean,
     onClick: () -> Unit,
     onAction: (Section) -> Unit

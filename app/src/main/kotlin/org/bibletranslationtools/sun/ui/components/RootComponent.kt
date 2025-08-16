@@ -105,7 +105,10 @@ class DefaultRootComponent(
                 )
             )
             is Config.Progress -> RootComponent.Child.Progress(
-                DefaultProgressComponent(context)
+                DefaultProgressComponent(
+                    componentContext = context,
+                    parentContext = this
+                )
             )
             is Config.Lessons -> RootComponent.Child.Lessons(
                 DefaultLessonsComponent(

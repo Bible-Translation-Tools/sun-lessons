@@ -19,7 +19,6 @@ import org.bibletranslationtools.sun.data.repositories.SentenceRepository
 import org.bibletranslationtools.sun.data.repositories.SentenceRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.data.repositories.SettingsRepositoryImpl
-import org.bibletranslationtools.sun.ui.mapper.LessonMapper
 import org.bibletranslationtools.sun.utils.Section
 
 class HomeViewModel(private val application: Application) : AndroidViewModel(application) {
@@ -111,22 +110,22 @@ class HomeViewModel(private val application: Application) : AndroidViewModel(app
         return settingsRepository.get("last_lesson")?.value?.toInt() ?: 1
     }
 
-    suspend fun testsAvailable(): Boolean {
-        val lastLesson = settingsRepository.get("last_lesson")?.value?.toInt() ?: 1
-        val lesson = lessonRepository.getWithData(lastLesson)
-        val lessonData = lesson?.let(LessonMapper::map) ?: return false
-        val hasSentences = lessonData.sentences.isNotEmpty()
-        val cardsLearned = lessonData.cardsLearnedProgress == 100.0
-        val cardsTested = lessonData.cardsTestedProgress == 100.0
-        val sentencesLearned = lessonData.sentencesLearnedProgress == 100.0
-        val sentencesTested = lessonData.sentencesTestedProgress == 100.0
-
-        return when {
-            hasSentences && sentencesLearned && !sentencesTested -> true
-            cardsLearned && !cardsTested -> true
-            else -> false
-        }
-    }
+//    suspend fun testsAvailable(): Boolean {
+//        val lastLesson = settingsRepository.get("last_lesson")?.value?.toInt() ?: 1
+//        val lesson = lessonRepository.getWithData(lastLesson)
+//        val lessonData = lesson?.let(LessonMapper::map) ?: return false
+//        val hasSentences = lessonData.sentences.isNotEmpty()
+//        val cardsLearned = lessonData.cardsLearnedProgress == 100.0
+//        val cardsTested = lessonData.cardsTestedProgress == 100.0
+//        val sentencesLearned = lessonData.sentencesLearnedProgress == 100.0
+//        val sentencesTested = lessonData.sentencesTestedProgress == 100.0
+//
+//        return when {
+//            hasSentences && sentencesLearned && !sentencesTested -> true
+//            cardsLearned && !cardsTested -> true
+//            else -> false
+//        }
+//    }
 
     suspend fun navigateToSection(callback: (Section, Int, SectionState) -> Unit) {
         val lastSection = settingsRepository

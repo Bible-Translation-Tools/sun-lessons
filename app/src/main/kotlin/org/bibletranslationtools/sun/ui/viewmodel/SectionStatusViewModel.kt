@@ -12,7 +12,6 @@ import org.bibletranslationtools.sun.data.repositories.SentenceRepository
 import org.bibletranslationtools.sun.data.repositories.SentenceRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.data.repositories.SettingsRepositoryImpl
-import org.bibletranslationtools.sun.ui.mapper.LessonMapper
 import org.bibletranslationtools.sun.utils.Section
 
 class SectionStatusViewModel(application: Application) : AndroidViewModel(application) {
@@ -54,16 +53,16 @@ class SectionStatusViewModel(application: Application) : AndroidViewModel(applic
         return sentenceRepository.getByLessonCount(lessonId)
     }
 
-    suspend fun getLastTestSession(): Section? {
-        val lastLesson = settingsRepository.get("last_lesson")?.value?.toInt() ?: 1
-        val lesson = lessonRepository.getWithData(lastLesson)
-        val lessonData = lesson?.let(LessonMapper::map) ?: return null
-        val hasSentences = lessonData.sentences.isNotEmpty()
-
-        return when {
-            hasSentences && lessonData.sentencesLearnedProgress == 100.0 -> Section.TEST_SENTENCES
-            lessonData.cardsLearnedProgress == 100.0 -> Section.TEST_SYMBOLS
-            else -> null
-        }
-    }
+//    suspend fun getLastTestSession(): Section? {
+//        val lastLesson = settingsRepository.get("last_lesson")?.value?.toInt() ?: 1
+//        val lesson = lessonRepository.getWithData(lastLesson)
+//        val lessonData = lesson?.let(LessonMapper::map) ?: return null
+//        val hasSentences = lessonData.sentences.isNotEmpty()
+//
+//        return when {
+//            hasSentences && lessonData.sentencesLearnedProgress == 100.0 -> Section.TEST_SENTENCES
+//            lessonData.cardsLearnedProgress == 100.0 -> Section.TEST_SYMBOLS
+//            else -> null
+//        }
+//    }
 }

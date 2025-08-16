@@ -29,11 +29,6 @@ fun AnswerArea(
     ) {
         val slotSize = min((maxWidth / state.answerSlots.size) - 8.dp, 80.dp)
 
-        println(maxWidth)
-        println(state.answerSlots.size)
-        println(maxWidth / state.answerSlots.size)
-        println(slotSize)
-
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
             modifier = modifier.fillMaxSize()

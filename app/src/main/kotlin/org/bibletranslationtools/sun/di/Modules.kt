@@ -1,6 +1,5 @@
 package org.bibletranslationtools.sun.di
 
-import androidx.room.Room
 import org.bibletranslationtools.sun.data.AppDatabase
 import org.bibletranslationtools.sun.data.repositories.CardRepository
 import org.bibletranslationtools.sun.data.repositories.CardRepositoryImpl
@@ -18,11 +17,7 @@ import org.koin.dsl.module
 
 val sharedModule = module {
     single {
-        Room.databaseBuilder(
-            get(),
-            AppDatabase::class.java,
-            "sun.db"
-        ).build()
+        AppDatabase.getDatabase(get())
     }
     single { get<AppDatabase>().getLessonDao() }
     single { get<AppDatabase>().getCardDao() }

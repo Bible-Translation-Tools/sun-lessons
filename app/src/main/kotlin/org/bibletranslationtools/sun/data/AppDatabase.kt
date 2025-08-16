@@ -45,6 +45,14 @@ abstract class AppDatabase : RoomDatabase() {
             return INSTANCE ?: synchronized(this) {
                 INSTANCE = Room
                     .databaseBuilder(context, AppDatabase::class.java, "sun.db")
+//                    .setQueryCallback(
+//                        object : QueryCallback {
+//                            override fun onQuery(sqlQuery: String, bindArgs: List<Any?>) {
+//                                println("RoomQuery - Query: $sqlQuery, Args: $bindArgs")
+//                            }
+//                        },
+//                        Executors.newSingleThreadExecutor()
+//                    )
                     .build()
                 INSTANCE!!
             }
