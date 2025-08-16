@@ -122,15 +122,8 @@ fun LearnSentenceScreen(component: LearnSentenceComponent) {
                 SentencePage(
                     sentence = model.sentences[pageIndex],
                     onFrontFlipped = {
-                        model.sentences.let { sentences ->
-                            val sentence = sentences[pagerState.currentPage]
-                            if (model.mode == LessonMode.REPEAT) {
-                                component.setPassed(sentence)
-                            } else {
-                                component.saveSentence(sentence)
-                            }
-                            nextEnabled = true
-                        }
+                        component.onCardFlipped(it)
+                        nextEnabled = true
                     }
                 )
             }
@@ -153,7 +146,6 @@ fun LearnSentenceScreen(component: LearnSentenceComponent) {
                         pagerState.animateScrollToPage(next)
                     }
                 } ?: run {
-                    component.saveLastPosition(0)
                     component.finishLesson()
                 }
             }

@@ -19,7 +19,7 @@ import org.bibletranslationtools.sun.ui.model.SentenceItem
 @Composable
 fun SentencePage(
     sentence: SentenceItem,
-    onFrontFlipped: () -> Unit
+    onFrontFlipped: (SentenceItem) -> Unit
 ) {
     var isFlipped by remember { mutableStateOf(false) }
 
@@ -42,7 +42,7 @@ fun SentencePage(
         if (rotation <= 90f) {
             SentenceFront(symbols = sentence.symbols) {
                 isFlipped = true
-                onFrontFlipped()
+                onFrontFlipped(sentence)
             }
         } else {
             SentenceBack(

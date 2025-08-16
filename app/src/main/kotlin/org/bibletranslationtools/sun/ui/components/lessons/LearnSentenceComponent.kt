@@ -34,9 +34,8 @@ interface LearnSentenceComponent : ParentContext {
         val lastPosition: Int = 0
     )
 
-    fun saveLastPosition(position: Int)
-    fun setPassed(sentence: SentenceItem)
-    fun saveSentence(sentence: SentenceItem)
+    suspend fun saveLastPosition(position: Int)
+    fun onCardFlipped(sentence: SentenceItem)
     fun finishLesson()
 }
 
@@ -68,61 +67,63 @@ class DefaultLearnSentenceComponent(
         }
     }
 
-    override fun saveLastPosition(position: Int) {
+    override suspend fun saveLastPosition(position: Int) {
+        if (_model.value.mode == LessonMode.NORMAL) {
+            val lastSentence = SettingEntity(SettingEntity.LAST_SENTENCE, position.toString())
+            settingsRepository.insertOrUpdate(lastSentence)
+        }
+    }
+
+    override fun onCardFlipped(sentence: SentenceItem) {
         componentScope.launch {
-            if (_model.value.mode == LessonMode.NORMAL) {
-                val lastSentence = SettingEntity(SettingEntity.LAST_SENTENCE, position.toString())
-                settingsRepository.insertOrUpdate(lastSentence)
+            if (model.value.mode == LessonMode.REPEAT) {
+                setPassed(sentence)
+            } else {
+                saveSentence(sentence)
             }
         }
     }
 
-    override fun setPassed(sentence: SentenceItem) {
+    private fun setPassed(sentence: SentenceItem) {
         _model.update { state ->
             state.copy(
                 sentences = state.sentences.map {
-                    if (it.id == sentence.id) {
-                        it.copy(passed = true)
-                    } else it
+                    if (it.id == sentence.id) it.copy(passed = true) else it
                 }
             )
         }
     }
 
-    override fun saveSentence(sentence: SentenceItem) {
-        componentScope.launch {
-            if (!sentence.learned) {
-                sentenceRepository.update(sentence.copy(learned = true).toEntity())
+    private suspend fun saveSentence(sentence: SentenceItem) {
+        if (!sentence.learned) {
+            sentenceRepository.update(sentence.copy(learned = true).toEntity())
 
-                val lastSection = SettingEntity(
-                    SettingEntity.LAST_SECTION,
-                    Section.LEARN_SENTENCES.id
+            _model.update { state ->
+                state.copy(
+                    sentences = state.sentences.map {
+                        if (it.id == sentence.id) it.copy(learned = true) else it
+                    }
                 )
-                val lastLesson = SettingEntity(
-                    SettingEntity.LAST_LESSON,
-                    lessonId.toString()
-                )
-                settingsRepository.insertOrUpdate(lastSection)
-                settingsRepository.insertOrUpdate(lastLesson)
             }
+
+            val lastSection = SettingEntity(
+                SettingEntity.LAST_SECTION,
+                Section.LEARN_SENTENCES.id
+            )
+            val lastLesson = SettingEntity(
+                SettingEntity.LAST_LESSON,
+                lessonId.toString()
+            )
+            settingsRepository.insertOrUpdate(lastSection)
+            settingsRepository.insertOrUpdate(lastLesson)
         }
     }
 
     override fun finishLesson() {
-        onFinishSection(lessonId, Section.LEARN_SENTENCES, _model.value.mode)
-    }
-
-    private suspend fun initializeLessonMode() {
-        val all = sentenceRepository.getByLessonCount(lessonId)
-        val done = sentenceRepository.getLearnedByLessonCount(lessonId)
-
-        val mode = if (all == done) {
-            LessonMode.REPEAT
-        } else {
-            LessonMode.NORMAL
+        componentScope.launch {
+            saveLastPosition(0)
+            onFinishSection(lessonId, Section.LEARN_SENTENCES, _model.value.mode)
         }
-
-        _model.update { it.copy(mode = mode) }
     }
 
     private suspend fun loadSentences() {
@@ -139,6 +140,19 @@ class DefaultLearnSentenceComponent(
             val lastPosition = getLastPosition()
             _model.update { it.copy(lastPosition = lastPosition) }
         }
+    }
+
+    private suspend fun initializeLessonMode() {
+        val all = sentenceRepository.getByLessonCount(lessonId)
+        val done = sentenceRepository.getLearnedByLessonCount(lessonId)
+
+        val mode = if (all == done) {
+            LessonMode.REPEAT
+        } else {
+            LessonMode.NORMAL
+        }
+
+        _model.update { it.copy(mode = mode) }
     }
 
     private suspend fun getLastPosition(): Int {

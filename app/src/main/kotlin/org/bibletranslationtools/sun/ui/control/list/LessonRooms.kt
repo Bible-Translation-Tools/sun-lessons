@@ -18,7 +18,6 @@ fun LessonRooms(
     lesson: LessonItem,
     onAction: (Section) -> Unit
 ) {
-
     val cardsLearnedProgress = lesson.cardsLearnedProgress
     val testSymbolsAvailable = cardsLearnedProgress == 100.0
     val cardsTestedProgress = lesson.cardsTestedProgress
