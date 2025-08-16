@@ -83,11 +83,11 @@ fun LessonRoomItem(
             when (status) {
                 LessonStatus.IN_PROGRESS -> {
                     CircularProgressIndicator(
-                        progress = { progress.toFloat() },
+                        progress = { progress.toFloat() / 100 },
                         modifier = Modifier.size(22.dp),
                         color = MaterialTheme.colorScheme.primary,
-                        trackColor = MaterialTheme.colorScheme.primaryContainer,
-                        strokeWidth = 2.dp,
+                        trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+                        strokeWidth = 3.dp,
                         gapSize = 0.dp
                     )
                 }

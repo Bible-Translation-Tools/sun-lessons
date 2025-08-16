@@ -76,7 +76,9 @@ fun LearnSymbolScreen(component: LearnSymbolComponent) {
                 nextEnabled = done
             }
             if (pagerState.currentPage > 0) {
-                component.saveLastPosition(pagerState.currentPage)
+                coroutineScope.launch {
+                    component.saveLastPosition(pagerState.currentPage)
+                }
             }
         }
     }
@@ -122,15 +124,8 @@ fun LearnSymbolScreen(component: LearnSymbolComponent) {
                 SymbolPage(
                     card = model.cards[pageIndex],
                     onFrontFlipped = {
-                        model.cards.let { cards ->
-                            val card = cards[pagerState.currentPage]
-                            if (model.mode == LessonMode.REPEAT) {
-                                component.setPassed(card)
-                            } else {
-                                component.saveCard(card)
-                            }
-                            nextEnabled = true
-                        }
+                        component.onCardFlipped(it)
+                        nextEnabled = true
                     }
                 )
             }
@@ -153,7 +148,6 @@ fun LearnSymbolScreen(component: LearnSymbolComponent) {
                         pagerState.animateScrollToPage(next)
                     }
                 } ?: run {
-                    component.saveLastPosition(0)
                     component.finishLesson()
                 }
             }

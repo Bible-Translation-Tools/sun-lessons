@@ -34,9 +34,8 @@ interface LearnSymbolComponent : ParentContext {
         val lastPosition: Int = 0
     )
 
-    fun saveLastPosition(position: Int)
-    fun setPassed(card: CardItem)
-    fun saveCard(card: CardItem)
+    suspend fun saveLastPosition(position: Int)
+    fun onCardFlipped(card: CardItem)
     fun finishLesson()
 }
 
@@ -68,46 +67,61 @@ class DefaultLearnSymbolComponent(
         }
     }
 
-    override fun saveLastPosition(position: Int) {
+    override suspend fun saveLastPosition(position: Int) {
+        if (model.value.mode == LessonMode.NORMAL) {
+            val lastSymbol = SettingEntity(SettingEntity.LAST_SYMBOL, position.toString())
+            settingsRepository.insertOrUpdate(lastSymbol)
+        }
+    }
+
+    override fun onCardFlipped(card: CardItem) {
         componentScope.launch {
-            if (model.value.mode == LessonMode.NORMAL) {
-                val lastSymbol = SettingEntity(SettingEntity.LAST_SYMBOL, position.toString())
-                settingsRepository.insertOrUpdate(lastSymbol)
+            model.value.cards.let { cards ->
+                if (model.value.mode == LessonMode.REPEAT) {
+                    setPassed(card)
+                } else {
+                    saveCard(card)
+                }
             }
         }
     }
 
-    override fun setPassed(card: CardItem) {
-        componentScope.launch {
+    private fun setPassed(card: CardItem) {
+        _model.update { state ->
+            state.copy(cards = state.cards.map {
+                if (it == card) card.copy(passed = true) else it
+            })
+        }
+    }
+
+    private suspend fun saveCard(card: CardItem) {
+        if (!card.learned) {
+            cardRepository.update(card.copy(learned = true).toEntity())
+
             _model.update { state ->
                 state.copy(cards = state.cards.map {
-                    if (it == card) card.copy(passed = true) else it
+                    if (it == card) card.copy(learned = true) else it
                 })
             }
-        }
-    }
 
-    override fun saveCard(card: CardItem) {
-        componentScope.launch {
-            if (!card.learned) {
-                cardRepository.update(card.copy(learned = true).toEntity())
-
-                val lastSection = SettingEntity(
-                    SettingEntity.LAST_SECTION,
-                    Section.LEARN_SYMBOLS.id
-                )
-                val lastLesson = SettingEntity(
-                    SettingEntity.LAST_LESSON,
-                    lessonId.toString()
-                )
-                settingsRepository.insertOrUpdate(lastSection)
-                settingsRepository.insertOrUpdate(lastLesson)
-            }
+            val lastSection = SettingEntity(
+                SettingEntity.LAST_SECTION,
+                Section.LEARN_SYMBOLS.id
+            )
+            val lastLesson = SettingEntity(
+                SettingEntity.LAST_LESSON,
+                lessonId.toString()
+            )
+            settingsRepository.insertOrUpdate(lastSection)
+            settingsRepository.insertOrUpdate(lastLesson)
         }
     }
 
     override fun finishLesson() {
-        onFinishSection(lessonId, Section.LEARN_SYMBOLS, _model.value.mode)
+        componentScope.launch {
+            saveLastPosition(0)
+            onFinishSection(lessonId, Section.LEARN_SYMBOLS, _model.value.mode)
+        }
     }
 
     private suspend fun getLastPosition(): Int {

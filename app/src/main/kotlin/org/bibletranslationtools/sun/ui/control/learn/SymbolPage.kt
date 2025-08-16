@@ -19,7 +19,7 @@ import org.bibletranslationtools.sun.ui.model.CardItem
 @Composable
 fun SymbolPage(
     card: CardItem,
-    onFrontFlipped: () -> Unit
+    onFrontFlipped: (CardItem) -> Unit
 ) {
     var isFlipped by remember { mutableStateOf(false) }
 
@@ -42,7 +42,7 @@ fun SymbolPage(
         if (rotation <= 90f) {
             SymbolFront(card = card) {
                 isFlipped = true
-                onFrontFlipped()
+                onFrontFlipped(card)
             }
         } else {
             CardBack(

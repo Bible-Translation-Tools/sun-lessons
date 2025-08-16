@@ -32,7 +32,7 @@ fun LessonCard(
     onAction: (Section) -> Unit
 ) {
     val backgroundColor = if (isExpanded) {
-        MaterialTheme.colorScheme.primaryContainer
+        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
     } else MaterialTheme.colorScheme.background
     val borderColor = if (isExpanded) {
         MaterialTheme.colorScheme.primary
