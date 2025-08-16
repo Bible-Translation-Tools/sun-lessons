@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -21,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -63,7 +64,7 @@ fun SentenceBack(
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.ic_eye_closed),
+                imageVector = Icons.Outlined.VisibilityOff,
                 contentDescription = null,
                 modifier = Modifier.size(30.dp)
             )
