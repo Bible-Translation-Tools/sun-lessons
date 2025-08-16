@@ -47,7 +47,7 @@ fun LearnCard(onLearnClicked: () -> Unit) {
             verticalArrangement = Arrangement.Center
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_learn_large),
+                painter = painterResource(id = R.drawable.learn),
                 contentDescription = "Learn",
                 modifier = Modifier.width(140.dp),
                 contentScale = ContentScale.FillWidth

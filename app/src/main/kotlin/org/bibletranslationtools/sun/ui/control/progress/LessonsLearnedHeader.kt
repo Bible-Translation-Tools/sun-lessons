@@ -20,7 +20,7 @@ import org.bibletranslationtools.sun.R
 fun LessonsLearnedHeader() {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Image(
-            painter = painterResource(id = R.drawable.ic_award),
+            painter = painterResource(id = R.drawable.finish),
             contentDescription = null,
             modifier = Modifier.size(50.dp)
         )

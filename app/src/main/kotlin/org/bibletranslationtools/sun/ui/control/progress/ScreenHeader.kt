@@ -1,6 +1,7 @@
 package org.bibletranslationtools.sun.ui.control.progress
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,9 +29,15 @@ fun ScreenHeader() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            painter = painterResource(id = R.drawable.ic_track_progress),
+            painter = painterResource(id = R.drawable.track_progress),
             contentDescription = null,
             modifier = Modifier.size(60.dp)
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.outlineVariant,
+                    shape = MaterialTheme.shapes.small
+                )
+                .padding(8.dp)
         )
         Spacer(modifier = Modifier.width(10.dp))
         Text(

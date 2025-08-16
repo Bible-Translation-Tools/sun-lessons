@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.outlined.Visibility
+import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -22,7 +24,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.bibletranslationtools.sun.R
@@ -72,8 +73,8 @@ fun ActionButtons(
                 }
                 false -> {
                     val (text, icon) = if (showCorrectAnswer) {
-                        R.string.hide to R.drawable.ic_eye_closed
-                    } else R.string.show to R.drawable.ic_eye_open
+                        R.string.hide to Icons.Outlined.VisibilityOff
+                    } else R.string.show to Icons.Outlined.Visibility
 
                     OutlinedButton(
                         onClick = {
@@ -85,7 +86,7 @@ fun ActionButtons(
                         modifier = Modifier.weight(1f)
                     ) {
                         Icon(
-                            painter = painterResource(icon),
+                            imageVector = icon,
                             contentDescription = stringResource(text),
                             modifier = Modifier.size(24.dp)
                         )
