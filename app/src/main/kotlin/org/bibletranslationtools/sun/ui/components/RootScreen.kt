@@ -8,6 +8,7 @@ import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import org.bibletranslationtools.sun.ui.components.home.HomeScreen
+import org.bibletranslationtools.sun.ui.components.lessons.LessonsComponent
 import org.bibletranslationtools.sun.ui.components.lessons.LessonsScreen
 import org.bibletranslationtools.sun.ui.components.progress.ProgressScreen
 import org.bibletranslationtools.sun.ui.components.settings.SettingsScreen
@@ -19,10 +20,22 @@ fun RootScreen(component: RootComponent) {
     val childStack by component.stack.subscribeAsState()
     val activeChild = childStack.active.instance
 
+    val showBottomBar = when (val child = activeChild) {
+        is RootComponent.Child.Home,
+        is RootComponent.Child.Progress,
+        is RootComponent.Child.Settings -> true
+        is RootComponent.Child.Lessons -> {
+            val lessonsStack by child.component.stack.subscribeAsState()
+            lessonsStack.active.instance is LessonsComponent.Child.List
+        }
+    }
+
     Scaffold(
         bottomBar = {
-            BottomNavBar(activeChild) { tab ->
-                component.onTabClicked(tab)
+            if (showBottomBar) {
+                BottomNavBar(activeChild) { tab ->
+                    component.onTabClicked(tab)
+                }
             }
         },
         containerColor = MaterialTheme.colorScheme.surface
