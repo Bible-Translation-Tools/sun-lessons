@@ -101,7 +101,7 @@ class DefaultTestSentenceComponent(
 
         if (inProgressSentences.isEmpty()) {
             componentScope.launch {
-                onFinishSection(lessonId, Section.TEST_SENTENCES, _model.value.mode)
+                onFinishSection(lessonId, Section.TEST_SENTENCES, model.value.mode)
             }
             return
         }
@@ -243,7 +243,7 @@ class DefaultTestSentenceComponent(
     }
 
     private fun onNavigateBack() {
-        if (_model.value.mode == LessonMode.REPEAT) {
+        if (model.value.mode == LessonMode.REPEAT) {
             onNavigateList(lessonId)
         } else {
             onNavigateHome()

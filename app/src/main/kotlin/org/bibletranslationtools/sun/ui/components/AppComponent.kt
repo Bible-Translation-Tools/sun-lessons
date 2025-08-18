@@ -20,7 +20,7 @@ abstract class AppComponent(
     init {
         parentContext.setTopAppBar(null)
 
-        lifecycle.doOnDestroy {
+        doOnDestroy {
             parentContext.setTopAppBar(null)
         }
     }

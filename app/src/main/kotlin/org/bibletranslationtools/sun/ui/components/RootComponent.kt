@@ -68,21 +68,21 @@ class DefaultRootComponent(
     override fun onTabClicked(tab: MainTab) {
         when (tab) {
             MainTab.Home -> {
-                navigation.replaceAll(Config.Home)
+                navigation.bringToFront(Config.Home)
             }
             MainTab.Progress -> {
-                navigation.replaceAll(Config.Progress)
+                navigation.bringToFront(Config.Progress)
             }
             MainTab.Lessons -> {
                 componentScope.launch {
                     val lastLesson = getLastLesson()
-                    navigation.replaceAll(Config.Lessons(
+                    navigation.bringToFront(Config.Lessons(
                         LessonsIntent.List(lastLesson)
                     ))
                 }
             }
             MainTab.Settings -> {
-                navigation.replaceAll(Config.Settings)
+                navigation.bringToFront(Config.Settings)
             }
         }
     }

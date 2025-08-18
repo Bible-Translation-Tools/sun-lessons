@@ -82,7 +82,7 @@ class DefaultTestSymbolComponent(
                 val section = if (getSentencesCount() == 0) {
                     Section.TEST_SENTENCES
                 } else Section.TEST_SYMBOLS
-                onFinishSection(lessonId, section, _model.value.mode)
+                onFinishSection(lessonId, section, model.value.mode)
             }
             return
         }
@@ -173,7 +173,7 @@ class DefaultTestSymbolComponent(
     }
 
     private fun onNavigateBack() {
-        if (_model.value.mode == LessonMode.REPEAT) {
+        if (model.value.mode == LessonMode.REPEAT) {
             onNavigateList(lessonId)
         } else {
             onNavigateHome()

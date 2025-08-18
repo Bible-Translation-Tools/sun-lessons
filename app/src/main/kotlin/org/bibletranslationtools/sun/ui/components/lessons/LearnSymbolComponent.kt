@@ -120,20 +120,20 @@ class DefaultLearnSymbolComponent(
     override fun finishLesson() {
         componentScope.launch {
             saveLastPosition(0)
-            onFinishSection(lessonId, Section.LEARN_SYMBOLS, _model.value.mode)
+            onFinishSection(lessonId, Section.LEARN_SYMBOLS, model.value.mode)
         }
     }
 
     private suspend fun getLastPosition(): Int {
         val pos = settingsRepository.get(SettingEntity.LAST_SYMBOL)?.value?.toInt() ?: 0
-        return min(pos, _model.value.cards.size - 1)
+        return min(pos, model.value.cards.size - 1)
     }
 
     private suspend fun loadCards() {
         val cards = cardRepository.getByLesson(lessonId).map { it.toItem() }
         _model.update { it.copy(cards = cards) }
 
-        if (_model.value.mode == LessonMode.NORMAL) {
+        if (model.value.mode == LessonMode.NORMAL) {
             delay(100)
 
             val lastPosition = getLastPosition()
@@ -155,8 +155,8 @@ class DefaultLearnSymbolComponent(
     }
 
     private fun onNavigateBack() {
-        if (_model.value.mode == LessonMode.REPEAT) {
-            onNavigateList(_model.value.lessonId)
+        if (model.value.mode == LessonMode.REPEAT) {
+            onNavigateList(model.value.lessonId)
         } else {
             onNavigateHome()
         }

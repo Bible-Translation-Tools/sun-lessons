@@ -26,6 +26,7 @@ interface CompleteComponent : ParentContext {
 
     data class Model(
         val lessonId: Int = 0,
+        val section: Section = Section.LEARN_SYMBOLS,
         val sectionTitle: Int = R.string.learn_symbols_completed,
         val onNext: () -> Unit = {}
     )
@@ -57,12 +58,12 @@ class DefaultCompleteComponent(
 
     init {
         backHandler.register(backCallback)
-        _model.update { it.copy(lessonId = lessonId) }
+        _model.update { it.copy(lessonId = lessonId, section = section) }
         setupNextAction()
     }
 
     override fun onNextClicked() {
-        _model.value.onNext()
+        model.value.onNext()
     }
 
     private fun navigateToNextLesson() {

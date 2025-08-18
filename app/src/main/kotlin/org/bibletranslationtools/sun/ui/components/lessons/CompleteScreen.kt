@@ -30,10 +30,17 @@ import org.bibletranslationtools.sun.R
 import org.bibletranslationtools.sun.ui.control.NextButton
 import org.bibletranslationtools.sun.ui.control.TallyText
 import org.bibletranslationtools.sun.ui.control.TopAppBar
+import org.bibletranslationtools.sun.utils.Section
 
 @Composable
 fun CompleteScreen(component: CompleteComponent) {
     val model by component.model.subscribeAsState()
+
+    val image = if (model.section == Section.TEST_SENTENCES) {
+        R.drawable.finish
+    } else {
+        R.drawable.track_progress
+    }
 
     LaunchedEffect(Unit) {
         component.setTopAppBar {
@@ -71,7 +78,7 @@ fun CompleteScreen(component: CompleteComponent) {
                 Spacer(modifier = Modifier.height(50.dp))
 
                 Image(
-                    painter = painterResource(id = R.drawable.finish),
+                    painter = painterResource(image),
                     contentDescription = "completed",
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier.width(120.dp),
