@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 import org.bibletranslationtools.sun.R
 import org.bibletranslationtools.sun.data.repositories.SentenceRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
-import org.bibletranslationtools.sun.ui.components.LessonsIntent
 import org.bibletranslationtools.sun.ui.components.ParentContext
 import org.bibletranslationtools.sun.utils.Section
 import org.koin.core.component.KoinComponent
@@ -37,7 +36,7 @@ class DefaultStartComponent(
     private val lessonId: Int,
     private val section: Section,
     private val onFinishLesson: (Int, Section) -> Unit,
-    private val onNextSection: (LessonsIntent) -> Unit
+    private val onNextSection: (LessonsComponent.Intent) -> Unit
 ) : StartComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
     private val sentenceRepository: SentenceRepository by inject()
@@ -83,7 +82,7 @@ class DefaultStartComponent(
                     it.copy(
                         sectionTitle = R.string.test_symbols,
                         imageResource = R.drawable.test,
-                        onNext = { onNextSection(LessonsIntent.TestSymbol(lessonId)) }
+                        onNext = { onNextSection(LessonsComponent.Intent.TestSymbol(lessonId)) }
                     )
                 }
             }
@@ -92,7 +91,7 @@ class DefaultStartComponent(
                     it.copy(
                         sectionTitle = R.string.learn_sentences,
                         imageResource = R.drawable.learn,
-                        onNext = { onNextSection(LessonsIntent.LearnSentence(lessonId)) }
+                        onNext = { onNextSection(LessonsComponent.Intent.LearnSentence(lessonId)) }
                     )
                 }
             }
@@ -101,7 +100,7 @@ class DefaultStartComponent(
                     it.copy(
                         sectionTitle = R.string.test_sentences,
                         imageResource = R.drawable.test,
-                        onNext = { onNextSection(LessonsIntent.TestSentence(lessonId)) }
+                        onNext = { onNextSection(LessonsComponent.Intent.TestSentence(lessonId)) }
                     )
                 }
             }
@@ -110,7 +109,7 @@ class DefaultStartComponent(
                     it.copy(
                         sectionTitle = R.string.learn_symbols,
                         imageResource = R.drawable.learn,
-                        onNext = { onNextSection(LessonsIntent.LearnSymbol(lessonId)) }
+                        onNext = { onNextSection(LessonsComponent.Intent.LearnSymbol(lessonId)) }
                     )
                 }
             }

@@ -7,6 +7,7 @@ import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.replaceAll
+import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.backhandler.BackCallback
 import kotlinx.coroutines.CoroutineScope
@@ -14,25 +15,23 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
-import org.bibletranslationtools.sun.data.repositories.SettingsRepository
-import org.bibletranslationtools.sun.ui.components.home.DefaultHomeComponent
-import org.bibletranslationtools.sun.ui.components.home.HomeComponent
 import org.bibletranslationtools.sun.ui.components.lessons.DefaultLessonsComponent
+import org.bibletranslationtools.sun.ui.components.lessons.LessonType
 import org.bibletranslationtools.sun.ui.components.lessons.LessonsComponent
 import org.bibletranslationtools.sun.ui.components.progress.DefaultProgressComponent
 import org.bibletranslationtools.sun.ui.components.progress.ProgressComponent
 import org.bibletranslationtools.sun.ui.components.settings.DefaultSettingsComponent
 import org.bibletranslationtools.sun.ui.components.settings.SettingsComponent
+import org.bibletranslationtools.sun.ui.components.splash.DefaultSplashComponent
+import org.bibletranslationtools.sun.ui.components.splash.SplashComponent
 import org.bibletranslationtools.sun.ui.navigation.MainTab
-import org.bibletranslationtools.sun.utils.Section
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 interface RootComponent : ParentContext {
     val stack: Value<ChildStack<*, Child>>
 
     sealed class Child {
-        class Home(val component: HomeComponent) : Child()
+        class Splash(val component: SplashComponent) : Child()
+        class Home(val component: LessonsComponent) : Child()
         class Progress(val component: ProgressComponent) : Child()
         class Lessons(val component: LessonsComponent) : Child()
         class Settings(val component: SettingsComponent) : Child()
@@ -44,9 +43,7 @@ interface RootComponent : ParentContext {
 class DefaultRootComponent(
     componentContext: ComponentContext,
     private val onFinished: () -> Unit
-) : RootComponent, KoinComponent, ComponentContext by componentContext {
-
-    private val settingsRepository: SettingsRepository by inject()
+) : RootComponent, ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
 
@@ -57,7 +54,7 @@ class DefaultRootComponent(
         childStack(
             source = navigation,
             serializer = Config.serializer(),
-            initialConfiguration = Config.Home,
+            initialConfiguration = Config.Splash,
             handleBackButton = true,
             childFactory = ::createChild
         )
@@ -76,10 +73,7 @@ class DefaultRootComponent(
             }
             MainTab.Lessons -> {
                 componentScope.launch {
-                    val lastLesson = getLastLesson()
-                    navigation.bringToFront(Config.Lessons(
-                        LessonsIntent.List(lastLesson)
-                    ))
+                    navigation.bringToFront(Config.Lessons)
                 }
             }
             MainTab.Settings -> {
@@ -94,11 +88,19 @@ class DefaultRootComponent(
 
     private fun createChild(config: Config, context: ComponentContext): RootComponent.Child =
         when (config) {
+            is Config.Splash -> RootComponent.Child.Splash(
+                DefaultSplashComponent(
+                    componentContext = context,
+                    onInitDone = {
+                        navigation.replaceCurrent(Config.Home)
+                    }
+                )
+            )
             is Config.Home -> RootComponent.Child.Home(
-                DefaultHomeComponent(
+                DefaultLessonsComponent(
                     componentContext = context,
                     parentContext = this,
-                    onNavigateLearn = ::navigateSection
+                    lessonType = LessonType.BASIC
                 )
             )
             is Config.Progress -> RootComponent.Child.Progress(
@@ -111,56 +113,13 @@ class DefaultRootComponent(
                 DefaultLessonsComponent(
                     componentContext = context,
                     parentContext = this,
-                    intent = config.intent
+                    lessonType = LessonType.SCRIPTURE
                 )
             )
             is Config.Settings -> RootComponent.Child.Settings(
                 DefaultSettingsComponent(context)
             )
         }
-
-    private fun navigateSection(
-        lastSection: Section,
-        lastLesson: Int,
-        state: DefaultHomeComponent.SectionState
-    ) {
-        val intent = when (state) {
-            DefaultHomeComponent.SectionState.NOT_STARTED -> {
-                LessonsIntent.Start(lastLesson, lastSection)
-            }
-            DefaultHomeComponent.SectionState.IN_PROGRESS -> {
-                when (lastSection) {
-                    Section.LEARN_SYMBOLS -> LessonsIntent.LearnSymbol(lastLesson)
-                    Section.TEST_SYMBOLS -> LessonsIntent.TestSymbol(lastLesson)
-                    Section.LEARN_SENTENCES -> LessonsIntent.LearnSentence(lastLesson)
-                    else -> LessonsIntent.TestSentence(lastLesson)
-                }
-            }
-            DefaultHomeComponent.SectionState.COMPLETED -> {
-                when (lastSection) {
-                    Section.LEARN_SYMBOLS -> {
-                        LessonsIntent.Start(lastLesson, Section.TEST_SYMBOLS)
-                    }
-                    Section.TEST_SYMBOLS -> {
-                        LessonsIntent.Start(lastLesson, Section.LEARN_SENTENCES)
-                    }
-                    Section.LEARN_SENTENCES -> {
-                        LessonsIntent.Start(lastLesson, Section.TEST_SENTENCES)
-                    }
-                    else -> {
-                        // When we complete test sentences, we land on completed page
-                        // instead of starting page
-                        LessonsIntent.Complete(lastLesson, Section.TEST_SENTENCES)
-                    }
-                }
-            }
-        }
-        navigation.bringToFront(Config.Lessons(intent))
-    }
-
-    suspend fun getLastLesson(): Int {
-        return settingsRepository.get("last_lesson")?.value?.toInt() ?: 1
-    }
 
     private fun onNavigateBack() {
         val config = stack.value.active.configuration
@@ -173,30 +132,14 @@ class DefaultRootComponent(
     @Serializable
     private sealed interface Config {
         @Serializable
+        data object Splash : Config
+        @Serializable
         data object Home : Config
         @Serializable
         data object Progress : Config
         @Serializable
-        data class Lessons(val intent: LessonsIntent) : Config
+        data object Lessons : Config
         @Serializable
         data object Settings : Config
     }
-}
-
-@Serializable
-sealed class LessonsIntent {
-    @Serializable
-    data class List(val selected: Int) : LessonsIntent()
-    @Serializable
-    data class Start(val id: Int, val section: Section) : LessonsIntent()
-    @Serializable
-    data class LearnSymbol(val lessonId: Int) : LessonsIntent()
-    @Serializable
-    data class TestSymbol(val lessonId: Int) : LessonsIntent()
-    @Serializable
-    data class LearnSentence(val lessonId: Int) : LessonsIntent()
-    @Serializable
-    data class TestSentence(val lessonId: Int) : LessonsIntent()
-    @Serializable
-    data class Complete(val id: Int, val section: Section) : LessonsIntent()
 }

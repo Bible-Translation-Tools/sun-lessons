@@ -10,9 +10,19 @@ import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.Serializable
 import org.bibletranslationtools.sun.ui.components.AppComponent
-import org.bibletranslationtools.sun.ui.components.LessonsIntent
 import org.bibletranslationtools.sun.ui.components.ParentContext
 import org.bibletranslationtools.sun.utils.Section
+
+enum class LessonType {
+    BASIC,
+    SCRIPTURE
+}
+
+enum class SectionState {
+    NOT_STARTED,
+    IN_PROGRESS,
+    COMPLETED
+}
 
 interface LessonsComponent: ParentContext {
 
@@ -27,12 +37,26 @@ interface LessonsComponent: ParentContext {
         class TestSentence(val component: TestSentenceComponent) : Child()
         class Complete(val component: CompleteComponent) : Child()
     }
+
+    @Serializable
+    sealed class Intent {
+        @Serializable
+        data class List(val selected: Int) : Intent()
+        @Serializable
+        data class LearnSymbol(val lessonId: Int) : Intent()
+        @Serializable
+        data class TestSymbol(val lessonId: Int) : Intent()
+        @Serializable
+        data class LearnSentence(val lessonId: Int) : Intent()
+        @Serializable
+        data class TestSentence(val lessonId: Int) : Intent()
+    }
 }
 
 class DefaultLessonsComponent(
     componentContext: ComponentContext,
     parentContext: ParentContext,
-    intent: LessonsIntent
+    private val lessonType: LessonType
 ) : LessonsComponent, AppComponent(componentContext, parentContext) {
 
     private val navigation = StackNavigation<Config>()
@@ -41,15 +65,7 @@ class DefaultLessonsComponent(
         childStack(
             source = navigation,
             serializer = Config.serializer(),
-            initialConfiguration = when (intent) {
-                is LessonsIntent.List -> Config.List(intent.selected)
-                is LessonsIntent.Start -> Config.Start(intent.id, intent.section)
-                is LessonsIntent.LearnSymbol -> Config.LearnSymbol(intent.lessonId)
-                is LessonsIntent.TestSymbol -> Config.TestSymbol(intent.lessonId)
-                is LessonsIntent.LearnSentence -> Config.LearnSentence(intent.lessonId)
-                is LessonsIntent.TestSentence -> Config.TestSentence(intent.lessonId)
-                is LessonsIntent.Complete -> Config.Complete(intent.id, intent.section)
-            },
+            initialConfiguration = Config.List,
             handleBackButton = true,
             childFactory = ::createChild
         )
@@ -68,7 +84,8 @@ class DefaultLessonsComponent(
                 DefaultListComponent(
                     componentContext = context,
                     parentContext = this,
-                    selectedLessonId = config.selected,
+                    lessonType = lessonType,
+                    onContinueLesson = ::navigateContinueLesson,
                     onStartLesson = { id, section, mode ->
                         navigation.bringToFront(Config.Start(id, section))
                     }
@@ -148,24 +165,55 @@ class DefaultLessonsComponent(
             )
         }
 
-    private fun navigateNextSection(intent: LessonsIntent) {
+    private fun navigateContinueLesson(lessonId: Int, section: Section, state: SectionState) {
+        val config = when (state) {
+            SectionState.NOT_STARTED -> Config.Start(lessonId, section)
+
+            SectionState.IN_PROGRESS -> when (section) {
+                Section.LEARN_SYMBOLS -> Config.LearnSymbol(lessonId)
+                Section.TEST_SYMBOLS -> Config.TestSymbol(lessonId)
+                Section.LEARN_SENTENCES -> Config.LearnSentence(lessonId)
+                else -> Config.TestSentence(lessonId)
+            }
+
+            SectionState.COMPLETED -> when (section) {
+                Section.LEARN_SYMBOLS -> {
+                    Config.Start(lessonId, Section.TEST_SYMBOLS)
+                }
+                Section.TEST_SYMBOLS -> {
+                    Config.Start(lessonId, Section.LEARN_SENTENCES)
+                }
+                Section.LEARN_SENTENCES -> {
+                    Config.Start(lessonId, Section.TEST_SENTENCES)
+                }
+                else -> {
+                    // When we complete test sentences, we land on completed page
+                    // instead of starting page
+                    Config.Complete(lessonId, Section.TEST_SENTENCES)
+                }
+            }
+        }
+        navigation.bringToFront(config)
+    }
+
+    private fun navigateNextSection(intent: LessonsComponent.Intent) {
         when (intent) {
-            is LessonsIntent.LearnSymbol -> {
+            is LessonsComponent.Intent.LearnSymbol -> {
                 navigation.replaceCurrent(Config.LearnSymbol(
                     intent.lessonId
                 ))
             }
-            is LessonsIntent.TestSymbol -> {
+            is LessonsComponent.Intent.TestSymbol -> {
                 navigation.replaceCurrent(Config.TestSymbol(
                     intent.lessonId
                 ))
             }
-            is LessonsIntent.LearnSentence -> {
+            is LessonsComponent.Intent.LearnSentence -> {
                 navigation.replaceCurrent(Config.LearnSentence(
                     intent.lessonId
                 ))
             }
-            is LessonsIntent.TestSentence -> {
+            is LessonsComponent.Intent.TestSentence -> {
                 navigation.replaceCurrent(Config.TestSentence(
                     intent.lessonId
                 ))
@@ -177,7 +225,7 @@ class DefaultLessonsComponent(
     @Serializable
     private sealed interface Config {
         @Serializable
-        data class List(val selected: Int) : Config
+        data object List : Config
         @Serializable
         data class Start(val lessonId: Int, val section: Section) : Config
         @Serializable
