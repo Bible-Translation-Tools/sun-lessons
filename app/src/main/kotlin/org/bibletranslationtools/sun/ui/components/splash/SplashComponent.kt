@@ -53,16 +53,28 @@ class DefaultSplashComponent(
 
                 if (lessonSuite.version > dbVersion) {
                     for (lesson in lessonSuite.lessons) {
-                        insertLesson(lesson)
+                        val lessonId = insertLesson(lesson)
+                        var sort = 0
 
                         for (card in lesson.cards) {
-                            insertCard(card.copy(lessonId = lesson.id))
+                            insertCard(card.copy(
+                                lessonId = lessonId,
+                                sort = sort++
+                            ))
                         }
 
+                        sort = 0
                         for (sentence in lesson.sentences) {
-                            insertSentence(sentence.copy(lessonId = lesson.id))
+                            val sentenceId = insertSentence(sentence.copy(
+                                lessonId = lessonId,
+                                sort = sort++
+                            ))
+                            var symbolSort = 0
                             for (symbol in sentence.symbols) {
-                                insertSymbol(symbol.copy(sentenceId = sentence.id))
+                                insertSymbol(symbol.copy(
+                                    sentenceId = sentenceId,
+                                    sort = symbolSort++
+                                ))
                             }
                         }
                     }
@@ -76,24 +88,22 @@ class DefaultSplashComponent(
                 }
             }
 
-            delay(1000)
+            delay(2000)
 
             onInitDone()
         }
     }
 
-    private suspend fun insertLesson(lesson: LessonData) {
-        lessonRepository.insert(lesson.toEntity())
+    private suspend fun insertLesson(lesson: LessonData): Long {
+        return lessonRepository.insert(lesson.toEntity())
     }
 
-    private suspend fun insertCard(card: CardData) {
-        cardRepository.insert(card.toEntity())
+    private suspend fun insertCard(card: CardData): Long {
+        return cardRepository.insert(card.toEntity())
     }
 
-    private fun insertSentence(sentence: SentenceData) {
-        componentScope.launch {
-            sentenceRepository.insert(sentence.toEntity())
-        }
+    private suspend fun insertSentence(sentence: SentenceData): Long {
+        return sentenceRepository.insert(sentence.toEntity())
     }
 
     private fun insertSymbol(symbol: SymbolData) {

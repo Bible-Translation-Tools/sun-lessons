@@ -2,21 +2,23 @@ package org.bibletranslationtools.sun.data.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-@Entity(tableName = "cards", primaryKeys = ["id"])
+@Entity(tableName = "cards")
 data class CardEntity(
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    val id: String,
+    val id: Long = 0,
     @ColumnInfo(name = "symbol")
     val symbol: String,
+    @ColumnInfo(name = "sort")
+    val sort: Int,
     @ColumnInfo(name = "primary")
-    val primary: String,
-    @ColumnInfo(name = "secondary")
-    val secondary: String,
+    val image: String,
     @ColumnInfo(name = "learned")
     var learned: Boolean = false,
     @ColumnInfo(name = "tested")
     var tested: Boolean = false,
     @ColumnInfo(name = "lesson_id")
-    var lessonId: Int
+    var lessonId: Long = 0
 )

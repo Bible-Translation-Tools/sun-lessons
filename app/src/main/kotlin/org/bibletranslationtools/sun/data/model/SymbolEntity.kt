@@ -7,11 +7,11 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "symbols")
 data class SymbolEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val id: Long = 0,
     @ColumnInfo(name = "sort")
     val sort: Int,
     @ColumnInfo(name = "name")
     val name: String,
     @ColumnInfo(name = "sentence_id")
-    val sentenceId: String? = null
+    val sentenceId: Long = 0
 )

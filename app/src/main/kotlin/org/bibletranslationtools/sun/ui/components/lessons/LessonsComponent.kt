@@ -41,15 +41,15 @@ interface LessonsComponent: ParentContext {
     @Serializable
     sealed class Intent {
         @Serializable
-        data class List(val selected: Int) : Intent()
+        data class List(val selected: Long) : Intent()
         @Serializable
-        data class LearnSymbol(val lessonId: Int) : Intent()
+        data class LearnSymbol(val lessonId: Long) : Intent()
         @Serializable
-        data class TestSymbol(val lessonId: Int) : Intent()
+        data class TestSymbol(val lessonId: Long) : Intent()
         @Serializable
-        data class LearnSentence(val lessonId: Int) : Intent()
+        data class LearnSentence(val lessonId: Long) : Intent()
         @Serializable
-        data class TestSentence(val lessonId: Int) : Intent()
+        data class TestSentence(val lessonId: Long) : Intent()
     }
 }
 
@@ -157,6 +157,7 @@ class DefaultLessonsComponent(
                     parentContext = this,
                     lessonId = config.lessonId,
                     section = config.section,
+                    lessonType = lessonType,
                     onStartLesson = { id, section ->
                         navigation.replaceCurrent(Config.Start(id, section))
                     },
@@ -165,7 +166,7 @@ class DefaultLessonsComponent(
             )
         }
 
-    private fun navigateContinueLesson(lessonId: Int, section: Section, state: SectionState) {
+    private fun navigateContinueLesson(lessonId: Long, section: Section, state: SectionState) {
         val config = when (state) {
             SectionState.NOT_STARTED -> Config.Start(lessonId, section)
 
@@ -227,16 +228,16 @@ class DefaultLessonsComponent(
         @Serializable
         data object List : Config
         @Serializable
-        data class Start(val lessonId: Int, val section: Section) : Config
+        data class Start(val lessonId: Long, val section: Section) : Config
         @Serializable
-        data class LearnSymbol(val lessonId: Int) : Config
+        data class LearnSymbol(val lessonId: Long) : Config
         @Serializable
-        data class TestSymbol(val lessonId: Int) : Config
+        data class TestSymbol(val lessonId: Long) : Config
         @Serializable
-        data class LearnSentence(val lessonId: Int) : Config
+        data class LearnSentence(val lessonId: Long) : Config
         @Serializable
-        data class TestSentence(val lessonId: Int) : Config
+        data class TestSentence(val lessonId: Long) : Config
         @Serializable
-        data class Complete(val lessonId: Int, val section: Section) : Config
+        data class Complete(val lessonId: Long, val section: Section) : Config
     }
 }

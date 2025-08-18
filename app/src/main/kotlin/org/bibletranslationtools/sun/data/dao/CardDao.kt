@@ -11,7 +11,7 @@ import org.bibletranslationtools.sun.data.model.CardEntity
 @Dao
 interface CardDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(card: CardEntity)
+    suspend fun insert(card: CardEntity): Long
 
     @Delete
     suspend fun delete(card: CardEntity)
@@ -20,7 +20,7 @@ interface CardDao {
     suspend fun update(card: CardEntity)
 
     @Query("SELECT * FROM cards WHERE id = :id")
-    suspend fun get(id: String): CardEntity?
+    suspend fun get(id: Long): CardEntity?
 
     @Query("SELECT * FROM cards WHERE learned = 1")
     suspend fun getAllLearned(): List<CardEntity>
@@ -35,20 +35,20 @@ interface CardDao {
     suspend fun allTestedCount(): Int
 
     @Query("SELECT * FROM cards WHERE lesson_id = :lessonId")
-    suspend fun getByLesson(lessonId: Int): List<CardEntity>
+    suspend fun getByLesson(lessonId: Long): List<CardEntity>
 
     @Query("SELECT COUNT(*) FROM cards WHERE lesson_id = :lessonId")
-    suspend fun getByLessonCount(lessonId: Int): Int
+    suspend fun getByLessonCount(lessonId: Long): Int
 
     @Query("SELECT * FROM cards WHERE learned = 1 AND lesson_id = :lessonId")
-    suspend fun getLearnedByLesson(lessonId: Int): List<CardEntity>
+    suspend fun getLearnedByLesson(lessonId: Long): List<CardEntity>
 
     @Query("SELECT COUNT(*) FROM cards WHERE learned = 1 AND lesson_id = :lessonId")
-    suspend fun getLearnedByLessonCount(lessonId: Int): Int
+    suspend fun getLearnedByLessonCount(lessonId: Long): Int
 
     @Query("SELECT * FROM cards WHERE tested = 1 AND lesson_id = :lessonId")
-    suspend fun getTestedByLesson(lessonId: Int): List<CardEntity>
+    suspend fun getTestedByLesson(lessonId: Long): List<CardEntity>
 
     @Query("SELECT COUNT(*) FROM cards WHERE tested = 1 AND lesson_id = :lessonId")
-    suspend fun getTestedByLessonCount(lessonId: Int): Int
+    suspend fun getTestedByLessonCount(lessonId: Long): Int
 }

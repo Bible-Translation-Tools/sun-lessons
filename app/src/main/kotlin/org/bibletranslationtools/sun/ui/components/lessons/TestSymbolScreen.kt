@@ -31,7 +31,7 @@ fun TestSymbolScreen(component: TestSymbolComponent, parentPadding: PaddingValue
     val model by component.model.subscribeAsState()
 
     val imageUri = "file:///android_asset/images/symbols/" +
-            (model.currentCard?.secondary ?: "0.jpg")
+            (model.currentCard?.image ?: "0.jpg")
 
     Scaffold(
         topBar = {

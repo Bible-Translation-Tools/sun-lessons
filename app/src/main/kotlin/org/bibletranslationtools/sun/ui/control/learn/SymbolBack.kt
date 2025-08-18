@@ -47,8 +47,8 @@ fun CardBack(
             )
     ) {
         AsyncImage(
-            model = "file:///android_asset/images/symbols/${card.primary}",
-            contentDescription = card.primary,
+            model = "file:///android_asset/images/symbols/${card.image}",
+            contentDescription = card.image,
             modifier = Modifier
                 .height(260.dp)
                 .align(Alignment.Center),

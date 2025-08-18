@@ -10,46 +10,42 @@ data class LessonSuite(
 
 @Serializable
 data class LessonData(
-    val id: Int,
     val cards: List<CardData> = emptyList(),
     val sentences: List<SentenceData> = emptyList()
 )
 
 @Serializable
 data class CardData(
-    val id: String,
     val symbol: String,
-    val primary: String,
-    val secondary: String,
-    val lessonId: Int = 0
+    val image: String,
+    val sort: Int = 0,
+    val lessonId: Long = 0
 )
 
 @Serializable
 data class SentenceData(
-    val id: String,
+    val image: String,
     val symbols: List<SymbolData>,
-    val correct: String,
-    val incorrect: String,
-    val lessonId: Int = 0
+    val sort: Int = 0,
+    val lessonId: Long = 0
 )
 
 @Serializable
 data class SymbolData(
-    val sort: Int,
     val name: String,
-    val sentenceId: String = ""
+    val sort: Int = 0,
+    val sentenceId: Long = 0
 )
 
 fun LessonData.toEntity(): LessonEntity {
-    return LessonEntity(id)
+    return LessonEntity()
 }
 
 fun CardData.toEntity(): CardEntity {
     return CardEntity(
-        id = id,
         symbol = symbol,
-        primary = primary,
-        secondary = secondary,
+        sort = sort,
+        image = image,
         learned = false,
         tested = false,
         lessonId = lessonId
@@ -58,9 +54,8 @@ fun CardData.toEntity(): CardEntity {
 
 fun SentenceData.toEntity(): SentenceEntity {
     return SentenceEntity(
-        id = id,
-        correct = correct,
-        incorrect = incorrect,
+        sort = sort,
+        image = image,
         learned = false,
         tested = false,
         lessonId = lessonId

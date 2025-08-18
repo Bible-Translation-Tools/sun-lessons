@@ -13,7 +13,7 @@ import org.bibletranslationtools.sun.data.model.SentenceWithSymbols
 @Dao
 interface SentenceDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(sentence: SentenceEntity)
+    suspend fun insert(sentence: SentenceEntity): Long
 
     @Delete
     suspend fun delete(sentence: SentenceEntity)
@@ -23,15 +23,15 @@ interface SentenceDao {
 
     @Transaction
     @Query("SELECT * FROM sentences WHERE id = :id")
-    suspend fun get(id: String): SentenceEntity?
+    suspend fun get(id: Long): SentenceEntity?
 
     @Transaction
     @Query("SELECT * FROM sentences WHERE lesson_id = :lessonId")
-    suspend fun getByLesson(lessonId: Int): List<SentenceEntity>
+    suspend fun getByLesson(lessonId: Long): List<SentenceEntity>
 
     @Transaction
     @Query("SELECT * FROM sentences WHERE lesson_id = :lessonId")
-    suspend fun getByLessonWithSymbols(lessonId: Int): List<SentenceWithSymbols>
+    suspend fun getByLessonWithSymbols(lessonId: Long): List<SentenceWithSymbols>
 
     @Transaction
     @Query("SELECT * FROM sentences WHERE tested = 1")
@@ -51,17 +51,17 @@ interface SentenceDao {
 
     @Transaction
     @Query("SELECT * FROM sentences WHERE learned = 1 AND lesson_id = :lessonId")
-    suspend fun getLearnedByLesson(lessonId: Int): List<SentenceEntity>
+    suspend fun getLearnedByLesson(lessonId: Long): List<SentenceEntity>
 
     @Transaction
     @Query("SELECT COUNT(*) FROM sentences WHERE lesson_id = :lessonId")
-    suspend fun getByLessonCount(lessonId: Int): Int
+    suspend fun getByLessonCount(lessonId: Long): Int
 
     @Transaction
     @Query("SELECT COUNT(*) FROM sentences WHERE learned = 1 AND lesson_id = :lessonId")
-    suspend fun getLearnedByLessonCount(lessonId: Int): Int
+    suspend fun getLearnedByLessonCount(lessonId: Long): Int
 
     @Transaction
     @Query("SELECT COUNT(*) FROM sentences WHERE tested = 1 AND lesson_id = :lessonId")
-    suspend fun getTestedByLessonCount(lessonId: Int): Int
+    suspend fun getTestedByLessonCount(lessonId: Long): Int
 }

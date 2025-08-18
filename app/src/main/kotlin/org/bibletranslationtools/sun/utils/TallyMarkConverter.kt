@@ -1,11 +1,11 @@
 package org.bibletranslationtools.sun.utils
 
 object TallyMarkConverter {
-    fun toText(number: Int): String {
+    fun toText(number: Long): String {
         var text = ""
-        val fivesCount = number / 5
+        val fivesCount = number.toInt() / 5
 
-        for (i in 1..fivesCount) {
+        repeat(fivesCount) {
             text += "5"
         }
 

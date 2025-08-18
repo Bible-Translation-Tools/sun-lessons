@@ -21,7 +21,7 @@ interface StartComponent : ParentContext {
     val model: Value<Model>
 
     data class Model(
-        val lessonId: Int = 0,
+        val lessonId: Long = 0,
         val sectionTitle: Int = 0,
         val imageResource: Int = 0,
         val onNext: () -> Unit = {}
@@ -33,9 +33,9 @@ interface StartComponent : ParentContext {
 class DefaultStartComponent(
     componentContext: ComponentContext,
     parentContext: ParentContext,
-    private val lessonId: Int,
+    private val lessonId: Long,
     private val section: Section,
-    private val onFinishLesson: (Int, Section) -> Unit,
+    private val onFinishLesson: (Long, Section) -> Unit,
     private val onNextSection: (LessonsComponent.Intent) -> Unit
 ) : StartComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
@@ -65,7 +65,7 @@ class DefaultStartComponent(
         _model.value.onNext()
     }
 
-    suspend fun sentencesByLessonCount(lessonId: Int): Int {
+    suspend fun sentencesByLessonCount(lessonId: Long): Int {
         return sentenceRepository.getByLessonCount(lessonId)
     }
 

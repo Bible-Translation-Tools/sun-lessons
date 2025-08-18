@@ -17,7 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -35,7 +35,7 @@ fun ListScreen(component: ListComponent, parentPadding: PaddingValues) {
     val model by component.model.subscribeAsState()
 
     var expandedLessonId by rememberSaveable {
-        mutableIntStateOf(model.selectedId)
+        mutableLongStateOf(model.selectedId)
     }
 
     val (topIcon, topText) = when (model.lessonType) {
@@ -82,6 +82,7 @@ fun ListScreen(component: ListComponent, parentPadding: PaddingValues) {
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
                 Button(
+                    enabled = model.lessons.isNotEmpty(),
                     onClick = component::onLearnClicked,
                     shape = MaterialTheme.shapes.medium,
                     colors = ButtonDefaults.buttonColors(

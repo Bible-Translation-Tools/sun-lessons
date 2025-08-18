@@ -26,7 +26,7 @@ interface TestSymbolComponent : ParentContext {
     val model: Value<Model>
 
     data class Model(
-        val lessonId: Int = 1,
+        val lessonId: Long = 1,
         val currentCard: CardItem? = null,
         val cards: List<CardItem> = emptyList(),
         val choices: List<CardItem> = emptyList(),
@@ -42,8 +42,8 @@ interface TestSymbolComponent : ParentContext {
 class DefaultTestSymbolComponent(
     componentContext: ComponentContext,
     parentContext: ParentContext,
-    private val lessonId: Int,
-    private val onFinishSection: (Int, Section) -> Unit
+    private val lessonId: Long,
+    private val onFinishSection: (Long, Section) -> Unit
 ) : TestSymbolComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
     private val cardRepository: CardRepository by inject()

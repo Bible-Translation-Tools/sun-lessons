@@ -6,7 +6,11 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.Orientation
 import com.arkivanov.decompose.extensions.compose.stack.animation.StackAnimator
 import com.arkivanov.decompose.extensions.compose.stack.animation.slide
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.json.Json
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 object Utils {
     val JsonLenient = Json {
@@ -14,6 +18,13 @@ object Utils {
         ignoreUnknownKeys = true
         coerceInputValues = true
     }
+
+    @OptIn(ExperimentalTime::class)
+    fun getCurrentTime() =
+        Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+
+    @OptIn(ExperimentalTime::class)
+    fun getCurrentTimestamp() = Clock.System.now().epochSeconds
 
     fun slideHorizontally(): StackAnimator {
         return slide(

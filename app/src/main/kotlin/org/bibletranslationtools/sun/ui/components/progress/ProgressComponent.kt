@@ -9,9 +9,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
-import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
+import org.bibletranslationtools.sun.ui.components.lessons.LessonType
 import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.ui.model.toItem
 import org.koin.core.component.KoinComponent
@@ -32,7 +32,6 @@ class DefaultProgressComponent(
 ) : ProgressComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
     private val lessonRepository: LessonRepository by inject()
-    private val settingsRepository: SettingsRepository by inject()
 
     private val _model = MutableValue(ProgressComponent.Model())
     override val model: Value<ProgressComponent.Model> = _model
@@ -46,7 +45,7 @@ class DefaultProgressComponent(
     }
 
     private  suspend fun loadLessons() {
-        val lessons = lessonRepository.getAllWithData().map { it.toItem() }
+        val lessons = lessonRepository.getAllWithData(LessonType.BASIC).map { it.toItem() }
         _model.update {
             it.copy(lessons = lessons.mapIndexed { index, lesson ->
                 lesson.copy(isAvailable = lessonAvailable(lessons, index))

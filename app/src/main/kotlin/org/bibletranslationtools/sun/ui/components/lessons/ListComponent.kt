@@ -27,23 +27,23 @@ interface ListComponent : ParentContext {
 
     data class Model(
         val lessons: List<LessonItem> = emptyList(),
-        val selectedId: Int = 1,
-        val nextLessonId: Int = 1,
+        val selectedId: Long = 1,
+        val nextLessonId: Long = 1,
         val nextSection: Section = Section.LEARN_SYMBOLS,
         val nextState: SectionState = SectionState.NOT_STARTED,
         val lessonType: LessonType = LessonType.BASIC
     )
 
     fun onLearnClicked()
-    fun onLessonAction(lessonId: Int, action: Section)
+    fun onLessonAction(lessonId: Long, action: Section)
 }
 
 class DefaultListComponent(
     componentContext: ComponentContext,
     parentContext: ParentContext,
     private val lessonType: LessonType,
-    private val onContinueLesson: (Int, Section, SectionState) -> Unit,
-    private val onStartLesson: (Int, Section, LessonMode) -> Unit
+    private val onContinueLesson: (Long, Section, SectionState) -> Unit,
+    private val onStartLesson: (Long, Section, LessonMode) -> Unit
 ) : ListComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
     private val settingsRepository: SettingsRepository by inject()
@@ -74,12 +74,12 @@ class DefaultListComponent(
         )
     }
 
-    override fun onLessonAction(lessonId: Int, action: Section) {
+    override fun onLessonAction(lessonId: Long, action: Section) {
         onStartLesson(lessonId, action, LessonMode.REPEAT)
     }
 
     private suspend fun loadLessons() {
-        val lessons = lessonRepository.getAllWithData().map { it.toItem() }
+        val lessons = lessonRepository.getAllWithData(lessonType).map { it.toItem() }
         _model.update {
             it.copy(lessons = lessons.mapIndexed { index, lesson ->
                 lesson.copy(
@@ -91,7 +91,7 @@ class DefaultListComponent(
     }
 
     private suspend fun setSelectedLesson() {
-        val lastLesson = settingsRepository.get("last_lesson")?.value?.toInt() ?: 1
+        val lastLesson = settingsRepository.get("last_lesson")?.value?.toLong() ?: 1
         _model.update { it.copy(selectedId = lastLesson) }
     }
 
@@ -106,7 +106,7 @@ class DefaultListComponent(
             .get("last_section")
             ?.value
             ?.let { Section.of(it) } ?: Section.LEARN_SYMBOLS
-        val lastLesson = settingsRepository.get("last_lesson")?.value?.toInt() ?: 1
+        val lastLesson = settingsRepository.get("last_lesson")?.value?.toLong() ?: 1L
 
         val all: Int
         val done: Int

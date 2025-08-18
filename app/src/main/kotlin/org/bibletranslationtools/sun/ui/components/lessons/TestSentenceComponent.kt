@@ -29,7 +29,7 @@ interface TestSentenceComponent : ParentContext {
     val model: Value<Model>
 
     data class Model(
-        val lessonId: Int = 1,
+        val lessonId: Long = 1,
         val currentSentence: SentenceItem? = null,
         val sentences: List<SentenceItem> = emptyList(),
         val cards: List<CardItem> = emptyList(),
@@ -50,8 +50,8 @@ interface TestSentenceComponent : ParentContext {
 class DefaultTestSentenceComponent(
     componentContext: ComponentContext,
     parentContext: ParentContext,
-    private val lessonId: Int,
-    private val onFinishSection: (Int, Section) -> Unit
+    private val lessonId: Long,
+    private val onFinishSection: (Long, Section) -> Unit
 ) : TestSentenceComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
     private val sentenceRepository: SentenceRepository by inject()
@@ -105,7 +105,7 @@ class DefaultTestSentenceComponent(
         val options = buildOptions(correctSymbols)
         val answerSlots = correctSymbols.map { it.copy(name = "") }
 
-        val imageUri = "file:///android_asset/images/sentences/${correctSentence.correct}"
+        val imageUri = "file:///android_asset/images/sentences/${correctSentence.image}"
 
         _model.update {
             it.copy(
@@ -192,7 +192,7 @@ class DefaultTestSentenceComponent(
                 0,
                 it.symbol,
                 0,
-                null,
+                0,
                 selected = false,
                 correct = false
             )

@@ -22,7 +22,7 @@ interface CompleteComponent : ParentContext {
     val model: Value<Model>
 
     data class Model(
-        val lessonId: Int = 0,
+        val lessonId: Long = 0,
         val section: Section = Section.LEARN_SYMBOLS,
         val sectionTitle: Int = R.string.learn_symbols_completed,
         val onNext: () -> Unit = {}
@@ -34,9 +34,10 @@ interface CompleteComponent : ParentContext {
 class DefaultCompleteComponent(
     componentContext: ComponentContext,
     parentContext: ParentContext,
-    private val lessonId: Int,
+    private val lessonId: Long,
     private val section: Section,
-    private val onStartLesson: (Int, Section) -> Unit,
+    private val lessonType: LessonType,
+    private val onStartLesson: (Long, Section) -> Unit,
     private val onNextSection: (LessonsComponent.Intent) -> Unit
 ) : CompleteComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
@@ -65,17 +66,17 @@ class DefaultCompleteComponent(
         }
     }
 
-    private suspend fun getNextLesson(id: Int): Int {
-        val lessons = lessonRepository.getAll().map { it.id }
+    private suspend fun getNextLesson(id: Long): Long {
+        val lessons = lessonRepository.getAll(lessonType).map { it.id }
         val current = lessons.indexOf(id)
-        var next = 1
+        var next = 1L
         if (current < lessons.size - 1) {
             next = lessons[current + 1]
         }
         return next
     }
 
-    private suspend fun saveSectionStatus(lessonId: Int, section: Section) {
+    private suspend fun saveSectionStatus(lessonId: Long, section: Section) {
         val lastSection = SettingEntity(SettingEntity.LAST_SECTION, section.id)
         val lastLesson = SettingEntity(SettingEntity.LAST_LESSON, lessonId.toString())
         settingsRepository.insertOrUpdate(lastSection)

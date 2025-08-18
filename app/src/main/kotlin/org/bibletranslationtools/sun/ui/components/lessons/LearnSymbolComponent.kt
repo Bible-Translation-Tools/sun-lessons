@@ -27,7 +27,7 @@ interface LearnSymbolComponent : ParentContext {
     val model: Value<Model>
 
     data class Model(
-        val lessonId: Int = 1,
+        val lessonId: Long = 1,
         val cards: List<CardItem> = emptyList(),
         val mode: LessonMode = LessonMode.NORMAL,
         val lastPosition: Int = 0
@@ -41,8 +41,8 @@ interface LearnSymbolComponent : ParentContext {
 class DefaultLearnSymbolComponent(
     componentContext: ComponentContext,
     parentContext: ParentContext,
-    private val lessonId: Int,
-    private val onFinishSection: (Int, Section) -> Unit
+    private val lessonId: Long,
+    private val onFinishSection: (Long, Section) -> Unit
 ) : LearnSymbolComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
     private val cardRepository: CardRepository by inject()
