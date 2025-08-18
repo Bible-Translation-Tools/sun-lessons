@@ -45,7 +45,7 @@ fun HomeScreen(component: HomeComponent, parentPadding: PaddingValues) {
             }
         },
         modifier = Modifier.padding(parentPadding),
-        containerColor = MaterialTheme.colorScheme.surface,
+        containerColor = MaterialTheme.colorScheme.surface
     ) { innerPadding ->
         Column(
             modifier = Modifier

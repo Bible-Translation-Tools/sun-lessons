@@ -141,7 +141,7 @@ class DefaultLessonsComponent(
                     lessonId = config.lessonId,
                     section = config.section,
                     onStartLesson = { id, section ->
-                        navigation.bringToFront(Config.Start(id, section))
+                        navigation.replaceCurrent(Config.Start(id, section))
                     },
                     onNextSection = ::navigateNextSection
                 )
