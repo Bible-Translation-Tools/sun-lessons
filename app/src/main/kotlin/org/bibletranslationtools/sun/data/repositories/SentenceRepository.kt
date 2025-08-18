@@ -2,67 +2,84 @@ package org.bibletranslationtools.sun.data.repositories
 
 import org.bibletranslationtools.sun.data.dao.SentenceDao
 import org.bibletranslationtools.sun.data.dao.SymbolDao
-import org.bibletranslationtools.sun.data.model.Sentence
+import org.bibletranslationtools.sun.data.model.SentenceEntity
 import org.bibletranslationtools.sun.data.model.SentenceWithSymbols
-import org.bibletranslationtools.sun.data.model.Symbol
+import org.bibletranslationtools.sun.data.model.SymbolEntity
 
-class SentenceRepository(
+interface SentenceRepository {
+    suspend fun insert(sentence: SentenceEntity)
+    suspend fun delete(sentence: SentenceEntity)
+    suspend fun update(sentence: SentenceEntity)
+    suspend fun insert(symbol: SymbolEntity)
+    suspend fun get(id: String): SentenceEntity?
+    suspend fun getByLesson(lessonId: Int): List<SentenceEntity>
+    suspend fun getAllWithSymbols(lessonId: Int): List<SentenceWithSymbols>
+    suspend fun getAllLearnedWithSymbols(): List<SentenceWithSymbols>
+    suspend fun allLearnedCount(): Int
+    suspend fun getAllTestedWithSymbols(): List<SentenceWithSymbols>
+    suspend fun allTestedCount(): Int
+    suspend fun getByLessonCount(lessonId: Int): Int
+    suspend fun getLearnedByLessonCount(lessonId: Int): Int
+    suspend fun getTestedByLessonCount(lessonId: Int): Int
+}
+
+class SentenceRepositoryImpl(
     private val sentenceDao: SentenceDao,
     private val symbolDao: SymbolDao
-) {
-    suspend fun insert(sentence: Sentence) {
+) : SentenceRepository {
+    override suspend fun insert(sentence: SentenceEntity) {
         sentenceDao.insert(sentence)
     }
 
-    suspend fun delete(sentence: Sentence) {
+    override suspend fun delete(sentence: SentenceEntity) {
         sentenceDao.delete(sentence)
     }
 
-    suspend fun update(sentence: Sentence) {
+    override suspend fun update(sentence: SentenceEntity) {
         sentenceDao.update(sentence)
     }
 
-    suspend fun insert(symbol: Symbol) {
+    override suspend fun insert(symbol: SymbolEntity) {
         symbolDao.insert(symbol)
     }
 
-    suspend fun get(id: String): Sentence? {
+    override suspend fun get(id: String): SentenceEntity? {
         return sentenceDao.get(id)
     }
 
-    suspend fun getByLesson(lessonId: Int): List<Sentence> {
+    override suspend fun getByLesson(lessonId: Int): List<SentenceEntity> {
         return sentenceDao.getByLesson(lessonId)
     }
 
-    suspend fun getAllWithSymbols(lessonId: Int): List<SentenceWithSymbols> {
+    override suspend fun getAllWithSymbols(lessonId: Int): List<SentenceWithSymbols> {
         return sentenceDao.getByLessonWithSymbols(lessonId)
     }
 
-    suspend fun getAllLearnedWithSymbols(): List<SentenceWithSymbols> {
+    override suspend fun getAllLearnedWithSymbols(): List<SentenceWithSymbols> {
         return sentenceDao.getAllLearnedWithSymbols()
     }
 
-    suspend fun allLearnedCount(): Int {
+    override suspend fun allLearnedCount(): Int {
         return sentenceDao.allLearnedCount()
     }
 
-    suspend fun getAllTestedWithSymbols(): List<SentenceWithSymbols> {
+    override suspend fun getAllTestedWithSymbols(): List<SentenceWithSymbols> {
         return sentenceDao.getAllTestedWithSymbols()
     }
 
-    suspend fun allTestedCount(): Int {
+    override suspend fun allTestedCount(): Int {
         return sentenceDao.allTestedCount()
     }
 
-    suspend fun getByLessonCount(lessonId: Int): Int {
+    override suspend fun getByLessonCount(lessonId: Int): Int {
         return sentenceDao.getByLessonCount(lessonId)
     }
 
-    suspend fun getLearnedByLessonCount(lessonId: Int): Int {
+    override suspend fun getLearnedByLessonCount(lessonId: Int): Int {
         return sentenceDao.getLearnedByLessonCount(lessonId)
     }
 
-    suspend fun getTestedByLessonCount(lessonId: Int): Int {
+    override suspend fun getTestedByLessonCount(lessonId: Int): Int {
         return sentenceDao.getTestedByLessonCount(lessonId)
     }
 }

@@ -4,10 +4,10 @@ import androidx.room.Embedded
 import androidx.room.Relation
 
 data class SentenceWithSymbols(
-    @Embedded val sentence: Sentence,
+    @Embedded val sentence: SentenceEntity,
     @Relation(
         parentColumn = "id",
         entityColumn = "sentence_id"
     )
-    val symbols: List<Symbol>
+    val symbols: List<SymbolEntity>
 )

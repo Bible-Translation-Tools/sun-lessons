@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application
+        android:name=".SunApplication"
             android:allowBackup="true"
             android:dataExtractionRules="@xml/data_extraction_rules"
             android:fullBackupContent="@xml/backup_rules"
@@ -13,35 +13,9 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
-            android:enableOnBackInvokedCallback="true"
-            android:theme="@style/Theme.SUN"
-            tools:targetApi="33">
+            android:theme="@style/Theme.Sun">
         <activity
-                android:name=".ui.activity.LessonListActivity"
-                android:exported="false"/>
-        <activity
-                android:name=".ui.activity.TestSymbolsActivity"
-                android:exported="false"/>
-        <activity
-                android:name=".ui.activity.LearnSymbolsActivity"
-                android:exported="false"/>
-        <activity
-            android:name=".ui.activity.SectionStartActivity"
-            android:exported="false"/>
-        <activity
-            android:name=".ui.activity.SectionCompleteActivity"
-            android:exported="false"/>
-        <activity
-            android:name=".ui.activity.LearnSentencesActivity"
-            android:exported="false"/>
-        <activity
-            android:name=".ui.activity.TestSentencesActivity"
-            android:exported="false"/>
-        <activity
-            android:name=".ui.activity.TrackProgressActivity"
-            android:exported="false"/>
-        <activity
-                android:name=".ui.activity.HomeActivity"
+                android:name=".MainActivity"
                 android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
