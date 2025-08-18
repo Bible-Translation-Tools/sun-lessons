@@ -38,6 +38,7 @@ fun BottomNavBar(currentTab: RootComponent.Child, onTabSelected: (MainTab) -> Un
                 is RootComponent.Child.Progress -> tab == MainTab.Progress
                 is RootComponent.Child.Lessons -> tab == MainTab.Lessons
                 is RootComponent.Child.Settings -> tab == MainTab.Settings
+                else -> false
             }
             NavigationItem(
                 label = stringResource(tab.title),

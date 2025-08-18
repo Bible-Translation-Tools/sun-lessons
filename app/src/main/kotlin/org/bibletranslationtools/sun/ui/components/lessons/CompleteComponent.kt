@@ -13,7 +13,6 @@ import org.bibletranslationtools.sun.data.model.SettingEntity
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
-import org.bibletranslationtools.sun.ui.components.LessonsIntent
 import org.bibletranslationtools.sun.ui.components.ParentContext
 import org.bibletranslationtools.sun.utils.Section
 import org.koin.core.component.KoinComponent
@@ -38,7 +37,7 @@ class DefaultCompleteComponent(
     private val lessonId: Int,
     private val section: Section,
     private val onStartLesson: (Int, Section) -> Unit,
-    private val onNextSection: (LessonsIntent) -> Unit
+    private val onNextSection: (LessonsComponent.Intent) -> Unit
 ) : CompleteComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
     private val settingsRepository: SettingsRepository by inject()
@@ -90,7 +89,7 @@ class DefaultCompleteComponent(
                     _model.update {
                         it.copy(
                             sectionTitle = R.string.learn_symbols_completed,
-                            onNext = { onNextSection(LessonsIntent.TestSymbol(lessonId)) }
+                            onNext = { onNextSection(LessonsComponent.Intent.TestSymbol(lessonId)) }
                         )
                     }
                 }
@@ -98,7 +97,7 @@ class DefaultCompleteComponent(
                     _model.update {
                         it.copy(
                             sectionTitle = R.string.test_symbols_completed,
-                            onNext = { onNextSection(LessonsIntent.LearnSentence(lessonId)) }
+                            onNext = { onNextSection(LessonsComponent.Intent.LearnSentence(lessonId)) }
                         )
                     }
                 }
@@ -106,7 +105,7 @@ class DefaultCompleteComponent(
                     _model.update {
                         it.copy(
                             sectionTitle = R.string.learn_sentences_completed,
-                            onNext = { onNextSection(LessonsIntent.TestSentence(lessonId)) }
+                            onNext = { onNextSection(LessonsComponent.Intent.TestSentence(lessonId)) }
                         )
                     }
                 }

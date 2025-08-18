@@ -35,4 +35,7 @@
     <string name="incorrect">Incorrect</string>
     <string name="show">Show</string>
     <string name="hide">Hide</string>
+    <string name="start_lesson">Start</string>
+    <string name="continue_lesson">Continue</string>
+    <string name="initialization">Loading lessons…</string>
 </resources>
