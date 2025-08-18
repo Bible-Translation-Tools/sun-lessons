@@ -5,9 +5,10 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.replaceAll
-import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -30,8 +31,6 @@ import org.koin.core.component.inject
 interface RootComponent : ParentContext {
     val stack: Value<ChildStack<*, Child>>
 
-    val topBarSlot: Value<ComposableSlot>
-
     sealed class Child {
         class Home(val component: HomeComponent) : Child()
         class Progress(val component: ProgressComponent) : Child()
@@ -51,10 +50,8 @@ class DefaultRootComponent(
 
     private val navigation = StackNavigation<Config>()
 
-    private val _topBarSlot = MutableValue(NoOpSlot)
-    override val topBarSlot: Value<ComposableSlot> = _topBarSlot
-
     private val componentScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+    private val backCallback = BackCallback(onBack = ::onNavigateBack)
 
     override val stack: Value<ChildStack<*, RootComponent.Child>> =
         childStack(
@@ -64,6 +61,10 @@ class DefaultRootComponent(
             handleBackButton = true,
             childFactory = ::createChild
         )
+
+    init {
+        backHandler.register(backCallback)
+    }
 
     override fun onTabClicked(tab: MainTab) {
         when (tab) {
@@ -87,12 +88,8 @@ class DefaultRootComponent(
         }
     }
 
-    override fun setTopAppBar(slot: ComposableSlot?) {
-        _topBarSlot.value = slot ?: NoOpSlot
-    }
-
     override fun onBackClick() {
-        onFinished()
+        navigation.pop()
     }
 
     private fun createChild(config: Config, context: ComponentContext): RootComponent.Child =
@@ -114,10 +111,7 @@ class DefaultRootComponent(
                 DefaultLessonsComponent(
                     componentContext = context,
                     parentContext = this,
-                    intent = config.intent,
-                    onNavigateHome = {
-                        navigation.replaceAll(Config.Home)
-                    }
+                    intent = config.intent
                 )
             )
             is Config.Settings -> RootComponent.Child.Settings(
@@ -166,6 +160,14 @@ class DefaultRootComponent(
 
     suspend fun getLastLesson(): Int {
         return settingsRepository.get("last_lesson")?.value?.toInt() ?: 1
+    }
+
+    private fun onNavigateBack() {
+        val config = stack.value.active.configuration
+        when (config) {
+            !is Config.Home -> navigation.replaceAll(Config.Home)
+            else -> onFinished()
+        }
     }
 
     @Serializable

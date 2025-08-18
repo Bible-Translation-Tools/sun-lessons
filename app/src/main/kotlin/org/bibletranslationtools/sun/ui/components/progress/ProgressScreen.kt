@@ -13,8 +13,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,11 +30,11 @@ import org.bibletranslationtools.sun.ui.control.progress.ProgressSection
 import org.bibletranslationtools.sun.ui.control.progress.ScreenHeader
 
 @Composable
-fun ProgressScreen(component: ProgressComponent) {
+fun ProgressScreen(component: ProgressComponent, parentPadding: PaddingValues) {
     val model by component.model.subscribeAsState()
 
-    LaunchedEffect(Unit) {
-        component.setTopAppBar {
+    Scaffold(
+        topBar = {
             TopAppBar(onBackClick = component::onBackClick) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -47,41 +48,44 @@ fun ProgressScreen(component: ProgressComponent) {
                     )
                 }
             }
-        }
-    }
-
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
+        },
+        modifier = Modifier.padding(parentPadding),
+        containerColor = MaterialTheme.colorScheme.surface
+    ) { innerPadding ->
         Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 16.dp)
+            modifier = Modifier.fillMaxSize()
+                .padding(innerPadding)
         ) {
-            ScreenHeader()
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            ProgressSection(model.lessons)
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            LessonsLearnedHeader()
-
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(5),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalArrangement = Arrangement.spacedBy(18.dp),
-                contentPadding = PaddingValues(vertical = 12.dp)
+            Column(
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 16.dp)
             ) {
-                items(model.lessons.size) { index ->
-                    val lesson = model.lessons[index]
-                    LessonBox(
-                        lesson = lesson,
-                        modifier = Modifier.size(60.dp)
-                    )
+                ScreenHeader()
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                ProgressSection(model.lessons)
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                LessonsLearnedHeader()
+
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(5),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(18.dp),
+                    contentPadding = PaddingValues(vertical = 12.dp)
+                ) {
+                    items(model.lessons.size) { index ->
+                        val lesson = model.lessons[index]
+                        LessonBox(
+                            lesson = lesson,
+                            modifier = Modifier.size(60.dp)
+                        )
+                    }
                 }
             }
         }

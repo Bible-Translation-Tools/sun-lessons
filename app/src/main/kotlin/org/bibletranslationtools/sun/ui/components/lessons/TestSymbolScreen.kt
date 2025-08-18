@@ -2,13 +2,15 @@ package org.bibletranslationtools.sun.ui.components.lessons
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,14 +26,14 @@ import org.bibletranslationtools.sun.ui.control.test.NextButtonSection
 import org.bibletranslationtools.sun.ui.control.test.QuestionSection
 
 @Composable
-fun TestSymbolScreen(component: TestSymbolComponent) {
+fun TestSymbolScreen(component: TestSymbolComponent, parentPadding: PaddingValues) {
     val model by component.model.subscribeAsState()
 
     val imageUri = "file:///android_asset/images/symbols/" +
             (model.currentCard?.secondary ?: "0.jpg")
 
-    LaunchedEffect(Unit) {
-        component.setTopAppBar {
+    Scaffold(
+        topBar = {
             TopAppBar(onBackClick = component::onBackClick) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -45,34 +47,41 @@ fun TestSymbolScreen(component: TestSymbolComponent) {
                     TallyText(model.lessonId)
                 }
             }
-        }
-    }
+        },
+        modifier = Modifier.padding(parentPadding),
+        containerColor = MaterialTheme.colorScheme.surface
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier.fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            Column(
+                modifier = Modifier.fillMaxSize()
+                    .padding(horizontal = 40.dp, vertical = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                QuestionSection(
+                    imageUri = imageUri,
+                    modifier = Modifier.weight(1f)
+                )
 
-    Column(
-        modifier = Modifier.fillMaxSize()
-            .padding(horizontal = 40.dp, vertical = 24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        QuestionSection(
-            imageUri = imageUri,
-            modifier = Modifier.weight(1f)
-        )
+                AnswerGrid(
+                    choices = model.choices,
+                    answer = model.answer,
+                    onCardSelected = { selectedCard ->
+                        component.checkAnswer(selectedCard)
+                    },
+                    showStatusIcon = model.questionDone,
+                    modifier = Modifier.weight(1f)
+                )
 
-        AnswerGrid(
-            choices = model.choices,
-            answer = model.answer,
-            onCardSelected = { selectedCard ->
-                component.checkAnswer(selectedCard)
-            },
-            showStatusIcon = model.questionDone,
-            modifier = Modifier.weight(1f)
-        )
-
-        NextButtonSection(
-            isVisible = model.questionDone,
-            onNextClicked = {
-                component.setNextQuestion()
+                NextButtonSection(
+                    isVisible = model.questionDone,
+                    onNextClicked = {
+                        component.setNextQuestion()
+                    }
+                )
             }
-        )
+        }
     }
 }

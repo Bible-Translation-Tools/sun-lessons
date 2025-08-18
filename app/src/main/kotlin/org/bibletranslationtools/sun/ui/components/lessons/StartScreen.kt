@@ -3,6 +3,7 @@ package org.bibletranslationtools.sun.ui.components.lessons
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,9 +12,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,11 +31,11 @@ import org.bibletranslationtools.sun.ui.control.TallyText
 import org.bibletranslationtools.sun.ui.control.TopAppBar
 
 @Composable
-fun StartScreen(component: StartComponent) {
+fun StartScreen(component: StartComponent, parentPadding: PaddingValues) {
     val model by component.model.subscribeAsState()
 
-    LaunchedEffect(Unit) {
-        component.setTopAppBar {
+    Scaffold(
+        topBar = {
             TopAppBar(onBackClick = component::onBackClick) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -48,57 +49,60 @@ fun StartScreen(component: StartComponent) {
                     TallyText(model.lessonId)
                 }
             }
-        }
-    }
-
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
+        },
+        modifier = Modifier.padding(parentPadding),
+        containerColor = MaterialTheme.colorScheme.surface
+    ) { innerPadding ->
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
+            modifier = Modifier.fillMaxSize()
+                .padding(innerPadding)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 60.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .weight(1f)
             ) {
-                Spacer(modifier = Modifier.height(50.dp))
-
-                Text(
-                    text = stringResource(id = model.sectionTitle),
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
-
-                Text(
-                    text = stringResource(id = R.string.lesson_name, model.lessonId),
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
-
-                Image(
-                    painter = painterResource(id = model.imageResource),
-                    contentDescription = stringResource(model.sectionTitle),
-                    contentScale = ContentScale.FillWidth,
+                Column(
                     modifier = Modifier
-                        .width(240.dp)
-                        .padding(top = 80.dp)
+                        .fillMaxWidth()
+                        .padding(horizontal = 60.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Spacer(modifier = Modifier.height(50.dp))
+
+                    Text(
+                        text = stringResource(id = model.sectionTitle),
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+
+                    Text(
+                        text = stringResource(id = R.string.lesson_name, model.lessonId),
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+
+                    Image(
+                        painter = painterResource(id = model.imageResource),
+                        contentDescription = stringResource(model.sectionTitle),
+                        contentScale = ContentScale.FillWidth,
+                        modifier = Modifier
+                            .width(240.dp)
+                            .padding(top = 80.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                NextButton(
+                    modifier = Modifier
+                        .padding(horizontal = 60.dp)
+                        .padding(bottom = 50.dp),
+                    onClick = component::onNextClicked
                 )
             }
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            NextButton(
-                modifier = Modifier
-                    .padding(horizontal = 60.dp)
-                    .padding(bottom = 50.dp),
-                onClick = component::onNextClicked
-            )
         }
     }
 }

@@ -1,6 +1,5 @@
 package org.bibletranslationtools.sun.ui
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -107,7 +106,7 @@ fun MainAppTheme(
 ) {
     val colorScheme = when {
         themeColorScheme != null -> themeColorScheme
-        isSystemInDarkTheme() -> DarkColorScheme
+        //isSystemInDarkTheme() -> DarkColorScheme
         else -> LightColorScheme
     }
 
