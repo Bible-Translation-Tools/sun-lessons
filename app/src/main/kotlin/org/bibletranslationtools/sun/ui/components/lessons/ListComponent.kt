@@ -61,7 +61,7 @@ class DefaultListComponent(
                 it.copy(lessons = lessons.mapIndexed { index, lesson ->
                     lesson.copy(
                         isAvailable = lessonAvailable(lessons, index),
-                        isSelected = lesson.lesson.id == _model.value.selectedId
+                        isSelected = lesson.lesson.id == model.value.selectedId
                     )
                 })
             }

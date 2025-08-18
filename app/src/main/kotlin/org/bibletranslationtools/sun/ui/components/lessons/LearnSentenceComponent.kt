@@ -68,7 +68,7 @@ class DefaultLearnSentenceComponent(
     }
 
     override suspend fun saveLastPosition(position: Int) {
-        if (_model.value.mode == LessonMode.NORMAL) {
+        if (model.value.mode == LessonMode.NORMAL) {
             val lastSentence = SettingEntity(SettingEntity.LAST_SENTENCE, position.toString())
             settingsRepository.insertOrUpdate(lastSentence)
         }
@@ -122,7 +122,7 @@ class DefaultLearnSentenceComponent(
     override fun finishLesson() {
         componentScope.launch {
             saveLastPosition(0)
-            onFinishSection(lessonId, Section.LEARN_SENTENCES, _model.value.mode)
+            onFinishSection(lessonId, Section.LEARN_SENTENCES, model.value.mode)
         }
     }
 
@@ -134,7 +134,7 @@ class DefaultLearnSentenceComponent(
 
         _model.update { it.copy(sentences = sentences) }
 
-        if (_model.value.mode == LessonMode.NORMAL) {
+        if (model.value.mode == LessonMode.NORMAL) {
             delay(100)
 
             val lastPosition = getLastPosition()
@@ -161,8 +161,8 @@ class DefaultLearnSentenceComponent(
     }
 
     private fun onNavigateBack() {
-        if (_model.value.mode == LessonMode.REPEAT) {
-            onNavigateList(_model.value.lessonId)
+        if (model.value.mode == LessonMode.REPEAT) {
+            onNavigateList(model.value.lessonId)
         } else {
             onNavigateHome()
         }

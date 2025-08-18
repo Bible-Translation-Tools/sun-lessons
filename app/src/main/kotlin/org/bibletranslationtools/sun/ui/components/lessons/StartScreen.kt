@@ -86,7 +86,7 @@ fun StartScreen(component: StartComponent) {
                     contentDescription = stringResource(model.sectionTitle),
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier
-                        .width(260.dp)
+                        .width(240.dp)
                         .padding(top = 80.dp)
                 )
             }
