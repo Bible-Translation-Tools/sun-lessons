@@ -2,14 +2,16 @@ package org.bibletranslationtools.sun.ui.components.lessons
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,14 +30,14 @@ import org.bibletranslationtools.sun.ui.control.test.AnswerArea
 import org.bibletranslationtools.sun.ui.control.test.QuestionSection
 
 @Composable
-fun TestSentenceScreen(component: TestSentenceComponent) {
+fun TestSentenceScreen(component: TestSentenceComponent, parentPadding: PaddingValues) {
 
     val model by component.model.subscribeAsState()
 
     var showCorrectAnswer by remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
-        component.setTopAppBar {
+    Scaffold(
+        topBar = {
             TopAppBar(onBackClick = component::onBackClick) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -49,35 +51,42 @@ fun TestSentenceScreen(component: TestSentenceComponent) {
                     TallyText(model.lessonId)
                 }
             }
-        }
-    }
+        },
+        modifier = Modifier.padding(parentPadding),
+        containerColor = MaterialTheme.colorScheme.surface
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier.fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            Column(
+                modifier = Modifier.fillMaxSize()
+                    .padding(horizontal = 20.dp, vertical = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                QuestionSection(
+                    imageUri = model.imageUri,
+                    modifier = Modifier.height(300.dp)
+                )
 
-    Column(
-        modifier = Modifier.fillMaxSize()
-            .padding(horizontal = 20.dp, vertical = 24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        QuestionSection(
-            imageUri = model.imageUri,
-            modifier = Modifier.height(300.dp)
-        )
+                AnswerArea(
+                    state = model,
+                    showCorrectAnswer = showCorrectAnswer,
+                    onSymbolSelected = component::onSymbolSelected,
+                    modifier = Modifier.weight(1f)
+                )
 
-        AnswerArea(
-            state = model,
-            showCorrectAnswer = showCorrectAnswer,
-            onSymbolSelected = component::onSymbolSelected,
-            modifier = Modifier.weight(1f)
-        )
-
-        ActionButtons(
-            isCorrect = model.isCorrect,
-            questionDone = model.questionDone,
-            onNextSentence = component::setNextSentence,
-            showCorrectAnswer = showCorrectAnswer,
-            onShowCorrectAnswer = { show ->
-                showCorrectAnswer = show ?: !showCorrectAnswer
+                ActionButtons(
+                    isCorrect = model.isCorrect,
+                    questionDone = model.questionDone,
+                    onNextSentence = component::setNextSentence,
+                    showCorrectAnswer = showCorrectAnswer,
+                    onShowCorrectAnswer = { show ->
+                        showCorrectAnswer = show ?: !showCorrectAnswer
+                    }
+                )
             }
-        )
+        }
     }
 }

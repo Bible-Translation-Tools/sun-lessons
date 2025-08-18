@@ -4,7 +4,6 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.update
-import com.arkivanov.essenty.backhandler.BackCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -43,9 +42,7 @@ class DefaultLearnSentenceComponent(
     componentContext: ComponentContext,
     parentContext: ParentContext,
     private val lessonId: Int,
-    private val onFinishSection: (Int, Section, LessonMode) -> Unit,
-    private val onNavigateList: (Int) -> Unit,
-    private val onNavigateHome: () -> Unit
+    private val onFinishSection: (Int, Section) -> Unit
 ) : LearnSentenceComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
     private val sentenceRepository: SentenceRepository by inject()
@@ -56,11 +53,7 @@ class DefaultLearnSentenceComponent(
 
     private val componentScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
-    private val backCallback = BackCallback(onBack = ::onNavigateBack)
-
     init {
-        backHandler.register(backCallback)
-
         componentScope.launch {
             initializeLessonMode()
             loadSentences()
@@ -122,7 +115,7 @@ class DefaultLearnSentenceComponent(
     override fun finishLesson() {
         componentScope.launch {
             saveLastPosition(0)
-            onFinishSection(lessonId, Section.LEARN_SENTENCES, model.value.mode)
+            onFinishSection(lessonId, Section.LEARN_SENTENCES)
         }
     }
 
@@ -158,13 +151,5 @@ class DefaultLearnSentenceComponent(
     private suspend fun getLastPosition(): Int {
         val pos = settingsRepository.get(SettingEntity.LAST_SENTENCE)?.value?.toInt() ?: 0
         return min(pos, model.value.sentences.size - 1)
-    }
-
-    private fun onNavigateBack() {
-        if (model.value.mode == LessonMode.REPEAT) {
-            onNavigateList(model.value.lessonId)
-        } else {
-            onNavigateHome()
-        }
     }
 }

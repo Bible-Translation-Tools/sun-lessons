@@ -4,7 +4,6 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.update
-import com.arkivanov.essenty.backhandler.BackCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -14,7 +13,6 @@ import org.bibletranslationtools.sun.data.repositories.SentenceRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.LessonsIntent
 import org.bibletranslationtools.sun.ui.components.ParentContext
-import org.bibletranslationtools.sun.ui.model.LessonMode
 import org.bibletranslationtools.sun.utils.Section
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -38,11 +36,8 @@ class DefaultStartComponent(
     parentContext: ParentContext,
     private val lessonId: Int,
     private val section: Section,
-    private val mode: LessonMode,
     private val onFinishLesson: (Int, Section) -> Unit,
-    private val onNextSection: (LessonsIntent) -> Unit,
-    private val onNavigateList: (Int) -> Unit,
-    private val onNavigateHome: () -> Unit
+    private val onNextSection: (LessonsIntent) -> Unit
 ) : StartComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
     private val sentenceRepository: SentenceRepository by inject()
@@ -52,11 +47,7 @@ class DefaultStartComponent(
     private val _model = MutableValue(StartComponent.Model())
     override val model: Value<StartComponent.Model> = _model
 
-    private val backCallback = BackCallback(onBack = ::onNavigateBack)
-
     init {
-        backHandler.register(backCallback)
-
         _model.update { it.copy(lessonId = lessonId) }
 
         componentScope.launch {
@@ -123,14 +114,6 @@ class DefaultStartComponent(
                     )
                 }
             }
-        }
-    }
-
-    private fun onNavigateBack() {
-        if (mode == LessonMode.REPEAT) {
-            onNavigateList(lessonId)
-        } else {
-            onNavigateHome()
         }
     }
 }

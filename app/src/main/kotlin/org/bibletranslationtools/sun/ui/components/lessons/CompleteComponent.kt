@@ -4,7 +4,6 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.update
-import com.arkivanov.essenty.backhandler.BackCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -16,7 +15,6 @@ import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.LessonsIntent
 import org.bibletranslationtools.sun.ui.components.ParentContext
-import org.bibletranslationtools.sun.ui.model.LessonMode
 import org.bibletranslationtools.sun.utils.Section
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -39,11 +37,8 @@ class DefaultCompleteComponent(
     parentContext: ParentContext,
     private val lessonId: Int,
     private val section: Section,
-    private val mode: LessonMode,
     private val onStartLesson: (Int, Section) -> Unit,
-    private val onNextSection: (LessonsIntent) -> Unit,
-    private val onNavigateList: (Int) -> Unit,
-    private val onNavigateHome: () -> Unit
+    private val onNextSection: (LessonsIntent) -> Unit
 ) : CompleteComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
     private val settingsRepository: SettingsRepository by inject()
@@ -54,10 +49,7 @@ class DefaultCompleteComponent(
     private val _model = MutableValue(CompleteComponent.Model())
     override val model: Value<CompleteComponent.Model> = _model
 
-    private val backCallback = BackCallback(onBack = ::onNavigateBack)
-
     init {
-        backHandler.register(backCallback)
         _model.update { it.copy(lessonId = lessonId, section = section) }
         setupNextAction()
     }
@@ -127,14 +119,6 @@ class DefaultCompleteComponent(
                     }
                 }
             }
-        }
-    }
-
-    private fun onNavigateBack() {
-        if (mode == LessonMode.REPEAT) {
-            onNavigateList(lessonId)
-        } else {
-            onNavigateHome()
         }
     }
 }

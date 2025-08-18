@@ -4,7 +4,6 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.update
-import com.arkivanov.essenty.backhandler.BackCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -43,9 +42,7 @@ class DefaultLearnSymbolComponent(
     componentContext: ComponentContext,
     parentContext: ParentContext,
     private val lessonId: Int,
-    private val onFinishSection: (Int, Section, LessonMode) -> Unit,
-    private val onNavigateList: (Int) -> Unit,
-    private val onNavigateHome: () -> Unit
+    private val onFinishSection: (Int, Section) -> Unit
 ) : LearnSymbolComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
     private val cardRepository: CardRepository by inject()
@@ -56,11 +53,7 @@ class DefaultLearnSymbolComponent(
 
     private val componentScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
-    private val backCallback = BackCallback(onBack = ::onNavigateBack)
-
     init {
-        backHandler.register(backCallback)
-
         componentScope.launch {
             initializeLessonMode()
             loadCards()
@@ -120,7 +113,7 @@ class DefaultLearnSymbolComponent(
     override fun finishLesson() {
         componentScope.launch {
             saveLastPosition(0)
-            onFinishSection(lessonId, Section.LEARN_SYMBOLS, model.value.mode)
+            onFinishSection(lessonId, Section.LEARN_SYMBOLS)
         }
     }
 
@@ -152,13 +145,5 @@ class DefaultLearnSymbolComponent(
         }
 
         _model.update { it.copy(mode = mode) }
-    }
-
-    private fun onNavigateBack() {
-        if (model.value.mode == LessonMode.REPEAT) {
-            onNavigateList(model.value.lessonId)
-        } else {
-            onNavigateHome()
-        }
     }
 }

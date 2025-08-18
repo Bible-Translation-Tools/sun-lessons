@@ -6,7 +6,6 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.update
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
@@ -54,8 +53,8 @@ class DefaultListComponent(
         onStartLesson(lessonId, action, LessonMode.REPEAT)
     }
 
-    private fun loadLessons(): Job {
-        return componentScope.launch {
+    private fun loadLessons() {
+        componentScope.launch {
             val lessons = lessonRepository.getAllWithData().map { it.toItem() }
             _model.update {
                 it.copy(lessons = lessons.mapIndexed { index, lesson ->

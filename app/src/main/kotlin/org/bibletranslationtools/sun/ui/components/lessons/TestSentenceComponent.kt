@@ -4,7 +4,6 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.update
-import com.arkivanov.essenty.backhandler.BackCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -52,9 +51,7 @@ class DefaultTestSentenceComponent(
     componentContext: ComponentContext,
     parentContext: ParentContext,
     private val lessonId: Int,
-    private val onFinishSection: (Int, Section, LessonMode) -> Unit,
-    private val onNavigateList: (Int) -> Unit,
-    private val onNavigateHome: () -> Unit
+    private val onFinishSection: (Int, Section) -> Unit
 ) : TestSentenceComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
     private val sentenceRepository: SentenceRepository by inject()
@@ -66,13 +63,9 @@ class DefaultTestSentenceComponent(
 
     private val componentScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
-    private val backCallback = BackCallback(onBack = ::onNavigateBack)
-
     private var lastAnswerPosition = -1
 
     init {
-        backHandler.register(backCallback)
-
         _model.update { it.copy(lessonId = lessonId) }
 
         initialize()
@@ -101,7 +94,7 @@ class DefaultTestSentenceComponent(
 
         if (inProgressSentences.isEmpty()) {
             componentScope.launch {
-                onFinishSection(lessonId, Section.TEST_SENTENCES, model.value.mode)
+                onFinishSection(lessonId, Section.TEST_SENTENCES)
             }
             return
         }
@@ -240,13 +233,5 @@ class DefaultTestSentenceComponent(
         }
 
         _model.update { it.copy(mode = mode) }
-    }
-
-    private fun onNavigateBack() {
-        if (model.value.mode == LessonMode.REPEAT) {
-            onNavigateList(lessonId)
-        } else {
-            onNavigateHome()
-        }
     }
 }

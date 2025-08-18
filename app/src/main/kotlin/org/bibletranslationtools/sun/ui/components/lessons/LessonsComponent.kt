@@ -5,13 +5,13 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.replaceAll
+import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.Serializable
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.LessonsIntent
 import org.bibletranslationtools.sun.ui.components.ParentContext
-import org.bibletranslationtools.sun.ui.model.LessonMode
 import org.bibletranslationtools.sun.utils.Section
 
 interface LessonsComponent: ParentContext {
@@ -32,8 +32,7 @@ interface LessonsComponent: ParentContext {
 class DefaultLessonsComponent(
     componentContext: ComponentContext,
     parentContext: ParentContext,
-    intent: LessonsIntent,
-    private val onNavigateHome: () -> Unit
+    intent: LessonsIntent
 ) : LessonsComponent, AppComponent(componentContext, parentContext) {
 
     private val navigation = StackNavigation<Config>()
@@ -55,6 +54,14 @@ class DefaultLessonsComponent(
             childFactory = ::createChild
         )
 
+    override fun onBackClick() {
+        if (stack.value.backStack.isEmpty()) {
+            super.onBackClick()
+        } else {
+            navigation.pop()
+        }
+    }
+
     private fun createChild(config: Config, context: ComponentContext): LessonsComponent.Child =
         when (config) {
             is Config.List -> LessonsComponent.Child.List(
@@ -63,7 +70,7 @@ class DefaultLessonsComponent(
                     parentContext = this,
                     selectedLessonId = config.selected,
                     onStartLesson = { id, section, mode ->
-                        navigation.bringToFront(Config.Start(id, section, mode))
+                        navigation.bringToFront(Config.Start(id, section))
                     }
                 )
             )
@@ -73,15 +80,10 @@ class DefaultLessonsComponent(
                     parentContext = this,
                     lessonId = config.lessonId,
                     section = config.section,
-                    mode = config.mode,
                     onFinishLesson = { id, section ->
-                        navigation.bringToFront(Config.Complete(id, section))
+                        navigation.replaceCurrent(Config.Complete(id, section))
                     },
-                    onNextSection = ::navigateNextSection,
-                    onNavigateList = {
-                        navigation.replaceAll(Config.List(it))
-                    },
-                    onNavigateHome = onNavigateHome
+                    onNextSection = ::navigateNextSection
                 )
             )
             is Config.LearnSymbol -> LessonsComponent.Child.LearnSymbol(
@@ -89,15 +91,11 @@ class DefaultLessonsComponent(
                     componentContext = context,
                     parentContext = this,
                     lessonId = config.lessonId,
-                    onFinishSection = { lessonId, section, mode ->
-                        navigation.bringToFront(
-                            Config.Complete(lessonId, section, mode)
+                    onFinishSection = { lessonId, section ->
+                        navigation.replaceCurrent(
+                            Config.Complete(lessonId, section)
                         )
-                    },
-                    onNavigateList = {
-                        navigation.replaceAll(Config.List(it))
-                    },
-                    onNavigateHome = onNavigateHome
+                    }
                 )
             )
             is Config.TestSymbol -> LessonsComponent.Child.TestSymbol(
@@ -105,15 +103,11 @@ class DefaultLessonsComponent(
                     componentContext = context,
                     parentContext = this,
                     lessonId = config.lessonId,
-                    onFinishSection = { lessonId, section, mode ->
-                        navigation.bringToFront(
-                            Config.Complete(lessonId, section, mode)
+                    onFinishSection = { lessonId, section ->
+                        navigation.replaceCurrent(
+                            Config.Complete(lessonId, section)
                         )
-                    },
-                    onNavigateList = {
-                        navigation.replaceAll(Config.List(it))
-                    },
-                    onNavigateHome = onNavigateHome
+                    }
                 )
             )
             is Config.LearnSentence -> LessonsComponent.Child.LearnSentence(
@@ -121,15 +115,11 @@ class DefaultLessonsComponent(
                     componentContext = context,
                     parentContext = this,
                     lessonId = config.lessonId,
-                    onFinishSection = { lessonId, section, mode ->
-                        navigation.bringToFront(
-                            Config.Complete(lessonId, section, mode)
+                    onFinishSection = { lessonId, section ->
+                        navigation.replaceCurrent(
+                            Config.Complete(lessonId, section)
                         )
-                    },
-                    onNavigateList = {
-                        navigation.replaceAll(Config.List(it))
-                    },
-                    onNavigateHome = onNavigateHome
+                    }
                 )
             )
             is Config.TestSentence -> LessonsComponent.Child.TestSentence(
@@ -137,15 +127,11 @@ class DefaultLessonsComponent(
                     componentContext = context,
                     parentContext = this,
                     lessonId = config.lessonId,
-                    onFinishSection = { lessonId, section, mode ->
-                        navigation.bringToFront(
-                            Config.Complete(lessonId, section, mode)
+                    onFinishSection = { lessonId, section ->
+                        navigation.replaceCurrent(
+                            Config.Complete(lessonId, section)
                         )
-                    },
-                    onNavigateList = {
-                        navigation.replaceAll(Config.List(it))
-                    },
-                    onNavigateHome = onNavigateHome
+                    }
                 )
             )
             is Config.Complete -> LessonsComponent.Child.Complete(
@@ -154,15 +140,10 @@ class DefaultLessonsComponent(
                     parentContext = this,
                     lessonId = config.lessonId,
                     section = config.section,
-                    mode = config.mode,
                     onStartLesson = { id, section ->
                         navigation.bringToFront(Config.Start(id, section))
                     },
-                    onNextSection = ::navigateNextSection,
-                    onNavigateList = {
-                        navigation.replaceAll(Config.List(it))
-                    },
-                    onNavigateHome = onNavigateHome
+                    onNextSection = ::navigateNextSection
                 )
             )
         }
@@ -170,22 +151,22 @@ class DefaultLessonsComponent(
     private fun navigateNextSection(intent: LessonsIntent) {
         when (intent) {
             is LessonsIntent.LearnSymbol -> {
-                navigation.bringToFront(Config.LearnSymbol(
+                navigation.replaceCurrent(Config.LearnSymbol(
                     intent.lessonId
                 ))
             }
             is LessonsIntent.TestSymbol -> {
-                navigation.bringToFront(Config.TestSymbol(
+                navigation.replaceCurrent(Config.TestSymbol(
                     intent.lessonId
                 ))
             }
             is LessonsIntent.LearnSentence -> {
-                navigation.bringToFront(Config.LearnSentence(
+                navigation.replaceCurrent(Config.LearnSentence(
                     intent.lessonId
                 ))
             }
             is LessonsIntent.TestSentence -> {
-                navigation.bringToFront(Config.TestSentence(
+                navigation.replaceCurrent(Config.TestSentence(
                     intent.lessonId
                 ))
             }
@@ -198,11 +179,7 @@ class DefaultLessonsComponent(
         @Serializable
         data class List(val selected: Int) : Config
         @Serializable
-        data class Start(
-            val lessonId: Int,
-            val section: Section,
-            val mode: LessonMode = LessonMode.NORMAL
-        ) : Config
+        data class Start(val lessonId: Int, val section: Section) : Config
         @Serializable
         data class LearnSymbol(val lessonId: Int) : Config
         @Serializable
@@ -212,10 +189,6 @@ class DefaultLessonsComponent(
         @Serializable
         data class TestSentence(val lessonId: Int) : Config
         @Serializable
-        data class Complete(
-            val lessonId: Int,
-            val section: Section,
-            val mode: LessonMode = LessonMode.NORMAL
-        ) : Config
+        data class Complete(val lessonId: Int, val section: Section) : Config
     }
 }
