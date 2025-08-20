@@ -11,8 +11,8 @@ import kotlinx.coroutines.launch
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
-import org.bibletranslationtools.sun.ui.components.lessons.LessonType
 import org.bibletranslationtools.sun.ui.model.LessonSuite
+import org.bibletranslationtools.sun.ui.model.LessonType
 import org.bibletranslationtools.sun.ui.model.toItem
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject

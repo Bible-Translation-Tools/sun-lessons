@@ -26,6 +26,7 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import org.bibletranslationtools.sun.R
 import org.bibletranslationtools.sun.ui.control.TopAppBar
 import org.bibletranslationtools.sun.ui.control.list.LessonCard
+import org.bibletranslationtools.sun.ui.model.LessonType
 
 @Composable
 fun ListScreen(component: ListComponent) {

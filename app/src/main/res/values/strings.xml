@@ -50,4 +50,5 @@
     <string name="internet_usage_hint">Your download will use internet data.</string>
     <string name="confirm_download">Do you wish to continue downloading?</string>
     <string name="download">Download</string>
+    <string name="updates">Updates</string>
 </resources>

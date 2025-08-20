@@ -11,8 +11,9 @@ import org.bibletranslationtools.sun.ui.components.RootScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+
+        enableEdgeToEdge()
 
         val root = retainedComponent { componentContext ->
             DefaultRootComponent(componentContext) {

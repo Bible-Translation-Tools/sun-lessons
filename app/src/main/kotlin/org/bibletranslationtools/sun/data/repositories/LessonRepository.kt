@@ -3,7 +3,7 @@ package org.bibletranslationtools.sun.data.repositories
 import org.bibletranslationtools.sun.data.dao.LessonDao
 import org.bibletranslationtools.sun.data.model.LessonEntity
 import org.bibletranslationtools.sun.data.model.LessonWithData
-import org.bibletranslationtools.sun.ui.components.lessons.LessonType
+import org.bibletranslationtools.sun.ui.model.LessonType
 
 interface LessonRepository {
     suspend fun insert(lesson: LessonEntity): Long

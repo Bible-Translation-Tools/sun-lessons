@@ -2,23 +2,36 @@ package org.bibletranslationtools.sun.ui.model
 
 import kotlinx.datetime.LocalDateTime
 import org.bibletranslationtools.sun.data.model.LessonEntity
-import org.bibletranslationtools.sun.utils.Utils
 import org.bibletranslationtools.sun.utils.toLocalDateTime
 import org.bibletranslationtools.sun.utils.toTimestamp
+
+enum class LessonType {
+    BASIC,
+    SCRIPTURE
+}
 
 data class LessonItem(
     val book: String?,
     val chapter: Int?,
     val verse: Int?,
-    val author: String?,
-    val createdAt: LocalDateTime = Utils.getCurrentTime(),
+    val sort: Int,
+    val author: String,
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime,
     val id: Long = 0
 ) {
     val name: String
-        get() = if (book != null && chapter != null && verse != null) {
+        get() = if (type == LessonType.SCRIPTURE) {
             "$book $chapter:$verse"
         } else {
             "Lesson $id"
+        }
+
+    val type: LessonType
+        get() = if (book == null || chapter == null || verse == null) {
+            LessonType.SCRIPTURE
+        } else {
+            LessonType.BASIC
         }
 }
 
@@ -27,8 +40,10 @@ fun LessonEntity.toItem(): LessonItem {
         book = book,
         chapter = chapter,
         verse = verse,
+        sort = sort,
         author = author,
         createdAt = createdAt.toLocalDateTime(),
+        updatedAt = updatedAt.toLocalDateTime(),
         id = id
     )
 }

@@ -8,13 +8,13 @@ data class LessonWithData(
     @Relation(
         entity = CardEntity::class,
         parentColumn = "id",
-        entityColumn = "lesson_id"
+        entityColumn = "lessonId"
     )
     val cards: List<CardEntity>,
     @Relation(
         entity = SentenceEntity::class,
         parentColumn = "id",
-        entityColumn = "lesson_id"
+        entityColumn = "lessonId"
     )
     val sentences: List<SentenceEntity>
 )

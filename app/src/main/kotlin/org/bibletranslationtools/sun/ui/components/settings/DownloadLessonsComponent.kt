@@ -14,6 +14,7 @@ import org.bibletranslationtools.sun.ui.components.ParentContext
 import org.bibletranslationtools.sun.ui.model.BookItem
 import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.ui.model.emptyBookItem
+import org.bibletranslationtools.sun.utils.Utils
 import org.koin.core.component.KoinComponent
 
 interface DownloadLessonsComponent : ParentContext {
@@ -77,12 +78,65 @@ class DefaultDownloadLessonsComponent(
     private suspend fun loadLessons() {
         withContext(Dispatchers.Default) {
             val lessons = listOf(
-                LessonItem("gen", 4, 21, "username1"),
-                LessonItem("psa", 144, 37, "username2"),
-                LessonItem("mat", 1, 1, "username1"),
-                LessonItem("jhn", 3, 16, "username1"),
-                LessonItem("act", 14, 2, "max"),
-                LessonItem("rev", 22, 12, "username2"),
+                LessonItem(
+                    "gen",
+                    4,
+                    21,
+                    1,
+                    "username1",
+                    Utils.getCurrentTime(),
+                    Utils.getCurrentTime()
+                ),
+                LessonItem(
+                    "psa",
+                    144,
+                    37,
+                    1,
+                    "username2",
+                    Utils.getCurrentTime(),
+                    Utils.getCurrentTime(),
+                    0
+                ),
+                LessonItem(
+                    "mat",
+                    1,
+                    1,
+                    1,
+                    "username1",
+                    Utils.getCurrentTime(),
+                    Utils.getCurrentTime(),
+                    0
+                ),
+                LessonItem(
+                    "jhn",
+                    3,
+                    16,
+                    1,
+                    "username1",
+                    Utils.getCurrentTime(),
+                    Utils.getCurrentTime(),
+                    0
+                ),
+                LessonItem(
+                    "act",
+                    14,
+                    2,
+                    1,
+                    "max",
+                    Utils.getCurrentTime(),
+                    Utils.getCurrentTime(),
+                    0
+                ),
+                LessonItem(
+                    "rev",
+                    22,
+                    12,
+                    1,
+                    "username2",
+                    Utils.getCurrentTime(),
+                    Utils.getCurrentTime(),
+                    0
+                ),
             )
             _model.update { it.copy(lessons = lessons) }
         }

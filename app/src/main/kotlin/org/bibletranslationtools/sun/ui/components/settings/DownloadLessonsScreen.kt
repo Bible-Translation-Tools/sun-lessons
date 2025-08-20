@@ -34,6 +34,7 @@ import org.bibletranslationtools.sun.R
 import org.bibletranslationtools.sun.ui.control.ConfirmDialog
 import org.bibletranslationtools.sun.ui.control.TopAppBar
 import org.bibletranslationtools.sun.ui.control.settings.DownloadCard
+import org.bibletranslationtools.sun.ui.control.settings.DownloadStatus
 
 @Composable
 fun DownloadLessonsScreen(component: DownloadLessonsComponent) {
@@ -46,7 +47,7 @@ fun DownloadLessonsScreen(component: DownloadLessonsComponent) {
     LaunchedEffect(searchQuery) {
         filteredLessons = model.lessons.filter { lesson ->
             lesson.verse.toString().contains(searchQuery, ignoreCase = true)
-                    || lesson.author?.contains(searchQuery, ignoreCase = true) == true
+                    || lesson.author.contains(searchQuery, ignoreCase = true)
         }
     }
 
@@ -106,8 +107,8 @@ fun DownloadLessonsScreen(component: DownloadLessonsComponent) {
                     itemsIndexed(filteredLessons) { index, lesson ->
                         DownloadCard(
                             lesson = lesson,
-                            downloaded = index % 2 == 0,
-                            onDownloadClick = {
+                            status = DownloadStatus.entries.random(),
+                            onClick = {
                                 component.onLessonSelected(lesson)
                             },
                             modifier = Modifier.fillMaxWidth()

@@ -11,12 +11,8 @@ import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.Serializable
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
+import org.bibletranslationtools.sun.ui.model.LessonType
 import org.bibletranslationtools.sun.utils.Section
-
-enum class LessonType {
-    BASIC,
-    SCRIPTURE
-}
 
 enum class SectionState {
     NOT_STARTED,

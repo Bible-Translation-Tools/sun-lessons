@@ -16,12 +16,12 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import org.bibletranslationtools.sun.ui.components.ParentContext
 import org.bibletranslationtools.sun.ui.components.lessons.DefaultLessonsComponent
-import org.bibletranslationtools.sun.ui.components.lessons.LessonType
 import org.bibletranslationtools.sun.ui.components.lessons.LessonsComponent
 import org.bibletranslationtools.sun.ui.components.progress.DefaultProgressComponent
 import org.bibletranslationtools.sun.ui.components.progress.ProgressComponent
 import org.bibletranslationtools.sun.ui.components.settings.DefaultSettingsComponent
 import org.bibletranslationtools.sun.ui.components.settings.SettingsComponent
+import org.bibletranslationtools.sun.ui.model.LessonType
 import org.bibletranslationtools.sun.ui.navigation.MainTab
 
 interface MainComponent: ParentContext {

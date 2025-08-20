@@ -7,7 +7,7 @@ data class SentenceWithSymbols(
     @Embedded val sentence: SentenceEntity,
     @Relation(
         parentColumn = "id",
-        entityColumn = "sentence_id"
+        entityColumn = "sentenceId"
     )
     val symbols: List<SymbolEntity>
 )

@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
 import org.bibletranslationtools.sun.data.dao.CardDao
 import org.bibletranslationtools.sun.data.dao.LessonDao
 import org.bibletranslationtools.sun.data.dao.SentenceDao
@@ -28,7 +27,6 @@ import kotlin.concurrent.Volatile
     version = 1,
     exportSchema = true
 )
-@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun getCardDao(): CardDao
