@@ -14,7 +14,7 @@ import org.bibletranslationtools.sun.data.repositories.SentenceRepository
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
-import org.bibletranslationtools.sun.ui.model.LessonItem
+import org.bibletranslationtools.sun.ui.model.LessonSuite
 import org.bibletranslationtools.sun.ui.model.LessonMode
 import org.bibletranslationtools.sun.ui.model.toItem
 import org.bibletranslationtools.sun.utils.Section
@@ -26,7 +26,7 @@ interface ListComponent : ParentContext {
     val model: Value<Model>
 
     data class Model(
-        val lessons: List<LessonItem> = emptyList(),
+        val lessons: List<LessonSuite> = emptyList(),
         val selectedId: Long = 1,
         val nextLessonId: Long = 1,
         val nextSection: Section = Section.LEARN_SYMBOLS,
@@ -61,8 +61,8 @@ class DefaultListComponent(
 
         componentScope.launch {
             defineNextSection()
-            loadLessons()
             setSelectedLesson()
+            loadLessons()
         }
     }
 
@@ -95,7 +95,7 @@ class DefaultListComponent(
         _model.update { it.copy(selectedId = lastLesson) }
     }
 
-    private fun lessonAvailable(lessons: List<LessonItem>, position: Int): Boolean {
+    private fun lessonAvailable(lessons: List<LessonSuite>, position: Int): Boolean {
         if (position == 0) return true
         val prevLesson = lessons[position - 1]
         return prevLesson.totalProgress == 100.0

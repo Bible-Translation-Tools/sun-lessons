@@ -1,46 +1,25 @@
 package org.bibletranslationtools.sun.ui.components.settings
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import org.bibletranslationtools.sun.R
-import org.bibletranslationtools.sun.ui.control.TopAppBar
+import com.arkivanov.decompose.extensions.compose.stack.Children
+import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
+import org.bibletranslationtools.sun.utils.Utils
 
 @Composable
-fun SettingsScreen(component: SettingsComponent, parentPadding: PaddingValues) {
-    Scaffold(
-        topBar = {
-            TopAppBar(onBackClick = {}) {
-                Spacer(modifier = Modifier.weight(1f))
-                Icon(
-                    painter = painterResource(R.drawable.settings),
-                    contentDescription = "Lessons"
-                )
-                Text(
-                    text = stringResource(R.string.settings),
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        },
-        modifier = Modifier.padding(parentPadding),
-        containerColor = MaterialTheme.colorScheme.surface
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier.fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            Text("Settings")
+fun SettingsScreen(component: SettingsComponent) {
+    Children(
+        stack = component.stack,
+        animation = stackAnimation(Utils.slideHorizontally())
+    ) {
+        when (val child = it.instance) {
+            is SettingsComponent.Child.SettingsList ->
+                SettingsListScreen(child.component)
+            is SettingsComponent.Child.SelectChapter ->
+                SelectChapterScreen(child.component)
+            is SettingsComponent.Child.DownloadLessons ->
+                DownloadLessonsScreen(child.component)
+            is SettingsComponent.Child.UpdateLessons ->
+                UpdateLessonsScreen(child.component)
         }
     }
 }

@@ -12,7 +12,7 @@ import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
 import org.bibletranslationtools.sun.ui.components.lessons.LessonType
-import org.bibletranslationtools.sun.ui.model.LessonItem
+import org.bibletranslationtools.sun.ui.model.LessonSuite
 import org.bibletranslationtools.sun.ui.model.toItem
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -22,7 +22,7 @@ interface ProgressComponent : ParentContext {
     val model: Value<Model>
 
     data class Model(
-        val lessons: List<LessonItem> = emptyList()
+        val lessons: List<LessonSuite> = emptyList()
     )
 }
 
@@ -53,7 +53,7 @@ class DefaultProgressComponent(
         }
     }
 
-    private fun lessonAvailable(lessons: List<LessonItem>, position: Int): Boolean {
+    private fun lessonAvailable(lessons: List<LessonSuite>, position: Int): Boolean {
         if (position == 0) return true
         val prevLesson = lessons[position - 1]
         return prevLesson.totalProgress == 100.0

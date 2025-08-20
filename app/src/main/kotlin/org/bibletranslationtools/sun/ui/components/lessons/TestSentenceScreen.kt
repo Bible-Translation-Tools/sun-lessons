@@ -2,15 +2,11 @@ package org.bibletranslationtools.sun.ui.components.lessons
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,36 +27,28 @@ import org.bibletranslationtools.sun.ui.control.test.AnswerArea
 import org.bibletranslationtools.sun.ui.control.test.QuestionSection
 
 @Composable
-fun TestSentenceScreen(component: TestSentenceComponent, parentPadding: PaddingValues) {
+fun TestSentenceScreen(component: TestSentenceComponent) {
 
     val model by component.model.subscribeAsState()
 
     var showCorrectAnswer by remember { mutableStateOf(false) }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(onBackClick = component::onBackClick) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(
-                        text = stringResource(R.string.lesson_name, model.lessonId),
-                        fontWeight = FontWeight.Bold
-                    )
-                    TallyText(model.lessonId)
-                }
+    Column(modifier = Modifier.fillMaxSize()) {
+        TopAppBar(onBackClick = component::onBackClick) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = stringResource(R.string.lesson_name, model.lessonId),
+                    fontWeight = FontWeight.Bold
+                )
+                TallyText(model.lessonId)
             }
-        },
-        modifier = Modifier.padding(parentPadding),
-        containerColor = MaterialTheme.colorScheme.surface,
-        contentWindowInsets = WindowInsets()
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier.fillMaxSize()
-                .padding(innerPadding)
-        ) {
+        }
+
+        Column(modifier = Modifier.weight(1f)) {
             Column(
                 modifier = Modifier.fillMaxSize()
                     .padding(horizontal = 20.dp, vertical = 24.dp),

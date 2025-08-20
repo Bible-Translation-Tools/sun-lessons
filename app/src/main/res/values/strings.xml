@@ -38,4 +38,16 @@
     <string name="start_lesson">Start</string>
     <string name="continue_lesson">Continue</string>
     <string name="initialization">Loading lessons…</string>
+    <string name="downloads">Downloads</string>
+    <string name="check_updates">Check for Updates</string>
+    <string name="search_book_name">Book name or identifier</string>
+    <string name="search_verse_username">Verse or username</string>
+    <string name="old_testament">Old Testament</string>
+    <string name="new_testament">New Testament</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="internet_usage">Internet Data Usage</string>
+    <string name="internet_usage_hint">Your download will use internet data.</string>
+    <string name="confirm_download">Do you wish to continue downloading?</string>
+    <string name="download">Download</string>
 </resources>

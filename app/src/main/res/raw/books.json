@@ -1,0 +1,398 @@
+[
+  {
+    "slug": "gen",
+    "name": "Genesis",
+    "sort": 1,
+    "chapters": 50
+  },
+  {
+    "slug": "exo",
+    "name": "Exodus",
+    "sort": 2,
+    "chapters": 40
+  },
+  {
+    "slug": "lev",
+    "name": "Leviticus",
+    "sort": 3,
+    "chapters": 27
+  },
+  {
+    "slug": "num",
+    "name": "Numbers",
+    "sort": 4,
+    "chapters": 36
+  },
+  {
+    "slug": "deu",
+    "name": "Deuteronomy",
+    "sort": 5,
+    "chapters": 34
+  },
+  {
+    "slug": "jos",
+    "name": "Joshua",
+    "sort": 6,
+    "chapters": 24
+  },
+  {
+    "slug": "jdg",
+    "name": "Judges",
+    "sort": 7,
+    "chapters": 21
+  },
+  {
+    "slug": "rut",
+    "name": "Ruth",
+    "sort": 8,
+    "chapters": 4
+  },
+  {
+    "slug": "1sa",
+    "name": "1 Samuel",
+    "sort": 9,
+    "chapters": 31
+  },
+  {
+    "slug": "2sa",
+    "name": "2 Samuel",
+    "sort": 10,
+    "chapters": 24
+  },
+  {
+    "slug": "1ki",
+    "name": "1 Kings",
+    "sort": 11,
+    "chapters": 22
+  },
+  {
+    "slug": "2ki",
+    "name": "2 Kings",
+    "sort": 12,
+    "chapters": 25
+  },
+  {
+    "slug": "1ch",
+    "name": "1 Chronicles",
+    "sort": 13,
+    "chapters": 29
+  },
+  {
+    "slug": "2ch",
+    "name": "2 Chronicles",
+    "sort": 14,
+    "chapters": 36
+  },
+  {
+    "slug": "ezr",
+    "name": "Ezra",
+    "sort": 15,
+    "chapters": 10
+  },
+  {
+    "slug": "neh",
+    "name": "Nehemiah",
+    "sort": 16,
+    "chapters": 13
+  },
+  {
+    "slug": "est",
+    "name": "Esther",
+    "sort": 17,
+    "chapters": 10
+  },
+  {
+    "slug": "job",
+    "name": "Job",
+    "sort": 18,
+    "chapters": 42
+  },
+  {
+    "slug": "psa",
+    "name": "Psalms",
+    "sort": 19,
+    "chapters": 150
+  },
+  {
+    "slug": "pro",
+    "name": "Proverbs",
+    "sort": 20,
+    "chapters": 31
+  },
+  {
+    "slug": "ecc",
+    "name": "Ecclesiastes",
+    "sort": 21,
+    "chapters": 12
+  },
+  {
+    "slug": "sng",
+    "name": "Song of Solomon",
+    "sort": 22,
+    "chapters": 8
+  },
+  {
+    "slug": "isa",
+    "name": "Isaiah",
+    "sort": 23,
+    "chapters": 66
+  },
+  {
+    "slug": "jer",
+    "name": "Jeremiah",
+    "sort": 24,
+    "chapters": 52
+  },
+  {
+    "slug": "lam",
+    "name": "Lamentations",
+    "sort": 25,
+    "chapters": 5
+  },
+  {
+    "slug": "ezk",
+    "name": "Ezekiel",
+    "sort": 26,
+    "chapters": 48
+  },
+  {
+    "slug": "dan",
+    "name": "Daniel",
+    "sort": 27,
+    "chapters": 12
+  },
+  {
+    "slug": "hos",
+    "name": "Hosea",
+    "sort": 28,
+    "chapters": 14
+  },
+  {
+    "slug": "jol",
+    "name": "Joel",
+    "sort": 29,
+    "chapters": 3
+  },
+  {
+    "slug": "amo",
+    "name": "Amos",
+    "sort": 30,
+    "chapters": 9
+  },
+  {
+    "slug": "oba",
+    "name": "Obadiah",
+    "sort": 31,
+    "chapters": 1
+  },
+  {
+    "slug": "jon",
+    "name": "Jonah",
+    "sort": 32,
+    "chapters": 4
+  },
+  {
+    "slug": "mic",
+    "name": "Micah",
+    "sort": 33,
+    "chapters": 7
+  },
+  {
+    "slug": "nam",
+    "name": "Nahum",
+    "sort": 34,
+    "chapters": 3
+  },
+  {
+    "slug": "hab",
+    "name": "Habakkuk",
+    "sort": 35,
+    "chapters": 3
+  },
+  {
+    "slug": "zep",
+    "name": "Zephaniah",
+    "sort": 36,
+    "chapters": 3
+  },
+  {
+    "slug": "hag",
+    "name": "Haggai",
+    "sort": 37,
+    "chapters": 2
+  },
+  {
+    "slug": "zec",
+    "name": "Zechariah",
+    "sort": 38,
+    "chapters": 14
+  },
+  {
+    "slug": "mal",
+    "name": "Malachi",
+    "sort": 39,
+    "chapters": 4
+  },
+  {
+    "slug": "mat",
+    "name": "Matthew",
+    "sort": 40,
+    "chapters": 28
+  },
+  {
+    "slug": "mrk",
+    "name": "Mark",
+    "sort": 41,
+    "chapters": 16
+  },
+  {
+    "slug": "luk",
+    "name": "Luke",
+    "sort": 42,
+    "chapters": 24
+  },
+  {
+    "slug": "jhn",
+    "name": "John",
+    "sort": 43,
+    "chapters": 21
+  },
+  {
+    "slug": "act",
+    "name": "Acts",
+    "sort": 44,
+    "chapters": 28
+  },
+  {
+    "slug": "rom",
+    "name": "Romans",
+    "sort": 45,
+    "chapters": 16
+  },
+  {
+    "slug": "1co",
+    "name": "1 Corinthians",
+    "sort": 46,
+    "chapters": 16
+  },
+  {
+    "slug": "2co",
+    "name": "2 Corinthians",
+    "sort": 47,
+    "chapters": 13
+  },
+  {
+    "slug": "gal",
+    "name": "Galatians",
+    "sort": 48,
+    "chapters": 6
+  },
+  {
+    "slug": "eph",
+    "name": "Ephesians",
+    "sort": 49,
+    "chapters": 6
+  },
+  {
+    "slug": "php",
+    "name": "Philippians",
+    "sort": 50,
+    "chapters": 4
+  },
+  {
+    "slug": "col",
+    "name": "Colossians",
+    "sort": 51,
+    "chapters": 4
+  },
+  {
+    "slug": "1th",
+    "name": "1 Thessalonians",
+    "sort": 52,
+    "chapters": 5
+  },
+  {
+    "slug": "2th",
+    "name": "2 Thessalonians",
+    "sort": 53,
+    "chapters": 3
+  },
+  {
+    "slug": "1ti",
+    "name": "1 Timothy",
+    "sort": 54,
+    "chapters": 6
+  },
+  {
+    "slug": "2ti",
+    "name": "2 Timothy",
+    "sort": 55,
+    "chapters": 4
+  },
+  {
+    "slug": "tit",
+    "name": "Titus",
+    "sort": 56,
+    "chapters": 3
+  },
+  {
+    "slug": "phm",
+    "name": "Philemon",
+    "sort": 57,
+    "chapters": 1
+  },
+  {
+    "slug": "heb",
+    "name": "Hebrews",
+    "sort": 58,
+    "chapters": 13
+  },
+  {
+    "slug": "jas",
+    "name": "James",
+    "sort": 59,
+    "chapters": 5
+  },
+  {
+    "slug": "1pe",
+    "name": "1 Peter",
+    "sort": 60,
+    "chapters": 5
+  },
+  {
+    "slug": "2pe",
+    "name": "2 Peter",
+    "sort": 61,
+    "chapters": 3
+  },
+  {
+    "slug": "1jn",
+    "name": "1 John",
+    "sort": 62,
+    "chapters": 5
+  },
+  {
+    "slug": "2jn",
+    "name": "2 John",
+    "sort": 63,
+    "chapters": 1
+  },
+  {
+    "slug": "3jn",
+    "name": "3 John",
+    "sort": 64,
+    "chapters": 1
+  },
+  {
+    "slug": "jud",
+    "name": "Jude",
+    "sort": 65,
+    "chapters": 1
+  },
+  {
+    "slug": "rev",
+    "name": "Revelation",
+    "sort": 66,
+    "chapters": 22
+  }
+]

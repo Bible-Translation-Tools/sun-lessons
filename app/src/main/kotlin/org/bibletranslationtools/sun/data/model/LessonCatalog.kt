@@ -3,7 +3,7 @@ package org.bibletranslationtools.sun.data.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LessonSuite(
+data class LessonCatalog(
     val version: Int,
     val lessons: List<LessonData>
 )

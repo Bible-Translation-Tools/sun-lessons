@@ -24,13 +24,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.bibletranslationtools.sun.R
-import org.bibletranslationtools.sun.ui.model.LessonItem
+import org.bibletranslationtools.sun.ui.model.LessonSuite
 import org.bibletranslationtools.sun.ui.tallyFontFamily
 import org.bibletranslationtools.sun.utils.TallyMarkConverter
 
 @Composable
 fun LessonHeader(
-    lesson: LessonItem,
+    lesson: LessonSuite,
     isExpanded: Boolean,
     onClick: () -> Unit
 ) {

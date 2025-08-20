@@ -1,9 +1,7 @@
 package org.bibletranslationtools.sun.ui.components.lessons
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,7 +11,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,7 +28,7 @@ import org.bibletranslationtools.sun.ui.control.TopAppBar
 import org.bibletranslationtools.sun.ui.control.list.LessonCard
 
 @Composable
-fun ListScreen(component: ListComponent, parentPadding: PaddingValues) {
+fun ListScreen(component: ListComponent) {
     val model by component.model.subscribeAsState()
 
     var expandedLessonId by rememberSaveable {
@@ -49,34 +46,26 @@ fun ListScreen(component: ListComponent, parentPadding: PaddingValues) {
         stringResource(R.string.continue_lesson)
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                onBackClick = if (model.lessonType == LessonType.SCRIPTURE) {
-                    component::onBackClick
-                } else null
-            ) {
-                if (model.lessonType == LessonType.SCRIPTURE) {
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-                Icon(
-                    painter = painterResource(topIcon),
-                    contentDescription = "Lessons"
-                )
-                Text(
-                    text = stringResource(topText),
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        },
-        modifier = Modifier.padding(parentPadding),
-        containerColor = MaterialTheme.colorScheme.surface,
-        contentWindowInsets = WindowInsets()
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier.fillMaxSize()
-                .padding(innerPadding)
+    Column(modifier = Modifier.fillMaxSize()) {
+        TopAppBar(
+            onBackClick = if (model.lessonType == LessonType.SCRIPTURE) {
+                component::onBackClick
+            } else null
         ) {
+            if (model.lessonType == LessonType.SCRIPTURE) {
+                Spacer(modifier = Modifier.weight(1f))
+            }
+            Icon(
+                painter = painterResource(topIcon),
+                contentDescription = "Lessons"
+            )
+            Text(
+                text = stringResource(topText),
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        Column(modifier = Modifier.weight(1f)) {
             Column(
                 modifier = Modifier.fillMaxSize()
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)

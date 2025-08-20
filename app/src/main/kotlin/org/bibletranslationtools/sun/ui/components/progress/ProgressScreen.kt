@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -30,32 +28,25 @@ import org.bibletranslationtools.sun.ui.control.progress.ProgressSection
 import org.bibletranslationtools.sun.ui.control.progress.ScreenHeader
 
 @Composable
-fun ProgressScreen(component: ProgressComponent, parentPadding: PaddingValues) {
+fun ProgressScreen(component: ProgressComponent) {
     val model by component.model.subscribeAsState()
 
-    Scaffold(
-        topBar = {
-            TopAppBar(onBackClick = component::onBackClick) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.padding(end = 8.dp)
-                ) {
-                    Spacer(modifier = Modifier.weight(1f))
-                    Icon(
-                        painter = painterResource(R.drawable.sun_logo),
-                        contentDescription = "logo"
-                    )
-                }
+    Column(modifier = Modifier.fillMaxSize()) {
+        TopAppBar(onBackClick = component::onBackClick) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.padding(end = 8.dp)
+            ) {
+                Spacer(modifier = Modifier.weight(1f))
+                Icon(
+                    painter = painterResource(R.drawable.sun_logo),
+                    contentDescription = "logo"
+                )
             }
-        },
-        modifier = Modifier.padding(parentPadding),
-        containerColor = MaterialTheme.colorScheme.surface
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier.fillMaxSize()
-                .padding(innerPadding)
-        ) {
+        }
+
+        Column(modifier = Modifier.weight(1f)) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier

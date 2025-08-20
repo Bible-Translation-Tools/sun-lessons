@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.bibletranslationtools.sun.data.model.CardData
 import org.bibletranslationtools.sun.data.model.LessonData
-import org.bibletranslationtools.sun.data.model.LessonSuite
+import org.bibletranslationtools.sun.data.model.LessonCatalog
 import org.bibletranslationtools.sun.data.model.SentenceData
 import org.bibletranslationtools.sun.data.model.SettingEntity
 import org.bibletranslationtools.sun.data.model.SymbolData
@@ -49,10 +49,10 @@ class DefaultSplashComponent(
 
                 val dbVersion = getVersion() ?: 0
 
-                val lessonSuite: LessonSuite = Utils.JsonLenient.decodeFromString(json)
+                val lessonCatalog: LessonCatalog = Utils.JsonLenient.decodeFromString(json)
 
-                if (lessonSuite.version > dbVersion) {
-                    for (lesson in lessonSuite.lessons) {
+                if (lessonCatalog.version > dbVersion) {
+                    for (lesson in lessonCatalog.lessons) {
                         val lessonId = insertLesson(lesson)
                         var sort = 0
 
@@ -82,7 +82,7 @@ class DefaultSplashComponent(
                     insertSetting(
                         SettingEntity(
                             SettingEntity.VERSION,
-                            lessonSuite.version.toString()
+                            lessonCatalog.version.toString()
                         )
                     )
                 }
