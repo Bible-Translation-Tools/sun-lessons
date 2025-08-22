@@ -10,6 +10,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
 import org.bibletranslationtools.sun.ui.model.BookItem
@@ -20,8 +21,10 @@ import org.bibletranslationtools.sun.ui.model.LessonSuite
 import org.bibletranslationtools.sun.ui.model.SentenceItem
 import org.bibletranslationtools.sun.ui.model.SymbolItem
 import org.bibletranslationtools.sun.ui.model.emptyBookItem
+import org.bibletranslationtools.sun.ui.model.toItem
 import org.bibletranslationtools.sun.usecase.CompareLessons
 import org.bibletranslationtools.sun.usecase.UpdateLesson
+import org.bibletranslationtools.sun.utils.Utils
 import org.bibletranslationtools.sun.utils.toLocalDateTime
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -49,6 +52,7 @@ class DefaultDownloadLessonsComponent(
     private val chapter: Int
 ) : DownloadLessonsComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
+    private val lessonRepository: LessonRepository by inject()
     private val compareLessons: CompareLessons by inject()
     private val updateLesson: UpdateLesson by inject()
 
@@ -83,7 +87,7 @@ class DefaultDownloadLessonsComponent(
             model.value.selectedLesson?.let { suite ->
                 dismissSelectedLesson()
 
-                //updateLesson.update(suite)
+                updateLesson.update(suite)
 
                 for (i in 0..100) {
                     onDownloadProgress(suite, i / 100f)
@@ -214,7 +218,7 @@ class DefaultDownloadLessonsComponent(
                     1,
                     "username2",
                     "2025-08-02T11:11:56".toLocalDateTime(),
-                    "2025-08-10T01:00:01".toLocalDateTime()
+                    Utils.getCurrentTime()
                 ),
                 cards = listOf(
                     CardItem(
@@ -564,194 +568,8 @@ class DefaultDownloadLessonsComponent(
         )
     }
 
-    private fun getLocalLessons(): List<LessonSuite> {
-        return listOf(
-            LessonSuite(
-                lesson = LessonItem(
-                    bookItem.slug,
-                    chapter,
-                    1,
-                    1,
-                    "username1",
-                    "2025-08-14T12:32:01".toLocalDateTime(),
-                    "2025-08-16T12:00:01".toLocalDateTime()
-                ),
-                cards = listOf(
-                    CardItem(
-                        symbol = "\uE352",
-                        sort = 2,
-                        image = "image52",
-                        learned = false,
-                        tested = false,
-                        lessonId = 0
-                    ),
-                    CardItem(
-                        symbol = "\uE225",
-                        sort = 3,
-                        image = "image3",
-                        learned = false,
-                        tested = false,
-                        lessonId = 0
-                    )
-                ),
-                sentences = listOf(
-                    SentenceItem(
-                        sort = 1,
-                        image = "image21",
-                        learned = false,
-                        tested = false,
-                        lessonId = 0,
-                        symbols = listOf(
-                            SymbolItem(
-                                name = "\uE28E",
-                                sort = 2,
-                                sentenceId = 0
-                            ),
-                            SymbolItem(
-                                name = "\uE256",
-                                sort = 3,
-                                sentenceId = 0
-                            )
-                        )
-                    ),
-                    SentenceItem(
-                        sort = 2,
-                        image = "image22",
-                        learned = false,
-                        tested = false,
-                        lessonId = 0,
-                        symbols = listOf(
-                            SymbolItem(
-                                name = "\uE020",
-                                sort = 1,
-                                sentenceId = 0
-                            ),
-                            SymbolItem(
-                                name = "\uE086",
-                                sort = 2,
-                                sentenceId = 0
-                            )
-                        )
-                    )
-                ),
-                isAvailable = false,
-                isSelected = false
-            ),
-            LessonSuite(
-                lesson = LessonItem(
-                    bookItem.slug,
-                    chapter,
-                    3,
-                    1,
-                    "username1",
-                    "2025-08-12T15:44:00".toLocalDateTime(),
-                    "2025-08-16T09:00:01".toLocalDateTime()
-                ),
-                cards = listOf(
-                    CardItem(
-                        symbol = "\uE26E",
-                        sort = 1,
-                        image = "image8",
-                        learned = false,
-                        tested = false,
-                        lessonId = 0
-                    ),
-                    CardItem(
-                        symbol = "\uE125",
-                        sort = 2,
-                        image = "image9",
-                        learned = false,
-                        tested = false,
-                        lessonId = 0
-                    )
-                ),
-                sentences = listOf(
-                    SentenceItem(
-                        sort = 1,
-                        image = "image27",
-                        learned = false,
-                        tested = false,
-                        lessonId = 0,
-                        symbols = listOf(
-                            SymbolItem(
-                                name = "\uE314",
-                                sort = 1,
-                                sentenceId = 0
-                            ),
-                            SymbolItem(
-                                name = "\uE167",
-                                sort = 2,
-                                sentenceId = 0
-                            )
-                        )
-                    ),
-                    SentenceItem(
-                        sort = 2,
-                        image = "image28",
-                        learned = false,
-                        tested = false,
-                        lessonId = 0,
-                        symbols = listOf(
-                            SymbolItem(
-                                name = "\uE24C",
-                                sort = 1,
-                                sentenceId = 0
-                            ),
-                            SymbolItem(
-                                name = "\uE356",
-                                sort = 2,
-                                sentenceId = 0
-                            )
-                        )
-                    )
-                ),
-                isAvailable = false,
-                isSelected = false
-            ),
-            LessonSuite(
-                lesson = LessonItem(
-                    bookItem.slug,
-                    chapter,
-                    6,
-                    1,
-                    "max",
-                    "2025-08-07T11:11:56".toLocalDateTime(),
-                    "2025-08-12T01:00:01".toLocalDateTime()
-                ),
-                cards = listOf(
-                    CardItem(
-                        symbol = "\uE058",
-                        sort = 1,
-                        image = "image12",
-                        learned = false,
-                        tested = false,
-                        lessonId = 0
-                    )
-                ),
-                sentences = listOf(
-                    SentenceItem(
-                        sort = 1,
-                        image = "image31",
-                        learned = false,
-                        tested = false,
-                        lessonId = 0,
-                        symbols = listOf(
-                            SymbolItem(
-                                name = "\uE205",
-                                sort = 1,
-                                sentenceId = 0
-                            ),
-                            SymbolItem(
-                                name = "\uE066",
-                                sort = 2,
-                                sentenceId = 0
-                            )
-                        )
-                    )
-                ),
-                isAvailable = false,
-                isSelected = false
-            )
-        )
+    private suspend fun getLocalLessons(): List<LessonSuite> {
+        return lessonRepository.getAllWithData(bookItem.slug, chapter)
+            .map { it.toItem() }
     }
 }

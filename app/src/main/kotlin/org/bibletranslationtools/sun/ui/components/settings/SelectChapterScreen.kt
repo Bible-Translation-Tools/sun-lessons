@@ -53,7 +53,7 @@ fun SelectChapterScreen(component: SelectChapterComponent) {
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var filteredBooks by remember { mutableStateOf(model.books) }
 
-    LaunchedEffect(searchQuery) {
+    LaunchedEffect(searchQuery, model.books) {
         filteredBooks = model.books.filter { book ->
             book.name.contains(searchQuery, ignoreCase = true)
                     || book.slug.contains(searchQuery, ignoreCase = true)

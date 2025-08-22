@@ -53,11 +53,10 @@ class DefaultSelectChapterComponent(
     }
 
     private suspend fun loadBooks() {
-        withContext(Dispatchers.Default) {
+        val books = withContext(Dispatchers.Default) {
             val json = assetReader.readRaw(R.raw.books)
-            val books: List<BookItem> = Utils.JsonLenient.decodeFromString(json)
-
-            _model.update { it.copy(books = books) }
+            Utils.JsonLenient.decodeFromString<List<BookItem>>(json)
         }
+        _model.update { it.copy(books = books) }
     }
 }

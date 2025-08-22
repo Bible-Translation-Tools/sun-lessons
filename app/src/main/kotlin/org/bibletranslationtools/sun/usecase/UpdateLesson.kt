@@ -18,13 +18,7 @@ class UpdateLesson(
     private val symbolRepository: SymbolRepository
 ) {
     suspend fun update(lesson: LessonSuite) {
-        val localLesson = lessonRepository.getWithData(
-            book = lesson.lesson.book ?: throw IllegalArgumentException("book is null"),
-            chapter = lesson.lesson.chapter ?: throw IllegalArgumentException("chapter is null"),
-            verse = lesson.lesson.verse ?: throw IllegalArgumentException("verse is null"),
-            sort = lesson.lesson.sort,
-            author = lesson.lesson.author
-        )?.toItem()
+        val localLesson = lessonRepository.getSingleWithData(lesson.lesson.uniqueId)?.toItem()
 
         if (localLesson != null) {
             updateLesson(localLesson, lesson)
@@ -38,22 +32,20 @@ class UpdateLesson(
             suite.lesson.toEntity()
         )
 
-        suite.cards.forEach {
-            cardRepository.insert(
-                it.copy(lessonId = lessonId).toEntity()
-            )
-        }
+        suite.cards
+            .map { it.copy(lessonId = lessonId) }
+            .forEach { cardRepository.insert(it.toEntity()) }
 
-        suite.sentences.forEach {
-            val sentenceId = sentenceRepository.insert(
-                it.copy(lessonId = lessonId).toEntity()
-            )
-            it.symbols.forEach { symbol ->
-                symbolRepository.insert(
-                    symbol.copy(sentenceId = sentenceId).toEntity()
-                )
+        suite.sentences
+            .map { it.copy(lessonId = lessonId) }
+            .forEach { sentence ->
+                val sentenceId = sentenceRepository.insert(sentence.toEntity())
+                sentence.symbols
+                    .map { it.copy(sentenceId = sentenceId) }
+                    .forEach { symbol ->
+                        symbolRepository.insert(symbol.toEntity())
+                    }
             }
-        }
     }
 
     private suspend fun updateLesson(local: LessonSuite, remote: LessonSuite) {
@@ -64,22 +56,29 @@ class UpdateLesson(
         val lesson = remote.lesson.copy(id = local.lesson.id)
         lessonRepository.update(lesson.toEntity())
 
-        updateCards(local.cards, remote.cards)
-        updateSentences(local.sentences, remote.sentences)
+        updateCards(local.cards, remote.cards, local.lesson.id)
+        updateSentences(local.sentences, remote.sentences, local.lesson.id)
     }
 
-    private suspend fun updateCards(local: List<CardItem>, remote: List<CardItem>) {
+    private suspend fun updateCards(
+        local: List<CardItem>,
+        remote: List<CardItem>,
+        lessonId: Long
+    ) {
         val localMap = local.associateBy { it.symbol }
         val remoteMap = remote.associateBy { it.symbol }
 
         val cardsToInsert = remote.filter { it.symbol !in localMap }
+            .map { it.copy(lessonId = lessonId) }
 
         val cardsToDelete = local.filter { it.symbol !in remoteMap }
 
-        val cardsToUpdate = remote.filter { remoteCard ->
-            val localCard = localMap[remoteCard.symbol]
-            localCard != null && localCard.image != remoteCard.image
-        }
+        val cardsToUpdate = remote
+            .filter { remoteCard ->
+                val localCard = localMap[remoteCard.symbol]
+                localCard != null && localCard.image != remoteCard.image
+            }
+            .map { it.copy(lessonId = lessonId) }
 
         if (cardsToInsert.isNotEmpty()) {
             cardRepository.insertAll(cardsToInsert.map { it.toEntity() })
@@ -94,7 +93,11 @@ class UpdateLesson(
         }
     }
 
-    private suspend fun updateSentences(local: List<SentenceItem>, remote: List<SentenceItem>) {
+    private suspend fun updateSentences(
+        local: List<SentenceItem>,
+        remote: List<SentenceItem>,
+        lessonId: Long
+    ) {
         val localSentenceMap = local.associateBy { it.fingerprint }
         val remoteSentenceMap = remote.associateBy { it.fingerprint }
 
@@ -110,8 +113,12 @@ class UpdateLesson(
             val localSentence = localSentenceMap[fingerprint]
 
             if (localSentence == null) {
-                sentenceRepository.insert(remoteSentence.toEntity())
-                symbolRepository.insertAll(remoteSentence.symbols.map { it.toEntity() })
+                val sentenceId = sentenceRepository.insert(
+                    remoteSentence.copy(lessonId = lessonId).toEntity()
+                )
+                symbolRepository.insertAll(remoteSentence.symbols.map {
+                    it.copy(sentenceId = sentenceId).toEntity()
+                })
             } else {
                 if (localSentence.sort != remoteSentence.sort) {
                     val sentenceToUpdate = localSentence.copy(sort = remoteSentence.sort)

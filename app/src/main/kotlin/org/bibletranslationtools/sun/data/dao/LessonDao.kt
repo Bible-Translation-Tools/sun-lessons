@@ -37,6 +37,10 @@ interface LessonDao {
     suspend fun getBasicWithData(): List<LessonWithData>
 
     @Transaction
+    @Query("SELECT * FROM lessons WHERE book = :book AND chapter = :chapter")
+    suspend fun getAllWithData(book: String?, chapter: Int?): List<LessonWithData>
+
+    @Transaction
     @Query("SELECT * FROM lessons WHERE $SCRIPTURE_FILTER")
     suspend fun getScriptureWithData(): List<LessonWithData>
 
@@ -46,15 +50,15 @@ interface LessonDao {
 
     @Transaction
     @Query("SELECT * FROM lessons WHERE id = :id")
-    suspend fun getWithData(id: Long): LessonWithData?
+    suspend fun getSingleWithData(id: Long): LessonWithData?
 
     @Transaction
     @Query("SELECT * FROM lessons WHERE book = :book AND chapter = :chapter " +
             "AND verse = :verse AND sort = :sort AND author = :author")
-    suspend fun getWithData(
-        book: String,
-        chapter: Int,
-        verse: Int,
+    suspend fun getSingleWithData(
+        book: String?,
+        chapter: Int?,
+        verse: Int?,
         sort: Int,
         author: String
     ): LessonWithData?

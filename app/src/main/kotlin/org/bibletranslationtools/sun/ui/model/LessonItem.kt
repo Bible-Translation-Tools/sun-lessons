@@ -10,6 +10,14 @@ enum class LessonType {
     SCRIPTURE
 }
 
+data class UniqueId(
+    val book: String?,
+    val chapter: Int?,
+    val verse: Int?,
+    val sort: Int,
+    val author: String
+)
+
 data class LessonItem(
     val book: String?,
     val chapter: Int?,
@@ -36,6 +44,14 @@ data class LessonItem(
 
     val fingerprint: String
         get() = "$name|$sort|$author"
+
+    val uniqueId = UniqueId(
+        book = book,
+        chapter = chapter,
+        verse = verse,
+        sort = sort,
+        author = author
+    )
 }
 
 fun LessonEntity.toItem(): LessonItem {
@@ -56,8 +72,10 @@ fun LessonItem.toEntity(): LessonEntity {
         book = book,
         chapter = chapter,
         verse = verse,
+        sort = sort,
         author = author,
         createdAt = createdAt.toTimestamp(),
+        updatedAt = updatedAt.toTimestamp(),
         id = id
     )
 }
