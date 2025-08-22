@@ -1,15 +1,24 @@
 package org.bibletranslationtools.sun.ui.model
 
 import org.bibletranslationtools.sun.data.model.LessonWithData
-import java.util.Objects
+
+enum class DownloadStatus {
+    DOWNLOAD,
+    UPDATE,
+    DONE
+}
 
 data class LessonSuite(
     val lesson: LessonItem,
     val cards: List<CardItem>,
     val sentences: List<SentenceItem>,
-    val isAvailable: Boolean,
-    val isSelected: Boolean
+    val isAvailable: Boolean = false,
+    val isSelected: Boolean = false,
+    val downloadStatus: DownloadStatus = DownloadStatus.DONE,
+    val downloadProgress: Float = -1f
 ) {
+    val fingerprint = lesson.fingerprint
+
     val cardsLearned get() = cards.count { it.learned }
     val cardsLearnedProgress get() = cardsLearned.toDouble() / cards.size * 100
 
@@ -43,28 +52,12 @@ data class LessonSuite(
             val completed = cardsLearned + cardsTested + sentencesLearned + sentencesTested
             return (completed.toDouble() / total) * 100
         }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || javaClass != other.javaClass) return false
-        val lessonSuite = other as LessonSuite
-        return lesson == lessonSuite.lesson &&
-                totalProgress == lessonSuite.totalProgress &&
-                isAvailable == lessonSuite.isAvailable &&
-                isSelected == lessonSuite.isSelected
-    }
-
-    override fun hashCode(): Int {
-        return Objects.hash(lesson, totalProgress, isAvailable, isSelected)
-    }
 }
 
 fun LessonWithData.toItem(): LessonSuite {
     return LessonSuite(
         lesson = lesson.toItem(),
         cards = cards.map { it.toItem() },
-        sentences = sentences.map { it.toItem() },
-        isAvailable = false,
-        isSelected = false
+        sentences = sentences.map { it.toItem() }
     )
 }

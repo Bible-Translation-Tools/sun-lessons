@@ -15,11 +15,20 @@ interface SentenceDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(sentence: SentenceEntity): Long
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertAll(sentences: List<SentenceEntity>)
+
     @Delete
     suspend fun delete(sentence: SentenceEntity)
 
+    @Delete
+    suspend fun deleteAll(sentences: List<SentenceEntity>)
+
     @Update
     suspend fun update(sentence: SentenceEntity)
+
+    @Update
+    suspend fun updateAll(sentences: List<SentenceEntity>)
 
     @Transaction
     @Query("SELECT * FROM sentences WHERE id = :id")

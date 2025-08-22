@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
@@ -34,7 +34,6 @@ import org.bibletranslationtools.sun.R
 import org.bibletranslationtools.sun.ui.control.ConfirmDialog
 import org.bibletranslationtools.sun.ui.control.TopAppBar
 import org.bibletranslationtools.sun.ui.control.settings.DownloadCard
-import org.bibletranslationtools.sun.ui.control.settings.DownloadStatus
 
 @Composable
 fun DownloadLessonsScreen(component: DownloadLessonsComponent) {
@@ -44,10 +43,10 @@ fun DownloadLessonsScreen(component: DownloadLessonsComponent) {
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var filteredLessons by remember { mutableStateOf(model.lessons) }
 
-    LaunchedEffect(searchQuery) {
-        filteredLessons = model.lessons.filter { lesson ->
-            lesson.verse.toString().contains(searchQuery, ignoreCase = true)
-                    || lesson.author.contains(searchQuery, ignoreCase = true)
+    LaunchedEffect(searchQuery, model.lessons) {
+        filteredLessons = model.lessons.filter { suite ->
+            suite.lesson.verse.toString().contains(searchQuery, ignoreCase = true)
+                    || suite.lesson.author.contains(searchQuery, ignoreCase = true)
         }
     }
 
@@ -104,10 +103,12 @@ fun DownloadLessonsScreen(component: DownloadLessonsComponent) {
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    itemsIndexed(filteredLessons) { index, lesson ->
+                    items(
+                        items = filteredLessons,
+                        key = { lesson -> lesson.fingerprint }
+                    ) { lesson ->
                         DownloadCard(
                             lesson = lesson,
-                            status = DownloadStatus.entries.random(),
                             onClick = {
                                 component.onLessonSelected(lesson)
                             },
@@ -120,8 +121,8 @@ fun DownloadLessonsScreen(component: DownloadLessonsComponent) {
 
         model.selectedLesson?.let { filteredLessons ->
             ConfirmDialog(
-                onDismiss = component::onLessonCanceled,
-                onCancel = component::onLessonCanceled,
+                onDismiss = component::dismissSelectedLesson,
+                onCancel = component::dismissSelectedLesson,
                 onConfirm = component::onDownloadLessonClick,
                 title = stringResource(R.string.internet_usage),
                 message = "${stringResource(R.string.internet_usage_hint)}\n" +

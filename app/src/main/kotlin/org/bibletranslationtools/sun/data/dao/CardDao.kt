@@ -13,11 +13,20 @@ interface CardDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(card: CardEntity): Long
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertAll(cards: List<CardEntity>)
+
     @Delete
     suspend fun delete(card: CardEntity)
 
+    @Delete
+    suspend fun deleteAll(cards: List<CardEntity>)
+
     @Update
     suspend fun update(card: CardEntity)
+
+    @Update
+    suspend fun updateAll(cards: List<CardEntity>)
 
     @Query("SELECT * FROM cards WHERE id = :id")
     suspend fun get(id: Long): CardEntity?

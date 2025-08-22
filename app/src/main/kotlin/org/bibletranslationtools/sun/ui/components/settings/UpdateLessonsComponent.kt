@@ -66,8 +66,7 @@ class DefaultUpdateLessonsComponent(
                     1,
                     "username1",
                     Utils.getCurrentTime(),
-                    Utils.getCurrentTime(),
-                    0
+                    Utils.getCurrentTime()
                 ),
                 LessonItem(
                     "psa",
@@ -76,8 +75,7 @@ class DefaultUpdateLessonsComponent(
                     1,
                     "username2",
                     Utils.getCurrentTime(),
-                    Utils.getCurrentTime(),
-                    0
+                    Utils.getCurrentTime()
                 ),
                 LessonItem(
                     "mat",
@@ -86,8 +84,7 @@ class DefaultUpdateLessonsComponent(
                     1,
                     "username1",
                     Utils.getCurrentTime(),
-                    Utils.getCurrentTime(),
-                    0
+                    Utils.getCurrentTime()
                 ),
                 LessonItem(
                     "jhn",
@@ -96,8 +93,7 @@ class DefaultUpdateLessonsComponent(
                     1,
                     "username1",
                     Utils.getCurrentTime(),
-                    Utils.getCurrentTime(),
-                    0
+                    Utils.getCurrentTime()
                 ),
                 LessonItem(
                     "act",
@@ -106,8 +102,7 @@ class DefaultUpdateLessonsComponent(
                     1,
                     "max",
                     Utils.getCurrentTime(),
-                    Utils.getCurrentTime(),
-                    0
+                    Utils.getCurrentTime()
                 ),
                 LessonItem(
                     "rev",
@@ -116,8 +111,7 @@ class DefaultUpdateLessonsComponent(
                     1,
                     "username2",
                     Utils.getCurrentTime(),
-                    Utils.getCurrentTime(),
-                    0
+                    Utils.getCurrentTime()
                 ),
             )
             _model.update { it.copy(lessons = lessons) }

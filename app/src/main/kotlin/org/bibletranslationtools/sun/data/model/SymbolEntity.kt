@@ -1,9 +1,20 @@
 package org.bibletranslationtools.sun.data.model
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "symbols")
+@Entity(
+    tableName = "symbols",
+    foreignKeys = [
+        ForeignKey(
+            entity = SentenceEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["sentenceId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class SymbolEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,

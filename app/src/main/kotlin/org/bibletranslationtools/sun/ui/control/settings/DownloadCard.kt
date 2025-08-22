@@ -16,35 +16,33 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.bibletranslationtools.sun.ui.model.LessonItem
-
-enum class DownloadStatus {
-    NOT_STARTED,
-    HAS_UPDATE,
-    COMPLETED
-}
+import org.bibletranslationtools.sun.ui.model.DownloadStatus
+import org.bibletranslationtools.sun.ui.model.LessonSuite
 
 @Composable
 fun DownloadCard(
-    lesson: LessonItem,
+    lesson: LessonSuite,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    status: DownloadStatus = DownloadStatus.NOT_STARTED,
-    progress: Float = -1f
+    modifier: Modifier = Modifier
 ) {
+    val progress by rememberUpdatedState(lesson.downloadProgress)
+    val status by rememberUpdatedState(lesson.downloadStatus)
+
     val icon = when (status) {
-        DownloadStatus.NOT_STARTED -> Icons.Default.Download
-        DownloadStatus.HAS_UPDATE -> Icons.Default.RestartAlt
-        DownloadStatus.COMPLETED -> Icons.Default.Check
+        DownloadStatus.DOWNLOAD -> Icons.Default.Download
+        DownloadStatus.UPDATE -> Icons.Default.RestartAlt
+        DownloadStatus.DONE -> Icons.Default.Check
     }
 
-    val (color, enabled) = if (status == DownloadStatus.COMPLETED) {
+    val (color, enabled) = if (status == DownloadStatus.DONE) {
         MaterialTheme.colorScheme.tertiary to false
     } else {
         Color.Unspecified to (progress < 0)
@@ -58,12 +56,12 @@ fun DownloadCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = lesson.name,
+                text = lesson.lesson.name,
                 modifier = Modifier.weight(1f)
             )
 
             Text(
-                text = lesson.author,
+                text = lesson.lesson.author,
                 textAlign = TextAlign.Start,
                 modifier = Modifier.weight(1f)
                     .padding(horizontal = 8.dp)

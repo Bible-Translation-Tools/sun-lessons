@@ -9,8 +9,13 @@ import org.bibletranslationtools.sun.data.repositories.SentenceRepository
 import org.bibletranslationtools.sun.data.repositories.SentenceRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.data.repositories.SettingsRepositoryImpl
+import org.bibletranslationtools.sun.data.repositories.SymbolRepository
+import org.bibletranslationtools.sun.data.repositories.SymbolRepositoryImpl
+import org.bibletranslationtools.sun.usecase.CompareLessons
+import org.bibletranslationtools.sun.usecase.UpdateLesson
 import org.bibletranslationtools.sun.utils.AssetReader
 import org.bibletranslationtools.sun.utils.AssetReaderImpl
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -25,9 +30,13 @@ val sharedModule = module {
     single { get<AppDatabase>().getSentenceDao() }
     single { get<AppDatabase>().getSettingDao() }
 
+    factoryOf(::CompareLessons)
+    factoryOf(::UpdateLesson)
+
     singleOf(::LessonRepositoryImpl).bind<LessonRepository>()
     singleOf(::CardRepositoryImpl).bind<CardRepository>()
     singleOf(::SentenceRepositoryImpl).bind<SentenceRepository>()
+    singleOf(::SymbolRepositoryImpl).bind<SymbolRepository>()
     singleOf(::SettingsRepositoryImpl).bind<SettingsRepository>()
     singleOf(::AssetReaderImpl).bind<AssetReader>()
 }

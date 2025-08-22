@@ -12,9 +12,18 @@ interface SymbolDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(symbol: SymbolEntity)
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertAll(symbols: List<SymbolEntity>)
+
     @Delete
     suspend fun delete(symbol: SymbolEntity)
 
+    @Delete
+    suspend fun deleteAll(symbols: List<SymbolEntity>)
+
     @Update
     suspend fun update(symbol: SymbolEntity)
+
+    @Update
+    suspend fun updateAll(symbols: List<SymbolEntity>)
 }

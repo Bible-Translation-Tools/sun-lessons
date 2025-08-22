@@ -47,4 +47,15 @@ interface LessonDao {
     @Transaction
     @Query("SELECT * FROM lessons WHERE id = :id")
     suspend fun getWithData(id: Long): LessonWithData?
+
+    @Transaction
+    @Query("SELECT * FROM lessons WHERE book = :book AND chapter = :chapter " +
+            "AND verse = :verse AND sort = :sort AND author = :author")
+    suspend fun getWithData(
+        book: String,
+        chapter: Int,
+        verse: Int,
+        sort: Int,
+        author: String
+    ): LessonWithData?
 }

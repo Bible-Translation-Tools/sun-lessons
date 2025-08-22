@@ -29,10 +29,13 @@ data class LessonItem(
 
     val type: LessonType
         get() = if (book == null || chapter == null || verse == null) {
-            LessonType.SCRIPTURE
-        } else {
             LessonType.BASIC
+        } else {
+            LessonType.SCRIPTURE
         }
+
+    val fingerprint: String
+        get() = "$name|$sort|$author"
 }
 
 fun LessonEntity.toItem(): LessonItem {

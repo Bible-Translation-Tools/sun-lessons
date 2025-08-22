@@ -8,8 +8,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.bibletranslationtools.sun.data.model.CardData
-import org.bibletranslationtools.sun.data.model.LessonData
 import org.bibletranslationtools.sun.data.model.LessonCatalog
+import org.bibletranslationtools.sun.data.model.LessonData
 import org.bibletranslationtools.sun.data.model.SentenceData
 import org.bibletranslationtools.sun.data.model.SettingEntity
 import org.bibletranslationtools.sun.data.model.SymbolData
@@ -18,6 +18,7 @@ import org.bibletranslationtools.sun.data.repositories.CardRepository
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.data.repositories.SentenceRepository
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
+import org.bibletranslationtools.sun.data.repositories.SymbolRepository
 import org.bibletranslationtools.sun.utils.AssetReader
 import org.bibletranslationtools.sun.utils.Utils
 import org.koin.core.component.KoinComponent
@@ -34,6 +35,7 @@ class DefaultSplashComponent(
     private val lessonRepository: LessonRepository by inject()
     private val settingsRepository: SettingsRepository by inject()
     private val sentenceRepository: SentenceRepository by inject()
+    private val symbolRepository: SymbolRepository by inject()
     private val assetReader: AssetReader by inject()
 
     private val componentScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
@@ -108,7 +110,7 @@ class DefaultSplashComponent(
 
     private fun insertSymbol(symbol: SymbolData) {
         componentScope.launch {
-            sentenceRepository.insert(symbol.toEntity())
+            symbolRepository.insert(symbol.toEntity())
         }
     }
 

@@ -1,16 +1,17 @@
 package org.bibletranslationtools.sun.data.repositories
 
 import org.bibletranslationtools.sun.data.dao.SentenceDao
-import org.bibletranslationtools.sun.data.dao.SymbolDao
 import org.bibletranslationtools.sun.data.model.SentenceEntity
 import org.bibletranslationtools.sun.data.model.SentenceWithSymbols
-import org.bibletranslationtools.sun.data.model.SymbolEntity
 
 interface SentenceRepository {
     suspend fun insert(sentence: SentenceEntity): Long
+    suspend fun insertAll(sentences: List<SentenceEntity>)
     suspend fun delete(sentence: SentenceEntity)
+    suspend fun deleteAll(sentences: List<SentenceEntity>)
     suspend fun update(sentence: SentenceEntity)
-    suspend fun insert(symbol: SymbolEntity)
+    suspend fun updateAll(sentences: List<SentenceEntity>)
+
     suspend fun get(id: Long): SentenceEntity?
     suspend fun getByLesson(lessonId: Long): List<SentenceEntity>
     suspend fun getAllWithSymbols(lessonId: Long): List<SentenceWithSymbols>
@@ -24,23 +25,30 @@ interface SentenceRepository {
 }
 
 class SentenceRepositoryImpl(
-    private val sentenceDao: SentenceDao,
-    private val symbolDao: SymbolDao
+    private val sentenceDao: SentenceDao
 ) : SentenceRepository {
     override suspend fun insert(sentence: SentenceEntity): Long {
         return sentenceDao.insert(sentence)
+    }
+
+    override suspend fun insertAll(sentences: List<SentenceEntity>) {
+        sentenceDao.insertAll(sentences)
     }
 
     override suspend fun delete(sentence: SentenceEntity) {
         sentenceDao.delete(sentence)
     }
 
+    override suspend fun deleteAll(sentences: List<SentenceEntity>) {
+        sentenceDao.deleteAll(sentences)
+    }
+
     override suspend fun update(sentence: SentenceEntity) {
         sentenceDao.update(sentence)
     }
 
-    override suspend fun insert(symbol: SymbolEntity) {
-        symbolDao.insert(symbol)
+    override suspend fun updateAll(sentences: List<SentenceEntity>) {
+        sentenceDao.updateAll(sentences)
     }
 
     override suspend fun get(id: Long): SentenceEntity? {

@@ -4,10 +4,12 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.update
+import com.arkivanov.essenty.lifecycle.doOnResume
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.bibletranslationtools.sun.data.repositories.CardRepository
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.data.repositories.SentenceRepository
@@ -60,10 +62,12 @@ class DefaultListComponent(
     init {
         _model.update { it.copy(lessonType = lessonType) }
 
-        componentScope.launch {
-            defineNextSection()
-            setSelectedLesson()
-            loadLessons()
+        doOnResume {
+            componentScope.launch {
+                defineNextSection()
+                setSelectedLesson()
+                loadLessons()
+            }
         }
     }
 
@@ -80,14 +84,16 @@ class DefaultListComponent(
     }
 
     private suspend fun loadLessons() {
-        val lessons = lessonRepository.getAllWithData(lessonType).map { it.toItem() }
-        _model.update {
-            it.copy(lessons = lessons.mapIndexed { index, lesson ->
-                lesson.copy(
-                    isAvailable = lessonAvailable(lessons, index),
-                    isSelected = lesson.lesson.id == model.value.selectedId
-                )
-            })
+        withContext(Dispatchers.Default) {
+            val lessons = lessonRepository.getAllWithData(lessonType).map { it.toItem() }
+            _model.update {
+                it.copy(lessons = lessons.mapIndexed { index, lesson ->
+                    lesson.copy(
+                        isAvailable = lessonAvailable(lessons, index),
+                        isSelected = lesson.lesson.id == model.value.selectedId
+                    )
+                })
+            }
         }
     }
 

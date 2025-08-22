@@ -16,6 +16,13 @@ interface LessonRepository {
     suspend fun getBasicWithData(): List<LessonWithData>
     suspend fun getScriptureWithData(): List<LessonWithData>
     suspend fun getWithData(id: Long): LessonWithData?
+    suspend fun getWithData(
+        book: String,
+        chapter: Int,
+        verse: Int,
+        sort: Int,
+        author: String
+    ): LessonWithData?
     suspend fun get(id: Long): LessonEntity?
 }
 class LessonRepositoryImpl(private val lessonDao: LessonDao) : LessonRepository {
@@ -65,8 +72,17 @@ class LessonRepositoryImpl(private val lessonDao: LessonDao) : LessonRepository 
         return lessonDao.getWithData(id)
     }
 
+    override suspend fun getWithData(
+        book: String,
+        chapter: Int,
+        verse: Int,
+        sort: Int,
+        author: String
+    ): LessonWithData? {
+        return lessonDao.getWithData(book, chapter, verse, sort, author)
+    }
+
     override suspend fun get(id: Long): LessonEntity? {
         return lessonDao.get(id)
     }
-
 }

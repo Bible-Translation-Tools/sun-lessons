@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -21,9 +20,6 @@ import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import org.bibletranslationtools.sun.R
 import org.bibletranslationtools.sun.ui.control.TopAppBar
-import org.bibletranslationtools.sun.ui.control.settings.DownloadCard
-import org.bibletranslationtools.sun.ui.control.settings.DownloadStatus
-import kotlin.random.Random
 
 @Composable
 fun UpdateLessonsScreen(component: UpdateLessonsComponent) {
@@ -53,15 +49,14 @@ fun UpdateLessonsScreen(component: UpdateLessonsComponent) {
                     modifier = Modifier.fillMaxSize()
                 ) {
                     itemsIndexed(model.lessons) { index, lesson ->
-                        DownloadCard(
-                            lesson = lesson,
-                            status = DownloadStatus.entries.random(),
-                            progress = Random.nextFloat(),
-                            onClick = {
-                                component.onLessonSelected(lesson)
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        )
+//                        DownloadCard(
+//                            suite = lesson,
+//                            progress = Random.nextFloat(),
+//                            onClick = {
+//                                component.onLessonSelected(lesson)
+//                            },
+//                            modifier = Modifier.fillMaxWidth()
+//                        )
                     }
                 }
             }

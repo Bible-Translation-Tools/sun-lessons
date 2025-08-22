@@ -189,12 +189,12 @@ class DefaultTestSentenceComponent(
 
         val cardSymbols = model.value.cards.map {
             SymbolItem(
-                0,
-                it.symbol,
-                0,
-                0,
+                name = it.symbol,
+                sort = 0,
+                sentenceId = 0,
                 selected = false,
-                correct = false
+                correct = false,
+                id = 0,
             )
         }
         val sentenceSymbols = model.value.sentences.flatMap { it.symbols }
