@@ -1,7 +1,7 @@
 package org.bibletranslationtools.sun.data.repositories
 
 import org.bibletranslationtools.sun.data.dao.SymbolDao
-import org.bibletranslationtools.sun.data.model.SymbolEntity
+import org.bibletranslationtools.sun.data.entity.SymbolEntity
 
 interface SymbolRepository {
     suspend fun insert(symbol: SymbolEntity)

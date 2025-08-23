@@ -7,8 +7,8 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import org.bibletranslationtools.sun.data.model.SentenceEntity
-import org.bibletranslationtools.sun.data.model.SentenceWithSymbols
+import org.bibletranslationtools.sun.data.entity.SentenceEntity
+import org.bibletranslationtools.sun.data.entity.SentenceWithSymbols
 
 @Dao
 interface SentenceDao {

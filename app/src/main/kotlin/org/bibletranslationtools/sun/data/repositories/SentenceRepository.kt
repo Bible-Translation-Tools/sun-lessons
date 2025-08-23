@@ -1,8 +1,8 @@
 package org.bibletranslationtools.sun.data.repositories
 
 import org.bibletranslationtools.sun.data.dao.SentenceDao
-import org.bibletranslationtools.sun.data.model.SentenceEntity
-import org.bibletranslationtools.sun.data.model.SentenceWithSymbols
+import org.bibletranslationtools.sun.data.entity.SentenceEntity
+import org.bibletranslationtools.sun.data.entity.SentenceWithSymbols
 
 interface SentenceRepository {
     suspend fun insert(sentence: SentenceEntity): Long

@@ -1,42 +1,102 @@
 package org.bibletranslationtools.sun.usecase
 
+import androidx.room.Transaction
+import org.bibletranslationtools.sun.api.LessonRequest
+import org.bibletranslationtools.sun.api.SunApi
 import org.bibletranslationtools.sun.data.repositories.CardRepository
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.data.repositories.SentenceRepository
 import org.bibletranslationtools.sun.data.repositories.SymbolRepository
 import org.bibletranslationtools.sun.ui.model.CardItem
-import org.bibletranslationtools.sun.ui.model.LessonSuite
+import org.bibletranslationtools.sun.ui.model.GroupId
+import org.bibletranslationtools.sun.ui.model.LessonGroup
+import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.ui.model.SentenceItem
 import org.bibletranslationtools.sun.ui.model.SymbolItem
 import org.bibletranslationtools.sun.ui.model.toEntity
 import org.bibletranslationtools.sun.ui.model.toItem
 
-class UpdateLesson(
+class DownloadLesson(
+    private val sunApi: SunApi,
     private val lessonRepository: LessonRepository,
     private val cardRepository: CardRepository,
     private val sentenceRepository: SentenceRepository,
     private val symbolRepository: SymbolRepository
 ) {
-    suspend fun update(lesson: LessonSuite) {
-        val localLesson = lessonRepository.getSingleWithData(lesson.lesson.uniqueId)?.toItem()
-
-        if (localLesson != null) {
-            updateLesson(localLesson, lesson)
+    suspend operator fun invoke(groupId: GroupId) {
+        val localLessons = lessonRepository.getGroupWithData(groupId).map {
+            it.toItem()
+        }
+        val localGroup: LessonGroup? = if (localLessons.isNotEmpty()) {
+            LessonGroup(
+                groupId = localLessons.first().groupId,
+                lessons = localLessons
+            )
         } else {
+            null
+        }
+
+        val remoteLessons = sunApi.getLessonCatalog(
+            LessonRequest(
+                book = groupId.book,
+                chapter = groupId.chapter,
+                verse = groupId.verse,
+                author = groupId.author
+            )
+        )
+            .lessons.map { it.toItem() }
+
+        val remoteGroup: LessonGroup? = if (remoteLessons.isNotEmpty()) {
+            LessonGroup(
+                groupId = remoteLessons.first().groupId,
+                lessons = remoteLessons
+            )
+        } else {
+            null
+        }
+
+        when {
+            localGroup != null && remoteGroup != null -> {
+                updateLessons(localGroup, remoteGroup)
+            }
+            remoteGroup != null -> insertLessons(remoteGroup)
+        }
+    }
+
+    private suspend fun insertLessons(group: LessonGroup) {
+        group.lessons.forEach { lesson ->
             insertLesson(lesson)
         }
     }
 
-    private suspend fun insertLesson(suite: LessonSuite) {
+    private suspend fun updateLessons(local: LessonGroup, remote: LessonGroup) {
+        val localIds = local.lessons.map { it.uniqueId }
+        remote.lessons.forEach { remoteLesson ->
+            val id = remoteLesson.uniqueId
+            if (id in localIds) {
+                val localLesson = local.lessons.first { it.uniqueId == id }
+                if (localLesson.updatedAt == remoteLesson.updatedAt) {
+                    return
+                } else {
+                    updateLesson(localLesson, remoteLesson)
+                }
+            } else {
+                insertLesson(remoteLesson)
+            }
+        }
+    }
+
+    @Transaction
+    private suspend fun insertLesson(lesson: LessonItem) {
         val lessonId = lessonRepository.insert(
-            suite.lesson.toEntity()
+            lesson.toEntity()
         )
 
-        suite.cards
+        lesson.cards
             .map { it.copy(lessonId = lessonId) }
             .forEach { cardRepository.insert(it.toEntity()) }
 
-        suite.sentences
+        lesson.sentences
             .map { it.copy(lessonId = lessonId) }
             .forEach { sentence ->
                 val sentenceId = sentenceRepository.insert(sentence.toEntity())
@@ -48,16 +108,13 @@ class UpdateLesson(
             }
     }
 
-    private suspend fun updateLesson(local: LessonSuite, remote: LessonSuite) {
-        if (local.lesson.updatedAt == remote.lesson.updatedAt) {
-            return
-        }
-
-        val lesson = remote.lesson.copy(id = local.lesson.id)
+    @Transaction
+    private suspend fun updateLesson(local: LessonItem, remote: LessonItem) {
+        val lesson = remote.copy(id = local.id)
         lessonRepository.update(lesson.toEntity())
 
-        updateCards(local.cards, remote.cards, local.lesson.id)
-        updateSentences(local.sentences, remote.sentences, local.lesson.id)
+        updateCards(local.cards, remote.cards, local.id)
+        updateSentences(local.sentences, remote.sentences, local.id)
     }
 
     private suspend fun updateCards(

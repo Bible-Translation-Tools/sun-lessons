@@ -1,11 +1,11 @@
-package org.bibletranslationtools.sun.data.model
+package org.bibletranslationtools.sun.data.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "cards",
+    tableName = "sentences",
     foreignKeys = [
         ForeignKey(
             entity = LessonEntity::class,
@@ -15,13 +15,12 @@ import androidx.room.PrimaryKey
         )
     ]
 )
-data class CardEntity(
+data class SentenceEntity (
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val symbol: String,
     val sort: Int,
-    val image: String,
+    val image: String? = null,
     var learned: Boolean = false,
     var tested: Boolean = false,
-    var lessonId: Long = 0
+    val lessonId: Long = 0
 )

@@ -1,4 +1,4 @@
-package org.bibletranslationtools.sun.data.model
+package org.bibletranslationtools.sun.data.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

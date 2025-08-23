@@ -1,6 +1,6 @@
 package org.bibletranslationtools.sun.ui.model
 
-import org.bibletranslationtools.sun.data.model.SymbolEntity
+import org.bibletranslationtools.sun.data.entity.SymbolEntity
 
 data class SymbolItem(
     val name: String,

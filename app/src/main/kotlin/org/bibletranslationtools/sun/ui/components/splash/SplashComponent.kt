@@ -7,13 +7,13 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.bibletranslationtools.sun.data.model.CardData
-import org.bibletranslationtools.sun.data.model.LessonCatalog
-import org.bibletranslationtools.sun.data.model.LessonData
-import org.bibletranslationtools.sun.data.model.SentenceData
-import org.bibletranslationtools.sun.data.model.SettingEntity
-import org.bibletranslationtools.sun.data.model.SymbolData
-import org.bibletranslationtools.sun.data.model.toEntity
+import org.bibletranslationtools.sun.data.entity.CardData
+import org.bibletranslationtools.sun.data.entity.LessonCatalog
+import org.bibletranslationtools.sun.data.entity.LessonData
+import org.bibletranslationtools.sun.data.entity.SentenceData
+import org.bibletranslationtools.sun.data.entity.SettingEntity
+import org.bibletranslationtools.sun.data.entity.SymbolData
+import org.bibletranslationtools.sun.data.entity.toEntity
 import org.bibletranslationtools.sun.data.repositories.CardRepository
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.data.repositories.SentenceRepository
@@ -59,24 +59,24 @@ class DefaultSplashComponent(
                         var sort = 0
 
                         for (card in lesson.cards) {
-                            insertCard(card.copy(
-                                lessonId = lessonId,
-                                sort = sort++
-                            ))
+                            insertCard(
+                                card = card.copy(sort = sort++),
+                                lessonId = lessonId
+                            )
                         }
 
                         sort = 0
                         for (sentence in lesson.sentences) {
-                            val sentenceId = insertSentence(sentence.copy(
-                                lessonId = lessonId,
-                                sort = sort++
-                            ))
+                            val sentenceId = insertSentence(
+                                sentence = sentence.copy(sort = sort++),
+                                lessonId = lessonId
+                            )
                             var symbolSort = 0
                             for (symbol in sentence.symbols) {
-                                insertSymbol(symbol.copy(
-                                    sentenceId = sentenceId,
-                                    sort = symbolSort++
-                                ))
+                                insertSymbol(
+                                    symbol = symbol.copy(sort = symbolSort++),
+                                    sentenceId = sentenceId
+                                )
                             }
                         }
                     }
@@ -100,17 +100,17 @@ class DefaultSplashComponent(
         return lessonRepository.insert(lesson.toEntity())
     }
 
-    private suspend fun insertCard(card: CardData): Long {
-        return cardRepository.insert(card.toEntity())
+    private suspend fun insertCard(card: CardData, lessonId: Long): Long {
+        return cardRepository.insert(card.toEntity().copy(lessonId = lessonId))
     }
 
-    private suspend fun insertSentence(sentence: SentenceData): Long {
-        return sentenceRepository.insert(sentence.toEntity())
+    private suspend fun insertSentence(sentence: SentenceData, lessonId: Long): Long {
+        return sentenceRepository.insert(sentence.toEntity().copy(lessonId = lessonId))
     }
 
-    private fun insertSymbol(symbol: SymbolData) {
+    private fun insertSymbol(symbol: SymbolData, sentenceId: Long) {
         componentScope.launch {
-            symbolRepository.insert(symbol.toEntity())
+            symbolRepository.insert(symbol.toEntity().copy(sentenceId = sentenceId))
         }
     }
 

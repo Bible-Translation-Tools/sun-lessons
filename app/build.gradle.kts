@@ -99,6 +99,12 @@ dependencies {
     // kotlin datetime
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
 
+    // ktor
+    implementation("io.ktor:ktor-client-core:3.2.3")
+    implementation("io.ktor:ktor-client-android:3.2.3")
+    implementation("io.ktor:ktor-client-content-negotiation:3.2.3")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:3.2.3")
+
     // Testing
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.3.0")

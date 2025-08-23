@@ -24,13 +24,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.bibletranslationtools.sun.R
-import org.bibletranslationtools.sun.ui.model.LessonSuite
+import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.ui.tallyFontFamily
 import org.bibletranslationtools.sun.utils.TallyMarkConverter
 
 @Composable
 fun LessonHeader(
-    lesson: LessonSuite,
+    lesson: LessonItem,
     isExpanded: Boolean,
     onClick: () -> Unit
 ) {
@@ -57,7 +57,7 @@ fun LessonHeader(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = stringResource(R.string.lesson_name, lesson.lesson.id),
+                text = stringResource(R.string.lesson_name, lesson.id),
                 fontSize = 24.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -67,7 +67,7 @@ fun LessonHeader(
                 } else MaterialTheme.colorScheme.onBackground
             )
             Text(
-                text = TallyMarkConverter.toText(lesson.lesson.id),
+                text = TallyMarkConverter.toText(lesson.id),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = tallyFontFamily(),

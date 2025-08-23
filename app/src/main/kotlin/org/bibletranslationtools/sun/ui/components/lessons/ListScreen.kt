@@ -87,14 +87,14 @@ fun ListScreen(component: ListComponent) {
                     items(model.lessons) { lesson ->
                         LessonCard(
                             lesson = lesson,
-                            isExpanded = lesson.lesson.id == expandedLessonId,
+                            isExpanded = lesson.id == expandedLessonId,
                             onClick = {
-                                expandedLessonId = if (expandedLessonId != lesson.lesson.id) {
-                                    lesson.lesson.id
+                                expandedLessonId = if (expandedLessonId != lesson.id) {
+                                    lesson.id
                                 } else 0
                             },
                             onAction = {
-                                component.onLessonAction(lesson.lesson.id, it)
+                                component.onLessonAction(lesson.id, it)
                             }
                         )
                     }

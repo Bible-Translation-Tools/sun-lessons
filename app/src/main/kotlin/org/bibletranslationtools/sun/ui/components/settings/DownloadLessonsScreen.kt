@@ -44,9 +44,9 @@ fun DownloadLessonsScreen(component: DownloadLessonsComponent) {
     var filteredLessons by remember { mutableStateOf(model.lessons) }
 
     LaunchedEffect(searchQuery, model.lessons) {
-        filteredLessons = model.lessons.filter { suite ->
-            suite.lesson.verse.toString().contains(searchQuery, ignoreCase = true)
-                    || suite.lesson.author.contains(searchQuery, ignoreCase = true)
+        filteredLessons = model.lessons.filter { lesson ->
+            lesson.verse.toString().contains(searchQuery, ignoreCase = true)
+                    || lesson.author.contains(searchQuery, ignoreCase = true)
         }
     }
 
@@ -103,10 +103,7 @@ fun DownloadLessonsScreen(component: DownloadLessonsComponent) {
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    items(
-                        items = filteredLessons,
-                        key = { lesson -> lesson.fingerprint }
-                    ) { lesson ->
+                    items(filteredLessons, key = { it.fingerprint }) { lesson ->
                         DownloadCard(
                             lesson = lesson,
                             onClick = {

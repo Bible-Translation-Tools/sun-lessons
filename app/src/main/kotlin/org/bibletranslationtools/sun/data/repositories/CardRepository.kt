@@ -1,7 +1,7 @@
 package org.bibletranslationtools.sun.data.repositories
 
 import org.bibletranslationtools.sun.data.dao.CardDao
-import org.bibletranslationtools.sun.data.model.CardEntity
+import org.bibletranslationtools.sun.data.entity.CardEntity
 
 interface CardRepository {
     suspend fun insert(card: CardEntity): Long

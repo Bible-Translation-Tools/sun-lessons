@@ -11,6 +11,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import org.bibletranslationtools.sun.ui.components.lessons.LessonsComponent
 import org.bibletranslationtools.sun.ui.components.lessons.LessonsScreen
+import org.bibletranslationtools.sun.ui.components.lessons.ScriptureLessonsScreen
 import org.bibletranslationtools.sun.ui.components.progress.ProgressScreen
 import org.bibletranslationtools.sun.ui.components.settings.SettingsScreen
 import org.bibletranslationtools.sun.ui.control.BottomNavBar
@@ -27,11 +28,8 @@ fun MainScreen(component: MainComponent) {
             lessonsStack.active.instance is LessonsComponent.Child.List
         }
         is MainComponent.Child.Progress,
-        is MainComponent.Child.Settings -> true
-        is MainComponent.Child.Lessons -> {
-            val lessonsStack by child.component.stack.subscribeAsState()
-            lessonsStack.active.instance is LessonsComponent.Child.List
-        }
+        is MainComponent.Child.Settings,
+        is MainComponent.Child.Lessons -> true
     }
 
     Scaffold(
@@ -52,7 +50,7 @@ fun MainScreen(component: MainComponent) {
             when (val child = it.instance) {
                 is MainComponent.Child.Home -> LessonsScreen(child.component)
                 is MainComponent.Child.Progress -> ProgressScreen(child.component)
-                is MainComponent.Child.Lessons -> LessonsScreen(child.component)
+                is MainComponent.Child.Lessons -> ScriptureLessonsScreen(child.component)
                 is MainComponent.Child.Settings -> SettingsScreen(child.component)
             }
         }

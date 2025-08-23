@@ -1,5 +1,8 @@
 package org.bibletranslationtools.sun.di
 
+import org.bibletranslationtools.sun.api.SunApi
+import org.bibletranslationtools.sun.api.SunApiImpl
+import org.bibletranslationtools.sun.api.createHttpClient
 import org.bibletranslationtools.sun.data.AppDatabase
 import org.bibletranslationtools.sun.data.repositories.CardRepository
 import org.bibletranslationtools.sun.data.repositories.CardRepositoryImpl
@@ -11,8 +14,8 @@ import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.data.repositories.SettingsRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.SymbolRepository
 import org.bibletranslationtools.sun.data.repositories.SymbolRepositoryImpl
-import org.bibletranslationtools.sun.usecase.CompareLessons
-import org.bibletranslationtools.sun.usecase.UpdateLesson
+import org.bibletranslationtools.sun.usecase.GetLessonsWithDownloadStatus
+import org.bibletranslationtools.sun.usecase.DownloadLesson
 import org.bibletranslationtools.sun.utils.AssetReader
 import org.bibletranslationtools.sun.utils.AssetReaderImpl
 import org.koin.core.module.dsl.factoryOf
@@ -30,8 +33,11 @@ val sharedModule = module {
     single { get<AppDatabase>().getSentenceDao() }
     single { get<AppDatabase>().getSettingDao() }
 
-    factoryOf(::CompareLessons)
-    factoryOf(::UpdateLesson)
+    singleOf(::createHttpClient)
+    singleOf(::SunApiImpl).bind<SunApi>()
+
+    factoryOf(::GetLessonsWithDownloadStatus)
+    factoryOf(::DownloadLesson)
 
     singleOf(::LessonRepositoryImpl).bind<LessonRepository>()
     singleOf(::CardRepositoryImpl).bind<CardRepository>()

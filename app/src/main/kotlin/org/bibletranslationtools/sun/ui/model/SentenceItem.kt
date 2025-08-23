@@ -1,14 +1,14 @@
 package org.bibletranslationtools.sun.ui.model
 
-import org.bibletranslationtools.sun.data.model.SentenceEntity
+import org.bibletranslationtools.sun.data.entity.SentenceEntity
 
 data class SentenceItem(
     val sort: Int,
-    val image: String,
     val learned: Boolean,
     val tested: Boolean,
     val lessonId: Long,
     val symbols: List<SymbolItem>,
+    val image: String? = null,
     var passed: Boolean = false,
     val id: Long = 0
 ) {

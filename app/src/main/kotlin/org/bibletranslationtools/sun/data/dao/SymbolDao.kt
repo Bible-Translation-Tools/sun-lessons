@@ -5,7 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Update
-import org.bibletranslationtools.sun.data.model.SymbolEntity
+import org.bibletranslationtools.sun.data.entity.SymbolEntity
 
 @Dao
 interface SymbolDao {

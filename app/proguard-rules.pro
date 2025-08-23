@@ -52,4 +52,4 @@
 # Kotlin
 -keep class kotlin.Metadata { *; }
 -keep class kotlin.reflect.** { *; }
--keep class org.bibletranslationtools.sun.data.model.** { *; }
+-keep class org.bibletranslationtools.sun.data.entity.** { *; }

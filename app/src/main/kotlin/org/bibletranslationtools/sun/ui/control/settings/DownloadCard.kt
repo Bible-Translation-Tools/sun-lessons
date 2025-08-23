@@ -25,11 +25,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.bibletranslationtools.sun.ui.model.DownloadStatus
-import org.bibletranslationtools.sun.ui.model.LessonSuite
+import org.bibletranslationtools.sun.ui.model.LessonItem
 
 @Composable
 fun DownloadCard(
-    lesson: LessonSuite,
+    lesson: LessonItem,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -56,12 +56,12 @@ fun DownloadCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = lesson.lesson.name,
+                text = lesson.name,
                 modifier = Modifier.weight(1f)
             )
 
             Text(
-                text = lesson.lesson.author,
+                text = lesson.author,
                 textAlign = TextAlign.Start,
                 modifier = Modifier.weight(1f)
                     .padding(horizontal = 8.dp)

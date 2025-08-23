@@ -26,6 +26,7 @@ interface LessonsComponent: ParentContext {
 
     sealed class Child {
         class List(val component: ListComponent) : Child()
+        class ScriptureLessons(val component: ScriptureLessonsComponent) : Child()
         class Start(val component: StartComponent) : Child()
         class LearnSymbol(val component: LearnSymbolComponent) : Child()
         class TestSymbol(val component: TestSymbolComponent) : Child()
@@ -85,6 +86,12 @@ class DefaultLessonsComponent(
                     onStartLesson = { id, section, mode ->
                         navigation.bringToFront(Config.Start(id, section))
                     }
+                )
+            )
+            is Config.ScriptureLessons -> LessonsComponent.Child.ScriptureLessons(
+                DefaultScriptureLessonsComponent(
+                    componentContext = context,
+                    parentContext = this
                 )
             )
             is Config.Start -> LessonsComponent.Child.Start(
@@ -223,6 +230,8 @@ class DefaultLessonsComponent(
     private sealed interface Config {
         @Serializable
         data object List : Config
+        @Serializable
+        data object ScriptureLessons : Config
         @Serializable
         data class Start(val lessonId: Long, val section: Section) : Config
         @Serializable

@@ -1,6 +1,7 @@
-package org.bibletranslationtools.sun.data.model
+package org.bibletranslationtools.sun.data.entity
 
 import kotlinx.serialization.Serializable
+import org.bibletranslationtools.sun.utils.Utils
 
 @Serializable
 data class LessonCatalog(
@@ -10,31 +11,35 @@ data class LessonCatalog(
 
 @Serializable
 data class LessonData(
+    val book: String? = null,
+    val chapter: Int? = null,
+    val verse: Int? = null,
+    val sort: Int = 1,
+    val author: String? = null,
     val cards: List<CardData> = emptyList(),
-    val sentences: List<SentenceData> = emptyList()
+    val sentences: List<SentenceData> = emptyList(),
+    val createdAt: Long = Utils.getCurrentTimestamp(),
+    val updatedAt: Long = Utils.getCurrentTimestamp()
 )
 
 @Serializable
 data class CardData(
     val symbol: String,
     val image: String,
-    val sort: Int = 0,
-    val lessonId: Long = 0
+    val sort: Int = 1
 )
 
 @Serializable
 data class SentenceData(
-    val image: String,
     val symbols: List<SymbolData>,
-    val sort: Int = 0,
-    val lessonId: Long = 0
+    val image: String? = null,
+    val sort: Int = 1
 )
 
 @Serializable
 data class SymbolData(
     val name: String,
-    val sort: Int = 0,
-    val sentenceId: Long = 0
+    val sort: Int = 0
 )
 
 fun LessonData.toEntity(): LessonEntity {
@@ -47,8 +52,7 @@ fun CardData.toEntity(): CardEntity {
         sort = sort,
         image = image,
         learned = false,
-        tested = false,
-        lessonId = lessonId
+        tested = false
     )
 }
 
@@ -57,15 +61,13 @@ fun SentenceData.toEntity(): SentenceEntity {
         sort = sort,
         image = image,
         learned = false,
-        tested = false,
-        lessonId = lessonId
+        tested = false
     )
 }
 
 fun SymbolData.toEntity(): SymbolEntity {
     return SymbolEntity(
         sort = sort,
-        name = name,
-        sentenceId = sentenceId
+        name = name
     )
 }

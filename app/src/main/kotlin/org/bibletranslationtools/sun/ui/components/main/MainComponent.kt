@@ -16,7 +16,9 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import org.bibletranslationtools.sun.ui.components.ParentContext
 import org.bibletranslationtools.sun.ui.components.lessons.DefaultLessonsComponent
+import org.bibletranslationtools.sun.ui.components.lessons.DefaultScriptureLessonsComponent
 import org.bibletranslationtools.sun.ui.components.lessons.LessonsComponent
+import org.bibletranslationtools.sun.ui.components.lessons.ScriptureLessonsComponent
 import org.bibletranslationtools.sun.ui.components.progress.DefaultProgressComponent
 import org.bibletranslationtools.sun.ui.components.progress.ProgressComponent
 import org.bibletranslationtools.sun.ui.components.settings.DefaultSettingsComponent
@@ -31,7 +33,7 @@ interface MainComponent: ParentContext {
     sealed class Child {
         class Home(val component: LessonsComponent) : Child()
         class Progress(val component: ProgressComponent) : Child()
-        class Lessons(val component: LessonsComponent) : Child()
+        class Lessons(val component: ScriptureLessonsComponent) : Child()
         class Settings(val component: SettingsComponent) : Child()
     }
 
@@ -100,10 +102,9 @@ class DefaultMainComponent(
                 )
             )
             is Config.Lessons -> MainComponent.Child.Lessons(
-                DefaultLessonsComponent(
+                DefaultScriptureLessonsComponent(
                     componentContext = context,
-                    parentContext = this,
-                    lessonType = LessonType.SCRIPTURE
+                    parentContext = this
                 )
             )
             is Config.Settings -> MainComponent.Child.Settings(

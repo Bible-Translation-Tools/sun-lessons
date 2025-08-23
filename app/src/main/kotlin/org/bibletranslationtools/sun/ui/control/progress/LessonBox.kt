@@ -20,13 +20,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.bibletranslationtools.sun.ui.model.LessonSuite
+import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.ui.tallyFontFamily
 import org.bibletranslationtools.sun.utils.TallyMarkConverter
 
 @Composable
 fun LessonBox(
-    lesson: LessonSuite,
+    lesson: LessonItem,
     modifier: Modifier = Modifier
 ) {
     val (borderColor, backgroundColor) = if (lesson.isAvailable) {
@@ -55,12 +55,12 @@ fun LessonBox(
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = lesson.lesson.id.toString(),
+                    text = lesson.id.toString(),
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = TallyMarkConverter.toText(lesson.lesson.id),
+                    text = TallyMarkConverter.toText(lesson.id),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = tallyFontFamily()

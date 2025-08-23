@@ -1,6 +1,6 @@
 package org.bibletranslationtools.sun.ui.model
 
-import org.bibletranslationtools.sun.data.model.CardEntity
+import org.bibletranslationtools.sun.data.entity.CardEntity
 
 data class CardItem(
     val symbol: String,

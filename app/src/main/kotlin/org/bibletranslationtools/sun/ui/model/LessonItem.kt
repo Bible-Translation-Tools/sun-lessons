@@ -1,13 +1,21 @@
 package org.bibletranslationtools.sun.ui.model
 
 import kotlinx.datetime.LocalDateTime
-import org.bibletranslationtools.sun.data.model.LessonEntity
+import org.bibletranslationtools.sun.data.entity.LessonData
+import org.bibletranslationtools.sun.data.entity.LessonEntity
+import org.bibletranslationtools.sun.data.entity.LessonWithData
 import org.bibletranslationtools.sun.utils.toLocalDateTime
 import org.bibletranslationtools.sun.utils.toTimestamp
 
 enum class LessonType {
     BASIC,
     SCRIPTURE
+}
+
+enum class DownloadStatus {
+    DOWNLOAD,
+    UPDATE,
+    DONE
 }
 
 data class UniqueId(
@@ -26,6 +34,12 @@ data class LessonItem(
     val author: String,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
+    val downloadStatus: DownloadStatus = DownloadStatus.DONE,
+    val downloadProgress: Float = -1f,
+    val cards: List<CardItem> = emptyList(),
+    val sentences: List<SentenceItem> = emptyList(),
+    val isAvailable: Boolean = false,
+    val isSelected: Boolean = false,
     val id: Long = 0
 ) {
     val name: String
@@ -52,6 +66,47 @@ data class LessonItem(
         sort = sort,
         author = author
     )
+
+    val groupId = GroupId(
+        book = book,
+        chapter = chapter,
+        verse = verse,
+        author = author
+    )
+
+    val cardsLearned get() = cards.count { it.learned }
+    val cardsLearnedProgress get() = cardsLearned.toDouble() / cards.size * 100
+
+    val cardsTested get() = cards.count { it.tested }
+    val cardsTestedProgress get() = cardsTested.toDouble() / cards.size * 100
+
+    val sentencesLearned get() = sentences.count { it.learned }
+    val sentencesLearnedProgress get() = run {
+        // If there are no sentences, return 100% progress
+        if (sentences.isNotEmpty()) {
+            sentencesLearned.toDouble() / sentences.size * 100
+        } else {
+            100.0
+        }
+    }
+
+    val sentencesTested get() = sentences.count { it.tested }
+    val sentencesTestedProgress get() = run {
+        // If there are no sentences, return 100% progress
+        if (sentences.isNotEmpty()) {
+            sentencesTested.toDouble() / sentences.size * 100
+        } else {
+            100.0
+        }
+    }
+
+    val totalProgress: Double
+        get() {
+            // Size times 2, because we have learned and tested cards/sentences
+            val total = (cards.size * 2) + (sentences.size * 2)
+            val completed = cardsLearned + cardsTested + sentencesLearned + sentencesTested
+            return (completed.toDouble() / total) * 100
+        }
 }
 
 fun LessonEntity.toItem(): LessonItem {
@@ -77,5 +132,31 @@ fun LessonItem.toEntity(): LessonEntity {
         createdAt = createdAt.toTimestamp(),
         updatedAt = updatedAt.toTimestamp(),
         id = id
+    )
+}
+
+fun LessonData.toItem(): LessonItem {
+    return LessonItem(
+        book = book,
+        chapter = chapter,
+        verse = verse,
+        sort = sort,
+        author = author ?: "unknown",
+        createdAt = createdAt.toLocalDateTime(),
+        updatedAt = updatedAt.toLocalDateTime()
+    )
+}
+
+fun LessonWithData.toItem(): LessonItem {
+    return LessonItem(
+        book = lesson.book,
+        chapter = lesson.chapter,
+        verse = lesson.verse,
+        sort = lesson.sort,
+        author = lesson.author,
+        createdAt = lesson.createdAt.toLocalDateTime(),
+        updatedAt = lesson.updatedAt.toLocalDateTime(),
+        cards = cards.map { it.toItem() },
+        sentences = sentences.map { it.toItem() }
     )
 }

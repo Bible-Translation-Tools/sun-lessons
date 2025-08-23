@@ -15,10 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.bibletranslationtools.sun.R
-import org.bibletranslationtools.sun.ui.model.LessonSuite
+import org.bibletranslationtools.sun.ui.model.LessonItem
 
 @Composable
-fun ProgressSection(lessons: List<LessonSuite>) {
+fun ProgressSection(lessons: List<LessonItem>) {
 
     val scoreProgress = if (lessons.isNotEmpty()) {
         lessons.sumOf { it.totalProgress }.toFloat() / lessons.size

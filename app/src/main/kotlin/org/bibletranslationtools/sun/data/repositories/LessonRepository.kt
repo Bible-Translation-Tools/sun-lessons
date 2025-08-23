@@ -1,16 +1,17 @@
 package org.bibletranslationtools.sun.data.repositories
 
 import org.bibletranslationtools.sun.data.dao.LessonDao
-import org.bibletranslationtools.sun.data.model.LessonEntity
-import org.bibletranslationtools.sun.data.model.LessonWithData
+import org.bibletranslationtools.sun.data.entity.LessonEntity
+import org.bibletranslationtools.sun.data.entity.LessonWithData
+import org.bibletranslationtools.sun.ui.model.GroupId
 import org.bibletranslationtools.sun.ui.model.LessonType
-import org.bibletranslationtools.sun.ui.model.UniqueId
 
 interface LessonRepository {
     suspend fun insert(lesson: LessonEntity): Long
     suspend fun delete(lesson: LessonEntity)
     suspend fun update(lesson: LessonEntity)
     suspend fun getAll(lessonType: LessonType): List<LessonEntity>
+    suspend fun getAll(book: String?, chapter: Int?): List<LessonEntity>
     suspend fun getBasicLessons(): List<LessonEntity>
     suspend fun getScriptureLessons(): List<LessonEntity>
     suspend fun getAllWithData(lessonType: LessonType): List<LessonWithData>
@@ -18,7 +19,7 @@ interface LessonRepository {
     suspend fun getBasicWithData(): List<LessonWithData>
     suspend fun getScriptureWithData(): List<LessonWithData>
     suspend fun getSingleWithData(id: Long): LessonWithData?
-    suspend fun getSingleWithData(id: UniqueId): LessonWithData?
+    suspend fun getGroupWithData(id: GroupId): List<LessonWithData>
     suspend fun get(id: Long): LessonEntity?
 }
 class LessonRepositoryImpl(private val lessonDao: LessonDao) : LessonRepository {
@@ -39,6 +40,10 @@ class LessonRepositoryImpl(private val lessonDao: LessonDao) : LessonRepository 
             LessonType.BASIC -> lessonDao.getBasicLessons()
             LessonType.SCRIPTURE -> lessonDao.getScriptureLessons()
         }
+    }
+
+    override suspend fun getAll(book: String?, chapter: Int?): List<LessonEntity> {
+        return lessonDao.getAll(book, chapter)
     }
 
     override suspend fun getBasicLessons(): List<LessonEntity> {
@@ -72,12 +77,11 @@ class LessonRepositoryImpl(private val lessonDao: LessonDao) : LessonRepository 
         return lessonDao.getSingleWithData(id)
     }
 
-    override suspend fun getSingleWithData(id: UniqueId): LessonWithData? {
-        return lessonDao.getSingleWithData(
+    override suspend fun getGroupWithData(id: GroupId): List<LessonWithData> {
+        return lessonDao.getGroupWithData(
             id.book,
             id.chapter,
             id.verse,
-            id.sort,
             id.author
         )
     }
