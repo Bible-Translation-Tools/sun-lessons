@@ -39,7 +39,8 @@ fun BottomNavBar(
             val isSelected = when (currentTab) {
                 is MainComponent.Child.Home -> tab == MainTab.Home
                 is MainComponent.Child.Progress -> tab == MainTab.Progress
-                is MainComponent.Child.Lessons -> tab == MainTab.Lessons
+                is MainComponent.Child.Lessons,
+                is MainComponent.Child.ScriptureLessons -> tab == MainTab.Lessons
                 is MainComponent.Child.Settings -> tab == MainTab.Settings
             }
             NavigationItem(

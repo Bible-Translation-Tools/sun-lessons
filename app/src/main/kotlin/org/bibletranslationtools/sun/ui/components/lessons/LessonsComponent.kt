@@ -11,7 +11,7 @@ import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.Serializable
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
-import org.bibletranslationtools.sun.ui.model.LessonType
+import org.bibletranslationtools.sun.ui.model.GroupId
 import org.bibletranslationtools.sun.utils.Section
 
 enum class SectionState {
@@ -26,7 +26,6 @@ interface LessonsComponent: ParentContext {
 
     sealed class Child {
         class List(val component: ListComponent) : Child()
-        class ScriptureLessons(val component: ScriptureLessonsComponent) : Child()
         class Start(val component: StartComponent) : Child()
         class LearnSymbol(val component: LearnSymbolComponent) : Child()
         class TestSymbol(val component: TestSymbolComponent) : Child()
@@ -53,7 +52,7 @@ interface LessonsComponent: ParentContext {
 class DefaultLessonsComponent(
     componentContext: ComponentContext,
     parentContext: ParentContext,
-    private val lessonType: LessonType
+    private val groupId: GroupId?
 ) : LessonsComponent, AppComponent(componentContext, parentContext) {
 
     private val navigation = StackNavigation<Config>()
@@ -81,17 +80,11 @@ class DefaultLessonsComponent(
                 DefaultListComponent(
                     componentContext = context,
                     parentContext = this,
-                    lessonType = lessonType,
+                    groupId = groupId,
                     onContinueLesson = ::navigateContinueLesson,
                     onStartLesson = { id, section, mode ->
                         navigation.bringToFront(Config.Start(id, section))
                     }
-                )
-            )
-            is Config.ScriptureLessons -> LessonsComponent.Child.ScriptureLessons(
-                DefaultScriptureLessonsComponent(
-                    componentContext = context,
-                    parentContext = this
                 )
             )
             is Config.Start -> LessonsComponent.Child.Start(
@@ -160,7 +153,7 @@ class DefaultLessonsComponent(
                     parentContext = this,
                     lessonId = config.lessonId,
                     section = config.section,
-                    lessonType = lessonType,
+                    groupId = groupId,
                     onStartLesson = { id, section ->
                         navigation.replaceCurrent(Config.Start(id, section))
                     },
@@ -230,8 +223,6 @@ class DefaultLessonsComponent(
     private sealed interface Config {
         @Serializable
         data object List : Config
-        @Serializable
-        data object ScriptureLessons : Config
         @Serializable
         data class Start(val lessonId: Long, val section: Section) : Config
         @Serializable

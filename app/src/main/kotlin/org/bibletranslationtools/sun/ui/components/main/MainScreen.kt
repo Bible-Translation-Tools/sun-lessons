@@ -27,9 +27,13 @@ fun MainScreen(component: MainComponent) {
             val lessonsStack by child.component.stack.subscribeAsState()
             lessonsStack.active.instance is LessonsComponent.Child.List
         }
+        is MainComponent.Child.Lessons -> {
+            val lessonsStack by child.component.stack.subscribeAsState()
+            lessonsStack.active.instance is LessonsComponent.Child.List
+        }
         is MainComponent.Child.Progress,
         is MainComponent.Child.Settings,
-        is MainComponent.Child.Lessons -> true
+        is MainComponent.Child.ScriptureLessons -> true
     }
 
     Scaffold(
@@ -50,7 +54,9 @@ fun MainScreen(component: MainComponent) {
             when (val child = it.instance) {
                 is MainComponent.Child.Home -> LessonsScreen(child.component)
                 is MainComponent.Child.Progress -> ProgressScreen(child.component)
-                is MainComponent.Child.Lessons -> ScriptureLessonsScreen(child.component)
+                is MainComponent.Child.Lessons -> LessonsScreen(child.component)
+                is MainComponent.Child.ScriptureLessons ->
+                    ScriptureLessonsScreen(child.component)
                 is MainComponent.Child.Settings -> SettingsScreen(child.component)
             }
         }

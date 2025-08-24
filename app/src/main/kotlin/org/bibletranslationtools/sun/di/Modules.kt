@@ -1,5 +1,8 @@
 package org.bibletranslationtools.sun.di
 
+import android.content.Context
+import coil3.imageLoader
+import coil3.request.ImageRequest
 import org.bibletranslationtools.sun.api.SunApi
 import org.bibletranslationtools.sun.api.SunApiImpl
 import org.bibletranslationtools.sun.api.createHttpClient
@@ -35,6 +38,9 @@ val sharedModule = module {
 
     singleOf(::createHttpClient)
     singleOf(::SunApiImpl).bind<SunApi>()
+
+    factory { get<Context>().imageLoader }
+    factory { ImageRequest.Builder(get<Context>()) }
 
     factoryOf(::GetLessonsWithDownloadStatus)
     factoryOf(::DownloadLesson)

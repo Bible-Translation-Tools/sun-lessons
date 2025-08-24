@@ -26,7 +26,6 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import org.bibletranslationtools.sun.R
 import org.bibletranslationtools.sun.ui.control.TopAppBar
 import org.bibletranslationtools.sun.ui.control.list.LessonCard
-import org.bibletranslationtools.sun.ui.model.LessonType
 
 @Composable
 fun ListScreen(component: ListComponent) {
@@ -36,9 +35,10 @@ fun ListScreen(component: ListComponent) {
         mutableLongStateOf(model.selectedId)
     }
 
-    val (topIcon, topText) = when (model.lessonType) {
-        LessonType.BASIC -> R.drawable.home to R.string.home
-        LessonType.SCRIPTURE -> R.drawable.book to R.string.lessons
+    val (topIcon, topText) = if (model.groupId == null) {
+        R.drawable.home to R.string.home
+    } else {
+        R.drawable.book to R.string.lessons
     }
 
     val continueLessonText = if (model.nextState == SectionState.NOT_STARTED) {
@@ -49,11 +49,11 @@ fun ListScreen(component: ListComponent) {
 
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
-            onBackClick = if (model.lessonType == LessonType.SCRIPTURE) {
+            onBackClick = if (model.groupId != null) {
                 component::onBackClick
             } else null
         ) {
-            if (model.lessonType == LessonType.SCRIPTURE) {
+            if (model.groupId != null) {
                 Spacer(modifier = Modifier.weight(1f))
             }
             Icon(

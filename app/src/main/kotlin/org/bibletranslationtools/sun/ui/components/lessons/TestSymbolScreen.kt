@@ -26,8 +26,7 @@ import org.bibletranslationtools.sun.ui.control.test.QuestionSection
 fun TestSymbolScreen(component: TestSymbolComponent) {
     val model by component.model.subscribeAsState()
 
-    val imageUri = "file:///android_asset/images/symbols/" +
-            (model.currentCard?.image ?: "0.jpg")
+    val imageUri = model.currentCard?.image ?: "file:///android_asset/images/symbols/0.jpg"
 
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(onBackClick = component::onBackClick) {

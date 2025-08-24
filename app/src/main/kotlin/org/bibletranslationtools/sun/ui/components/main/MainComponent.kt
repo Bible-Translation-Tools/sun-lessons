@@ -23,7 +23,7 @@ import org.bibletranslationtools.sun.ui.components.progress.DefaultProgressCompo
 import org.bibletranslationtools.sun.ui.components.progress.ProgressComponent
 import org.bibletranslationtools.sun.ui.components.settings.DefaultSettingsComponent
 import org.bibletranslationtools.sun.ui.components.settings.SettingsComponent
-import org.bibletranslationtools.sun.ui.model.LessonType
+import org.bibletranslationtools.sun.ui.model.GroupId
 import org.bibletranslationtools.sun.ui.navigation.MainTab
 
 interface MainComponent: ParentContext {
@@ -33,7 +33,8 @@ interface MainComponent: ParentContext {
     sealed class Child {
         class Home(val component: LessonsComponent) : Child()
         class Progress(val component: ProgressComponent) : Child()
-        class Lessons(val component: ScriptureLessonsComponent) : Child()
+        class Lessons(val component: LessonsComponent) : Child()
+        class ScriptureLessons(val component: ScriptureLessonsComponent) : Child()
         class Settings(val component: SettingsComponent) : Child()
     }
 
@@ -73,7 +74,7 @@ class DefaultMainComponent(
             }
             MainTab.Lessons -> {
                 componentScope.launch {
-                    navigation.bringToFront(Config.Lessons)
+                    navigation.bringToFront(Config.ScriptureLessons)
                 }
             }
             MainTab.Settings -> {
@@ -92,7 +93,7 @@ class DefaultMainComponent(
                 DefaultLessonsComponent(
                     componentContext = context,
                     parentContext = this,
-                    lessonType = LessonType.BASIC
+                    groupId = null
                 )
             )
             is Config.Progress -> MainComponent.Child.Progress(
@@ -102,9 +103,19 @@ class DefaultMainComponent(
                 )
             )
             is Config.Lessons -> MainComponent.Child.Lessons(
+                DefaultLessonsComponent(
+                    componentContext = context,
+                    parentContext = this,
+                    groupId = config.groupId
+                )
+            )
+            is Config.ScriptureLessons -> MainComponent.Child.ScriptureLessons(
                 DefaultScriptureLessonsComponent(
                     componentContext = context,
-                    parentContext = this
+                    parentContext = this,
+                    onNavigateLesson = {
+                        navigation.bringToFront(Config.Lessons(it))
+                    }
                 )
             )
             is Config.Settings -> MainComponent.Child.Settings(
@@ -130,7 +141,9 @@ class DefaultMainComponent(
         @Serializable
         data object Progress : Config
         @Serializable
-        data object Lessons : Config
+        data class Lessons(val groupId: GroupId) : Config
+        @Serializable
+        data object ScriptureLessons : Config
         @Serializable
         data object Settings : Config
     }

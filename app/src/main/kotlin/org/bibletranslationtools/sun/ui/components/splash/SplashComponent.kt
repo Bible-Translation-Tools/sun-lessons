@@ -1,5 +1,7 @@
 package org.bibletranslationtools.sun.ui.components.splash
 
+import coil3.ImageLoader
+import coil3.request.ImageRequest
 import com.arkivanov.decompose.ComponentContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -37,6 +39,8 @@ class DefaultSplashComponent(
     private val sentenceRepository: SentenceRepository by inject()
     private val symbolRepository: SymbolRepository by inject()
     private val assetReader: AssetReader by inject()
+    private val imageLoader: ImageLoader by inject()
+    private val imageRequestBuilder: ImageRequest.Builder by inject()
 
     private val componentScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
@@ -101,11 +105,29 @@ class DefaultSplashComponent(
     }
 
     private suspend fun insertCard(card: CardData, lessonId: Long): Long {
-        return cardRepository.insert(card.toEntity().copy(lessonId = lessonId))
+        val imageUrl = "file:///android_asset/images/symbols/${card.image}"
+        val request = imageRequestBuilder.data(imageUrl).build()
+        imageLoader.enqueue(request)
+
+        return cardRepository.insert(
+            card.toEntity().copy(
+                lessonId = lessonId,
+                image = imageUrl
+            )
+        )
     }
 
     private suspend fun insertSentence(sentence: SentenceData, lessonId: Long): Long {
-        return sentenceRepository.insert(sentence.toEntity().copy(lessonId = lessonId))
+        val imageUrl = "file:///android_asset/images/sentences/${sentence.image}"
+        val request = imageRequestBuilder.data(imageUrl).build()
+        imageLoader.enqueue(request)
+
+        return sentenceRepository.insert(
+            sentence.toEntity().copy(
+                lessonId = lessonId,
+                image = imageUrl
+            )
+        )
     }
 
     private fun insertSymbol(symbol: SymbolData, sentenceId: Long) {

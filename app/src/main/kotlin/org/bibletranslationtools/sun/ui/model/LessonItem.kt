@@ -75,18 +75,18 @@ data class LessonItem(
     )
 
     val cardsLearned get() = cards.count { it.learned }
-    val cardsLearnedProgress get() = cardsLearned.toDouble() / cards.size * 100
+    val cardsLearnedProgress get() = cardsLearned.toFloat() / cards.size
 
     val cardsTested get() = cards.count { it.tested }
-    val cardsTestedProgress get() = cardsTested.toDouble() / cards.size * 100
+    val cardsTestedProgress get() = cardsTested.toFloat() / cards.size
 
     val sentencesLearned get() = sentences.count { it.learned }
     val sentencesLearnedProgress get() = run {
         // If there are no sentences, return 100% progress
         if (sentences.isNotEmpty()) {
-            sentencesLearned.toDouble() / sentences.size * 100
+            sentencesLearned.toFloat() / sentences.size
         } else {
-            100.0
+            1f
         }
     }
 
@@ -94,18 +94,18 @@ data class LessonItem(
     val sentencesTestedProgress get() = run {
         // If there are no sentences, return 100% progress
         if (sentences.isNotEmpty()) {
-            sentencesTested.toDouble() / sentences.size * 100
+            sentencesTested.toFloat() / sentences.size
         } else {
-            100.0
+            1f
         }
     }
 
-    val totalProgress: Double
+    val totalProgress: Float
         get() {
             // Size times 2, because we have learned and tested cards/sentences
             val total = (cards.size * 2) + (sentences.size * 2)
             val completed = cardsLearned + cardsTested + sentencesLearned + sentencesTested
-            return (completed.toDouble() / total) * 100
+            return if (total > 0) (completed.toFloat() / total) else 0f
         }
 }
 
@@ -142,6 +142,8 @@ fun LessonData.toItem(): LessonItem {
         verse = verse,
         sort = sort,
         author = author ?: "unknown",
+        cards = cards.map { it.toItem() },
+        sentences = sentences.map { it.toItem() },
         createdAt = createdAt.toLocalDateTime(),
         updatedAt = updatedAt.toLocalDateTime()
     )
@@ -157,6 +159,7 @@ fun LessonWithData.toItem(): LessonItem {
         createdAt = lesson.createdAt.toLocalDateTime(),
         updatedAt = lesson.updatedAt.toLocalDateTime(),
         cards = cards.map { it.toItem() },
-        sentences = sentences.map { it.toItem() }
+        sentences = sentences.map { it.toItem() },
+        id = lesson.id
     )
 }

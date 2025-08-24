@@ -105,7 +105,7 @@ class DefaultTestSentenceComponent(
         val options = buildOptions(correctSymbols)
         val answerSlots = correctSymbols.map { it.copy(name = "") }
 
-        val imageUri = "file:///android_asset/images/sentences/${correctSentence.image}"
+        val imageUri = correctSentence.image ?: "file:///android_asset/images/sentences/0.jpg"
 
         _model.update {
             it.copy(

@@ -16,9 +16,9 @@ import org.bibletranslationtools.sun.data.repositories.SentenceRepository
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
+import org.bibletranslationtools.sun.ui.model.GroupId
 import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.ui.model.LessonMode
-import org.bibletranslationtools.sun.ui.model.LessonType
 import org.bibletranslationtools.sun.ui.model.toItem
 import org.bibletranslationtools.sun.utils.Section
 import org.koin.core.component.KoinComponent
@@ -34,7 +34,7 @@ interface ListComponent : ParentContext {
         val nextLessonId: Long = 1,
         val nextSection: Section = Section.LEARN_SYMBOLS,
         val nextState: SectionState = SectionState.NOT_STARTED,
-        val lessonType: LessonType = LessonType.BASIC
+        val groupId: GroupId? = null
     )
 
     fun onLearnClicked()
@@ -44,7 +44,7 @@ interface ListComponent : ParentContext {
 class DefaultListComponent(
     componentContext: ComponentContext,
     parentContext: ParentContext,
-    private val lessonType: LessonType,
+    private val groupId: GroupId?,
     private val onContinueLesson: (Long, Section, SectionState) -> Unit,
     private val onStartLesson: (Long, Section, LessonMode) -> Unit
 ) : ListComponent, KoinComponent, AppComponent(componentContext, parentContext) {
@@ -60,7 +60,7 @@ class DefaultListComponent(
     override val model: Value<ListComponent.Model> = _model
 
     init {
-        _model.update { it.copy(lessonType = lessonType) }
+        _model.update { it.copy(groupId = groupId) }
 
         doOnResume {
             componentScope.launch {
@@ -85,7 +85,11 @@ class DefaultListComponent(
 
     private suspend fun loadLessons() {
         withContext(Dispatchers.Default) {
-            val lessons = lessonRepository.getAllWithData(lessonType).map { it.toItem() }
+            val lessons = if (groupId != null) {
+                lessonRepository.getGroupWithData(groupId).map { it.toItem() }
+            } else {
+                lessonRepository.getBasicWithData().map { it.toItem() }
+            }
             _model.update {
                 it.copy(lessons = lessons.mapIndexed { index, lesson ->
                     lesson.copy(
@@ -105,7 +109,7 @@ class DefaultListComponent(
     private fun lessonAvailable(lessons: List<LessonItem>, position: Int): Boolean {
         if (position == 0) return true
         val prevLesson = lessons[position - 1]
-        return prevLesson.totalProgress == 100.0
+        return prevLesson.totalProgress == 1f
     }
 
     private suspend fun defineNextSection() {

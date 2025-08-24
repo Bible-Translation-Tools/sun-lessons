@@ -14,7 +14,7 @@ import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
-import org.bibletranslationtools.sun.ui.model.LessonType
+import org.bibletranslationtools.sun.ui.model.GroupId
 import org.bibletranslationtools.sun.utils.Section
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -37,7 +37,7 @@ class DefaultCompleteComponent(
     parentContext: ParentContext,
     private val lessonId: Long,
     private val section: Section,
-    private val lessonType: LessonType,
+    private val groupId: GroupId?,
     private val onStartLesson: (Long, Section) -> Unit,
     private val onNextSection: (LessonsComponent.Intent) -> Unit
 ) : CompleteComponent, KoinComponent, AppComponent(componentContext, parentContext) {
@@ -68,7 +68,11 @@ class DefaultCompleteComponent(
     }
 
     private suspend fun getNextLesson(id: Long): Long {
-        val lessons = lessonRepository.getAll(lessonType).map { it.id }
+        val lessons = if (groupId != null) {
+            lessonRepository.getGroup(groupId).map { it.id }
+        } else {
+            lessonRepository.getBasicLessons().map { it.id }
+        }
         val current = lessons.indexOf(id)
         var next = 1L
         if (current < lessons.size - 1) {

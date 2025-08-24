@@ -14,8 +14,6 @@ fun LessonsScreen(component: LessonsComponent) {
         when (val child = it.instance) {
             is LessonsComponent.Child.List ->
                 ListScreen(child.component)
-            is LessonsComponent.Child.ScriptureLessons ->
-                ScriptureLessonsScreen(child.component)
             is LessonsComponent.Child.Start ->
                 StartScreen(child.component)
             is LessonsComponent.Child.LearnSymbol ->

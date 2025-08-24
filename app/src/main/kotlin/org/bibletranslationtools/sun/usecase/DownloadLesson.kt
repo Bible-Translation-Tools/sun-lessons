@@ -1,6 +1,8 @@
 package org.bibletranslationtools.sun.usecase
 
 import androidx.room.Transaction
+import coil3.ImageLoader
+import coil3.request.ImageRequest
 import org.bibletranslationtools.sun.api.LessonRequest
 import org.bibletranslationtools.sun.api.SunApi
 import org.bibletranslationtools.sun.data.repositories.CardRepository
@@ -21,7 +23,9 @@ class DownloadLesson(
     private val lessonRepository: LessonRepository,
     private val cardRepository: CardRepository,
     private val sentenceRepository: SentenceRepository,
-    private val symbolRepository: SymbolRepository
+    private val symbolRepository: SymbolRepository,
+    private val imageLoader: ImageLoader,
+    private val imageRequestBuilder: ImageRequest.Builder
 ) {
     suspend operator fun invoke(groupId: GroupId) {
         val localLessons = lessonRepository.getGroupWithData(groupId).map {
@@ -94,11 +98,15 @@ class DownloadLesson(
 
         lesson.cards
             .map { it.copy(lessonId = lessonId) }
-            .forEach { cardRepository.insert(it.toEntity()) }
+            .forEach {
+                cacheImage(it.image)
+                cardRepository.insert(it.toEntity())
+            }
 
         lesson.sentences
             .map { it.copy(lessonId = lessonId) }
             .forEach { sentence ->
+                sentence.image?.let { cacheImage(it) }
                 val sentenceId = sentenceRepository.insert(sentence.toEntity())
                 sentence.symbols
                     .map { it.copy(sentenceId = sentenceId) }
@@ -138,6 +146,7 @@ class DownloadLesson(
             .map { it.copy(lessonId = lessonId) }
 
         if (cardsToInsert.isNotEmpty()) {
+            cacheImages(cardsToInsert.map { it.image })
             cardRepository.insertAll(cardsToInsert.map { it.toEntity() })
         }
 
@@ -146,6 +155,7 @@ class DownloadLesson(
         }
 
         if (cardsToUpdate.isNotEmpty()) {
+            cacheImages(cardsToInsert.map { it.image })
             cardRepository.updateAll(cardsToUpdate.map { it.toEntity() })
         }
     }
@@ -170,6 +180,7 @@ class DownloadLesson(
             val localSentence = localSentenceMap[fingerprint]
 
             if (localSentence == null) {
+                remoteSentence.image?.let { cacheImage(it) }
                 val sentenceId = sentenceRepository.insert(
                     remoteSentence.copy(lessonId = lessonId).toEntity()
                 )
@@ -179,6 +190,7 @@ class DownloadLesson(
             } else {
                 if (localSentence.sort != remoteSentence.sort) {
                     val sentenceToUpdate = localSentence.copy(sort = remoteSentence.sort)
+                    sentenceToUpdate.image?.let { cacheImage(it) }
                     sentenceRepository.update(sentenceToUpdate.toEntity())
                 }
                 updateSymbols(
@@ -227,5 +239,14 @@ class DownloadLesson(
         if (symbolsToUpdate.isNotEmpty()) {
             symbolRepository.updateAll(symbolsToUpdate.map { it.toEntity() })
         }
+    }
+
+    private fun cacheImage(url: String) {
+        val request = imageRequestBuilder.data(url).build()
+        imageLoader.enqueue(request)
+    }
+
+    private fun cacheImages(urls: List<String>) {
+        urls.forEach { cacheImage(it) }
     }
 }

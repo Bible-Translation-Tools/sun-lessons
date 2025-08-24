@@ -9,6 +9,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.json.Json
+import java.util.UUID
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -38,6 +39,10 @@ object Utils {
             animationSpec = customTween(),
             orientation = Orientation.Vertical
         )
+    }
+
+    fun getRandomUuid(): String {
+        return UUID.randomUUID().toString()
     }
 
     private fun <T> customTween(): TweenSpec<T> {

@@ -36,8 +36,8 @@ fun LessonHeader(
 ) {
 
     val status = when {
-        lesson.isAvailable && lesson.totalProgress == 100.0 -> LessonStatus.COMPLETED
-        lesson.isAvailable && lesson.totalProgress < 100.0 -> LessonStatus.IN_PROGRESS
+        lesson.isAvailable && lesson.totalProgress == 1f -> LessonStatus.COMPLETED
+        lesson.isAvailable && lesson.totalProgress < 1f -> LessonStatus.IN_PROGRESS
         else -> LessonStatus.LOCKED
     }
 
@@ -85,7 +85,7 @@ fun LessonHeader(
                 when (status) {
                     LessonStatus.IN_PROGRESS -> {
                         CircularProgressIndicator(
-                            progress = { lesson.totalProgress.toFloat() / 100 },
+                            progress = { lesson.totalProgress },
                             modifier = Modifier.size(24.dp),
                             color = MaterialTheme.colorScheme.primary,
                             trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),

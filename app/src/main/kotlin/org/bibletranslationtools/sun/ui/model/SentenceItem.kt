@@ -1,5 +1,6 @@
 package org.bibletranslationtools.sun.ui.model
 
+import org.bibletranslationtools.sun.data.entity.SentenceData
 import org.bibletranslationtools.sun.data.entity.SentenceEntity
 
 data class SentenceItem(
@@ -35,3 +36,14 @@ fun SentenceEntity.toItem() = SentenceItem(
     passed = false,
     id = id
 )
+
+fun SentenceData.toItem(): SentenceItem {
+    return SentenceItem(
+        sort = sort,
+        learned = false,
+        tested = false,
+        lessonId = 0,
+        symbols = symbols.map { it.toItem() },
+        image = image
+    )
+}

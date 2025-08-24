@@ -1,5 +1,6 @@
 package org.bibletranslationtools.sun.ui.model
 
+import org.bibletranslationtools.sun.data.entity.CardData
 import org.bibletranslationtools.sun.data.entity.CardEntity
 
 data class CardItem(
@@ -37,5 +38,16 @@ fun CardEntity.toItem(): CardItem {
         passed = false,
         correct = null,
         id = id
+    )
+}
+
+fun CardData.toItem(): CardItem {
+    return CardItem(
+        symbol = symbol,
+        sort = sort,
+        image = image,
+        learned = false,
+        tested = false,
+        lessonId = 0
     )
 }

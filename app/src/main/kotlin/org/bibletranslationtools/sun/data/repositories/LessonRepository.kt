@@ -9,9 +9,11 @@ import org.bibletranslationtools.sun.ui.model.LessonType
 interface LessonRepository {
     suspend fun insert(lesson: LessonEntity): Long
     suspend fun delete(lesson: LessonEntity)
+    suspend fun delete(groupId: GroupId)
     suspend fun update(lesson: LessonEntity)
     suspend fun getAll(lessonType: LessonType): List<LessonEntity>
     suspend fun getAll(book: String?, chapter: Int?): List<LessonEntity>
+    suspend fun getGroup(groupId: GroupId): List<LessonEntity>
     suspend fun getBasicLessons(): List<LessonEntity>
     suspend fun getScriptureLessons(): List<LessonEntity>
     suspend fun getAllWithData(lessonType: LessonType): List<LessonWithData>
@@ -31,6 +33,15 @@ class LessonRepositoryImpl(private val lessonDao: LessonDao) : LessonRepository 
         lessonDao.delete(lesson)
     }
 
+    override suspend fun delete(groupId: GroupId) {
+        lessonDao.delete(
+            groupId.book,
+            groupId.chapter,
+            groupId.verse,
+            groupId.author
+        )
+    }
+
     override suspend fun update(lesson: LessonEntity) {
         lessonDao.update(lesson)
     }
@@ -44,6 +55,15 @@ class LessonRepositoryImpl(private val lessonDao: LessonDao) : LessonRepository 
 
     override suspend fun getAll(book: String?, chapter: Int?): List<LessonEntity> {
         return lessonDao.getAll(book, chapter)
+    }
+
+    override suspend fun getGroup(groupId: GroupId): List<LessonEntity> {
+        return lessonDao.getGroup(
+            groupId.book,
+            groupId.chapter,
+            groupId.verse,
+            groupId.author
+        )
     }
 
     override suspend fun getBasicLessons(): List<LessonEntity> {

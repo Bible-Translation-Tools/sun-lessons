@@ -13,7 +13,8 @@ import kotlinx.coroutines.withContext
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
-import org.bibletranslationtools.sun.ui.model.LessonItem
+import org.bibletranslationtools.sun.ui.model.GroupId
+import org.bibletranslationtools.sun.ui.model.LessonGroup
 import org.bibletranslationtools.sun.ui.model.toItem
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -23,16 +24,19 @@ interface ScriptureLessonsComponent : ParentContext {
     val model: Value<Model>
 
     data class Model(
-        val lessons: List<LessonItem> = emptyList()
+        val lessons: List<LessonGroup> = emptyList(),
+        val lessonToDelete: LessonGroup? = null
     )
 
-    fun onLessonClick(lesson: LessonItem)
-    fun onLessonDelete(lesson: LessonItem)
+    fun onLessonClick(lesson: LessonGroup)
+    fun onLessonDelete(lesson: LessonGroup, confirm: Boolean)
+    fun clearLessonToDelete()
 }
 
 class DefaultScriptureLessonsComponent(
     componentContext: ComponentContext,
-    parentContext: ParentContext
+    parentContext: ParentContext,
+    private val onNavigateLesson: (GroupId) -> Unit
 ) : ScriptureLessonsComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
     private val lessonRepository: LessonRepository by inject()
@@ -50,18 +54,35 @@ class DefaultScriptureLessonsComponent(
         }
     }
 
-    override fun onLessonClick(lesson: LessonItem) {
-        println("open lesson: ${lesson.groupId}")
+    override fun onLessonClick(lesson: LessonGroup) {
+        onNavigateLesson(lesson.groupId)
     }
 
-    override fun onLessonDelete(lesson: LessonItem) {
-        println("delete lesson: ${lesson.name}")
+    override fun onLessonDelete(lesson: LessonGroup, confirm: Boolean) {
+        if (confirm) {
+            componentScope.launch {
+                clearLessonToDelete()
+                lessonRepository.delete(lesson.groupId)
+                loadLessons()
+            }
+        } else {
+            _model.update { it.copy(lessonToDelete = lesson) }
+        }
+    }
+
+    override fun clearLessonToDelete() {
+        _model.update { it.copy(lessonToDelete = null) }
     }
 
     private suspend fun loadLessons() {
         val lessons = withContext(Dispatchers.Default) {
             lessonRepository.getScriptureWithData().map { it.toItem() }
         }
-        _model.update { it.copy(lessons = lessons) }
+        val group = lessons.groupBy { it.groupId }
+        _model.update { it.copy(
+            lessons = group.map { (key, value) ->
+                LessonGroup(groupId = key, lessons = value)
+            })
+        }
     }
 }

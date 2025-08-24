@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import org.bibletranslationtools.sun.R
+import org.bibletranslationtools.sun.ui.control.ConfirmDialog
 import org.bibletranslationtools.sun.ui.control.TopAppBar
 import org.bibletranslationtools.sun.ui.control.list.SmallLessonCard
 
@@ -47,14 +48,14 @@ fun ScriptureLessonsScreen(component: ScriptureLessonsComponent) {
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
                 LazyColumn {
-                    items(model.lessons, key = { it.fingerprint }) { lesson ->
+                    items(model.lessons, key = { it.groupIdStr }) { lesson ->
                         SmallLessonCard(
-                            lesson = lesson,
+                            group = lesson,
                             onClick = {
                                 component.onLessonClick(lesson)
                             },
                             onDelete = {
-                                component.onLessonDelete(lesson)
+                                component.onLessonDelete(lesson, false)
                             },
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -62,5 +63,16 @@ fun ScriptureLessonsScreen(component: ScriptureLessonsComponent) {
                 }
             }
         }
+    }
+
+    model.lessonToDelete?.let { lesson ->
+        ConfirmDialog(
+            title = stringResource(R.string.delete_lesson_warning),
+            message = stringResource(R.string.delete_lesson_continue),
+            onDismiss = component::clearLessonToDelete,
+            onCancel = component::clearLessonToDelete,
+            onConfirm = { component.onLessonDelete(lesson, true) },
+            confirmButtonText = stringResource(R.string.delete)
+        )
     }
 }

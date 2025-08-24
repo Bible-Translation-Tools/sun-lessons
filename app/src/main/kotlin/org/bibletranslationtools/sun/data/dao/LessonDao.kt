@@ -20,6 +20,10 @@ interface LessonDao {
     @Delete
     suspend fun delete(lesson: LessonEntity)
 
+    @Query("DELETE FROM lessons WHERE book = :book AND chapter = :chapter " +
+            "AND verse = :verse AND author = :author")
+    suspend fun delete(book: String?, chapter: Int?, verse: Int?, author: String)
+
     @Update
     suspend fun update(lesson: LessonEntity)
 
@@ -47,6 +51,15 @@ interface LessonDao {
 
     @Query("SELECT * FROM lessons WHERE id = :id")
     suspend fun getSingleWithData(id: Long): LessonWithData?
+
+    @Query("SELECT * FROM lessons WHERE book = :book AND chapter = :chapter " +
+            "AND verse = :verse AND author = :author ORDER BY sort")
+    suspend fun getGroup(
+        book: String?,
+        chapter: Int?,
+        verse: Int?,
+        author: String
+    ): List<LessonEntity>
 
     @Query("SELECT * FROM lessons WHERE book = :book AND chapter = :chapter " +
             "AND verse = :verse AND author = :author ORDER BY sort")

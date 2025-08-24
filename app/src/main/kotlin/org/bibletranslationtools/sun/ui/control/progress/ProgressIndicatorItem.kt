@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun ProgressIndicatorItem(label: String, progress: Float, count: String) {
+    progress
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = label,

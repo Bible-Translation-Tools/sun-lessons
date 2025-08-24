@@ -4,6 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.update
+import com.arkivanov.essenty.lifecycle.doOnResume
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -39,8 +40,10 @@ class DefaultProgressComponent(
     private val componentScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     init {
-        componentScope.launch {
-            loadLessons()
+        doOnResume {
+            componentScope.launch {
+                loadLessons()
+            }
         }
     }
 
@@ -56,6 +59,6 @@ class DefaultProgressComponent(
     private fun lessonAvailable(lessons: List<LessonItem>, position: Int): Boolean {
         if (position == 0) return true
         val prevLesson = lessons[position - 1]
-        return prevLesson.totalProgress == 100.0
+        return prevLesson.totalProgress == 1f
     }
 }

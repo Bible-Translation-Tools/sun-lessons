@@ -51,4 +51,7 @@
     <string name="confirm_download">Do you wish to continue downloading?</string>
     <string name="download">Download</string>
     <string name="updates">Updates</string>
+    <string name="delete">Delete</string>
+    <string name="delete_lesson_warning">You are deleting a lesson.</string>
+    <string name="delete_lesson_continue">Would you like to continue deleting?</string>
 </resources>

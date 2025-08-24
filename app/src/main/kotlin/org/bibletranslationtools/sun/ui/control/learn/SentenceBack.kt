@@ -47,7 +47,7 @@ fun SentenceBack(
             )
     ) {
         AsyncImage(
-            model = "file:///android_asset/images/sentences/${sentence.image}",
+            model = sentence.image ?: "file:///android_asset/images/sentences/0.jpg",
             contentDescription = sentence.image,
             modifier = Modifier
                 .height(260.dp)

@@ -1,5 +1,6 @@
 package org.bibletranslationtools.sun.ui.model
 
+import org.bibletranslationtools.sun.data.entity.SymbolData
 import org.bibletranslationtools.sun.data.entity.SymbolEntity
 
 data class SymbolItem(
@@ -26,3 +27,11 @@ fun SymbolEntity.toItem() = SymbolItem(
     correct = null,
     id = id
 )
+
+fun SymbolData.toItem(): SymbolItem {
+    return SymbolItem(
+        name = name,
+        sort = sort,
+        sentenceId = 0
+    )
+}
