@@ -1,5 +1,7 @@
 package org.bibletranslationtools.sun.ui.model
 
+import android.content.Context
+import org.bibletranslationtools.sun.R
 import org.bibletranslationtools.sun.api.CardData
 import org.bibletranslationtools.sun.api.LessonData
 import org.bibletranslationtools.sun.api.SentenceData
@@ -34,12 +36,13 @@ interface DataMapper {
 }
 
 class DataMapperImpl(
-    private val bookDataStore: BookDataStore
+    private val bookDataStore: BookDataStore,
+    private val context: Context
 ) : DataMapper {
 
     override fun toItem(entity: LessonEntity): LessonItem {
         val book = entity.book?.let { bookDataStore.getBook(it) }
-        return LessonItem(
+        val item = LessonItem(
             book = book,
             chapter = entity.chapter,
             verse = entity.verse,
@@ -49,11 +52,12 @@ class DataMapperImpl(
             updatedAt = entity.updatedAt.toLocalDateTime(),
             id = entity.id
         )
+        return item.copy(name = getName(item))
     }
 
     override fun toItem(data: LessonData): LessonItem {
         val book = data.book?.let { bookDataStore.getBook(it) }
-        return LessonItem(
+        val item = LessonItem(
             book = book,
             chapter = data.chapter,
             verse = data.verse,
@@ -64,11 +68,12 @@ class DataMapperImpl(
             createdAt = data.createdAt.toLocalDateTime(),
             updatedAt = data.updatedAt.toLocalDateTime()
         )
+        return item.copy(name = getName(item))
     }
 
     override fun toItem(data: LessonWithData): LessonItem {
         val book = data.lesson.book?.let { bookDataStore.getBook(it) }
-        return LessonItem(
+        val item = LessonItem(
             book = book,
             chapter = data.lesson.chapter,
             verse = data.lesson.verse,
@@ -80,6 +85,7 @@ class DataMapperImpl(
             sentences = data.sentences.map(::toItem),
             id = data.lesson.id
         )
+        return item.copy(name = getName(item))
     }
 
     override fun toEntity(item: LessonItem) = LessonEntity(
@@ -196,4 +202,12 @@ class DataMapperImpl(
         sort = data.sort,
         name = data.name
     )
+
+    private fun getName(item: LessonItem): String {
+        return if (item.isScripture) {
+            "${item.book?.name} ${item.chapter}:${item.verse}"
+        } else {
+            context.getString(R.string.lesson_name, item.id)
+        }
+    }
 }

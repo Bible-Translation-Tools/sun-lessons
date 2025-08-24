@@ -30,27 +30,12 @@ data class LessonItem(
     val sentences: List<SentenceItem> = emptyList(),
     val isAvailable: Boolean = false,
     val isSelected: Boolean = false,
+    val name: String = "unknown",
     val id: Long = 0
 ) {
-    val name: String
-        get() = if (isScripture) {
-            "${book?.name} $chapter:$verse"
-        } else {
-            "Lesson $id"
-        }
-
-    val order: Int
-        get() = if (isScripture) {
-            sort
-        } else {
-            id.toInt()
-        }
-
-    val isScripture: Boolean
-        get() = book != null && chapter != null && verse != null
-
-    val fingerprint: String
-        get() = "$name|$sort|$author"
+    val isScripture = book != null && chapter != null && verse != null
+    val part = if (isScripture) sort else id.toInt()
+    val fingerprint = "$name|$sort|$author"
 
     val uniqueId = UniqueId(
         book = book?.slug,

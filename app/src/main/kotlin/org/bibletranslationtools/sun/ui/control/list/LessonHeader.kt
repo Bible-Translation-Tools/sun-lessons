@@ -66,7 +66,7 @@ fun LessonHeader(
                 } else MaterialTheme.colorScheme.onBackground
             )
             Text(
-                text = TallyMarkConverter.toText(lesson.order),
+                text = TallyMarkConverter.toText(lesson.part),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = tallyFontFamily(),

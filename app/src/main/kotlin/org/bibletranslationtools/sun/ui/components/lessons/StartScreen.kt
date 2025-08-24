@@ -42,7 +42,7 @@ fun StartScreen(component: StartComponent) {
                     text = model.lesson?.name ?: "error",
                     fontWeight = FontWeight.Bold
                 )
-                TallyText(model.lesson?.order ?: 0)
+                TallyText(model.lesson?.part ?: 0)
             }
         }
 
