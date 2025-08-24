@@ -19,7 +19,7 @@ import org.bibletranslationtools.sun.ui.components.ParentContext
 import org.bibletranslationtools.sun.ui.model.GroupId
 import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.ui.model.LessonMode
-import org.bibletranslationtools.sun.ui.model.toItem
+import org.bibletranslationtools.sun.ui.model.DataMapper
 import org.bibletranslationtools.sun.utils.Section
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -49,6 +49,7 @@ class DefaultListComponent(
     private val onStartLesson: (Long, Section, LessonMode) -> Unit
 ) : ListComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
+    private val dataMapper: DataMapper by inject()
     private val settingsRepository: SettingsRepository by inject()
     private val lessonRepository: LessonRepository by inject()
     private val cardRepository: CardRepository by inject()
@@ -86,9 +87,9 @@ class DefaultListComponent(
     private suspend fun loadLessons() {
         withContext(Dispatchers.Default) {
             val lessons = if (groupId != null) {
-                lessonRepository.getGroupWithData(groupId).map { it.toItem() }
+                lessonRepository.getGroupWithData(groupId).map(dataMapper::toItem)
             } else {
-                lessonRepository.getBasicWithData().map { it.toItem() }
+                lessonRepository.getBasicWithData().map(dataMapper::toItem)
             }
             _model.update {
                 it.copy(lessons = lessons.mapIndexed { index, lesson ->

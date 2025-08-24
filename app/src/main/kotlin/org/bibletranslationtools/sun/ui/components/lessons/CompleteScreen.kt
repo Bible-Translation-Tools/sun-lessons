@@ -49,10 +49,10 @@ fun CompleteScreen(component: CompleteComponent) {
             ) {
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = stringResource(R.string.lesson_name, model.lessonId),
+                    text = model.lesson?.name ?: "error",
                     fontWeight = FontWeight.Bold
                 )
-                TallyText(model.lessonId)
+                TallyText(model.lesson?.order ?: 0)
             }
         }
 
@@ -80,7 +80,10 @@ fun CompleteScreen(component: CompleteComponent) {
                     )
 
                     Text(
-                        text = stringResource(model.sectionTitle, model.lessonId),
+                        text = stringResource(
+                            model.sectionTitle,
+                            model.lesson?.name ?: "error"
+                        ),
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.tertiary,

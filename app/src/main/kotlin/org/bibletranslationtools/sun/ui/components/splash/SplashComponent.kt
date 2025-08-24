@@ -9,18 +9,18 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.bibletranslationtools.sun.data.entity.CardData
-import org.bibletranslationtools.sun.data.entity.LessonCatalog
-import org.bibletranslationtools.sun.data.entity.LessonData
-import org.bibletranslationtools.sun.data.entity.SentenceData
+import org.bibletranslationtools.sun.api.CardData
+import org.bibletranslationtools.sun.api.LessonCatalog
+import org.bibletranslationtools.sun.api.LessonData
+import org.bibletranslationtools.sun.api.SentenceData
+import org.bibletranslationtools.sun.api.SymbolData
 import org.bibletranslationtools.sun.data.entity.SettingEntity
-import org.bibletranslationtools.sun.data.entity.SymbolData
-import org.bibletranslationtools.sun.data.entity.toEntity
 import org.bibletranslationtools.sun.data.repositories.CardRepository
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.data.repositories.SentenceRepository
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.data.repositories.SymbolRepository
+import org.bibletranslationtools.sun.ui.model.DataMapper
 import org.bibletranslationtools.sun.utils.AssetReader
 import org.bibletranslationtools.sun.utils.Utils
 import org.koin.core.component.KoinComponent
@@ -33,6 +33,7 @@ class DefaultSplashComponent(
     private val onInitDone: () -> Unit
 ) : SplashComponent, KoinComponent, ComponentContext by componentContext {
 
+    private val dataMapper: DataMapper by inject()
     private val cardRepository: CardRepository by inject()
     private val lessonRepository: LessonRepository by inject()
     private val settingsRepository: SettingsRepository by inject()
@@ -101,7 +102,7 @@ class DefaultSplashComponent(
     }
 
     private suspend fun insertLesson(lesson: LessonData): Long {
-        return lessonRepository.insert(lesson.toEntity())
+        return lessonRepository.insert(lesson.let(dataMapper::toEntity))
     }
 
     private suspend fun insertCard(card: CardData, lessonId: Long): Long {
@@ -110,7 +111,7 @@ class DefaultSplashComponent(
         imageLoader.enqueue(request)
 
         return cardRepository.insert(
-            card.toEntity().copy(
+            card.let(dataMapper::toEntity).copy(
                 lessonId = lessonId,
                 image = imageUrl
             )
@@ -123,7 +124,7 @@ class DefaultSplashComponent(
         imageLoader.enqueue(request)
 
         return sentenceRepository.insert(
-            sentence.toEntity().copy(
+            sentence.let(dataMapper::toEntity).copy(
                 lessonId = lessonId,
                 image = imageUrl
             )
@@ -132,7 +133,9 @@ class DefaultSplashComponent(
 
     private fun insertSymbol(symbol: SymbolData, sentenceId: Long) {
         componentScope.launch {
-            symbolRepository.insert(symbol.toEntity().copy(sentenceId = sentenceId))
+            symbolRepository.insert(
+                symbol.let(dataMapper::toEntity).copy(sentenceId = sentenceId)
+            )
         }
     }
 

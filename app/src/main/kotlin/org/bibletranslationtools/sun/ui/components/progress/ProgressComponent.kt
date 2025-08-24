@@ -13,8 +13,7 @@ import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
 import org.bibletranslationtools.sun.ui.model.LessonItem
-import org.bibletranslationtools.sun.ui.model.LessonType
-import org.bibletranslationtools.sun.ui.model.toItem
+import org.bibletranslationtools.sun.ui.model.DataMapper
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -32,6 +31,7 @@ class DefaultProgressComponent(
     parentContext: ParentContext
 ) : ProgressComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
+    private val dataMapper: DataMapper by inject()
     private val lessonRepository: LessonRepository by inject()
 
     private val _model = MutableValue(ProgressComponent.Model())
@@ -48,7 +48,7 @@ class DefaultProgressComponent(
     }
 
     private  suspend fun loadLessons() {
-        val lessons = lessonRepository.getAllWithData(LessonType.BASIC).map { it.toItem() }
+        val lessons = lessonRepository.getBasicLessons().map(dataMapper::toItem)
         _model.update {
             it.copy(lessons = lessons.mapIndexed { index, lesson ->
                 lesson.copy(isAvailable = lessonAvailable(lessons, index))

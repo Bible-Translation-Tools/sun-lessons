@@ -4,14 +4,19 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.update
+import com.arkivanov.essenty.lifecycle.doOnResume
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.bibletranslationtools.sun.R
+import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.data.repositories.SentenceRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
+import org.bibletranslationtools.sun.ui.model.DataMapper
+import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.utils.Section
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -21,7 +26,7 @@ interface StartComponent : ParentContext {
     val model: Value<Model>
 
     data class Model(
-        val lessonId: Long = 0,
+        val lesson: LessonItem? = null,
         val sectionTitle: Int = 0,
         val imageResource: Int = 0,
         val onNext: () -> Unit = {}
@@ -39,6 +44,8 @@ class DefaultStartComponent(
     private val onNextSection: (LessonsComponent.Intent) -> Unit
 ) : StartComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
+    private val dataMapper: DataMapper by inject()
+    private val lessonRepository: LessonRepository by inject()
     private val sentenceRepository: SentenceRepository by inject()
 
     private val componentScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
@@ -47,18 +54,24 @@ class DefaultStartComponent(
     override val model: Value<StartComponent.Model> = _model
 
     init {
-        _model.update { it.copy(lessonId = lessonId) }
-
         componentScope.launch {
-            if ((section == Section.LEARN_SENTENCES || section == Section.TEST_SENTENCES) &&
-                sentencesByLessonCount(lessonId) == 0
-            ) {
-                finishLesson()
-                return@launch
+            val lesson = withContext(Dispatchers.Default) {
+                lessonRepository.get(lessonId)
             }
+            _model.update { it.copy(lesson = lesson?.let(dataMapper::toItem)) }
         }
 
-        setupNextAction()
+        doOnResume {
+            componentScope.launch {
+                if ((section == Section.LEARN_SENTENCES || section == Section.TEST_SENTENCES) &&
+                    sentencesByLessonCount(lessonId) == 0
+                ) {
+                    finishLesson()
+                    return@launch
+                }
+            }
+            setupNextAction()
+        }
     }
 
     override fun onNextClicked() {

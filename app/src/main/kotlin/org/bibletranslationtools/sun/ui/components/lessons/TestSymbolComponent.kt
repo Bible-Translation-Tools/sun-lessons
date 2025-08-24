@@ -8,16 +8,18 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.bibletranslationtools.sun.data.entity.SettingEntity
 import org.bibletranslationtools.sun.data.repositories.CardRepository
+import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.data.repositories.SentenceRepository
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
 import org.bibletranslationtools.sun.ui.model.CardItem
+import org.bibletranslationtools.sun.ui.model.DataMapper
+import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.ui.model.LessonMode
-import org.bibletranslationtools.sun.ui.model.toEntity
-import org.bibletranslationtools.sun.ui.model.toItem
 import org.bibletranslationtools.sun.utils.Section
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -26,7 +28,7 @@ interface TestSymbolComponent : ParentContext {
     val model: Value<Model>
 
     data class Model(
-        val lessonId: Long = 1,
+        val lesson: LessonItem? = null,
         val currentCard: CardItem? = null,
         val cards: List<CardItem> = emptyList(),
         val choices: List<CardItem> = emptyList(),
@@ -46,6 +48,8 @@ class DefaultTestSymbolComponent(
     private val onFinishSection: (Long, Section) -> Unit
 ) : TestSymbolComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
+    private val dataMapper: DataMapper by inject()
+    private val lessonRepository: LessonRepository by inject()
     private val cardRepository: CardRepository by inject()
     private val sentenceRepository: SentenceRepository by inject()
     private val settingsRepository: SettingsRepository by inject()
@@ -56,9 +60,12 @@ class DefaultTestSymbolComponent(
     private val componentScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     init {
-        _model.update { it.copy(lessonId = lessonId) }
-
         componentScope.launch {
+            val lesson = withContext(Dispatchers.Default) {
+                lessonRepository.get(lessonId)
+            }
+            _model.update { it.copy(lesson = lesson?.let(dataMapper::toItem)) }
+
             initializeLessonMode()
             loadLessonCards()
             setNextQuestion()
@@ -140,28 +147,36 @@ class DefaultTestSymbolComponent(
     }
 
     private suspend fun getSentencesCount(): Int {
-        return sentenceRepository.getByLessonCount(lessonId)
+        return withContext(Dispatchers.Default) {
+            sentenceRepository.getByLessonCount(lessonId)
+        }
     }
 
     private suspend fun updateCard(card: CardItem) {
-        cardRepository.update(card.toEntity())
+        withContext(Dispatchers.Default) {
+            cardRepository.update(card.let(dataMapper::toEntity))
 
-        val lastSection = SettingEntity(SettingEntity.LAST_SECTION, Section.TEST_SYMBOLS.id)
-        val lastLesson = SettingEntity(SettingEntity.LAST_LESSON, lessonId.toString())
-        settingsRepository.insertOrUpdate(lastSection)
-        settingsRepository.insertOrUpdate(lastLesson)
+            val lastSection = SettingEntity(SettingEntity.LAST_SECTION, Section.TEST_SYMBOLS.id)
+            val lastLesson = SettingEntity(SettingEntity.LAST_LESSON, lessonId.toString())
+            settingsRepository.insertOrUpdate(lastSection)
+            settingsRepository.insertOrUpdate(lastLesson)
+        }
     }
 
     private suspend fun initializeLessonMode() {
-        val all = cardRepository.getByLessonCount(lessonId)
-        val done = cardRepository.getTestedByLessonCount(lessonId)
+        val mode = withContext(Dispatchers.Default) {
+            val all = cardRepository.getByLessonCount(lessonId)
+            val done = cardRepository.getTestedByLessonCount(lessonId)
+            if (all == done) LessonMode.REPEAT else LessonMode.NORMAL
+        }
 
-        val mode = if (all == done) LessonMode.REPEAT else LessonMode.NORMAL
         _model.update { it.copy(mode = mode) }
     }
 
     private suspend fun loadLessonCards() {
-        val cards = cardRepository.getByLesson(lessonId).map { it.toItem() }
+        val cards = withContext(Dispatchers.Default) {
+            cardRepository.getByLesson(lessonId).map(dataMapper::toItem)
+        }
         _model.update { it.copy(cards = cards) }
     }
 }

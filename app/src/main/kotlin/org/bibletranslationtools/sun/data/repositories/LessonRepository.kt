@@ -4,19 +4,16 @@ import org.bibletranslationtools.sun.data.dao.LessonDao
 import org.bibletranslationtools.sun.data.entity.LessonEntity
 import org.bibletranslationtools.sun.data.entity.LessonWithData
 import org.bibletranslationtools.sun.ui.model.GroupId
-import org.bibletranslationtools.sun.ui.model.LessonType
 
 interface LessonRepository {
     suspend fun insert(lesson: LessonEntity): Long
     suspend fun delete(lesson: LessonEntity)
     suspend fun delete(groupId: GroupId)
     suspend fun update(lesson: LessonEntity)
-    suspend fun getAll(lessonType: LessonType): List<LessonEntity>
     suspend fun getAll(book: String?, chapter: Int?): List<LessonEntity>
     suspend fun getGroup(groupId: GroupId): List<LessonEntity>
     suspend fun getBasicLessons(): List<LessonEntity>
     suspend fun getScriptureLessons(): List<LessonEntity>
-    suspend fun getAllWithData(lessonType: LessonType): List<LessonWithData>
     suspend fun getAllWithData(book: String?, chapter: Int?): List<LessonWithData>
     suspend fun getBasicWithData(): List<LessonWithData>
     suspend fun getScriptureWithData(): List<LessonWithData>
@@ -46,13 +43,6 @@ class LessonRepositoryImpl(private val lessonDao: LessonDao) : LessonRepository 
         lessonDao.update(lesson)
     }
 
-    override suspend fun getAll(lessonType: LessonType): List<LessonEntity> {
-        return when (lessonType) {
-            LessonType.BASIC -> lessonDao.getBasicLessons()
-            LessonType.SCRIPTURE -> lessonDao.getScriptureLessons()
-        }
-    }
-
     override suspend fun getAll(book: String?, chapter: Int?): List<LessonEntity> {
         return lessonDao.getAll(book, chapter)
     }
@@ -72,13 +62,6 @@ class LessonRepositoryImpl(private val lessonDao: LessonDao) : LessonRepository 
 
     override suspend fun getScriptureLessons(): List<LessonEntity> {
         return lessonDao.getScriptureLessons()
-    }
-
-    override suspend fun getAllWithData(lessonType: LessonType): List<LessonWithData> {
-        return when (lessonType) {
-            LessonType.BASIC -> lessonDao.getBasicWithData()
-            LessonType.SCRIPTURE -> lessonDao.getScriptureWithData()
-        }
     }
 
     override suspend fun getAllWithData(book: String?, chapter: Int?): List<LessonWithData> {

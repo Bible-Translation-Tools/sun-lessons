@@ -15,7 +15,7 @@ import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
 import org.bibletranslationtools.sun.ui.model.GroupId
 import org.bibletranslationtools.sun.ui.model.LessonGroup
-import org.bibletranslationtools.sun.ui.model.toItem
+import org.bibletranslationtools.sun.ui.model.DataMapper
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -39,6 +39,7 @@ class DefaultScriptureLessonsComponent(
     private val onNavigateLesson: (GroupId) -> Unit
 ) : ScriptureLessonsComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
+    private val dataMapper: DataMapper by inject()
     private val lessonRepository: LessonRepository by inject()
 
     private val _model = MutableValue(ScriptureLessonsComponent.Model())
@@ -76,7 +77,7 @@ class DefaultScriptureLessonsComponent(
 
     private suspend fun loadLessons() {
         val lessons = withContext(Dispatchers.Default) {
-            lessonRepository.getScriptureWithData().map { it.toItem() }
+            lessonRepository.getScriptureWithData().map(dataMapper::toItem)
         }
         val group = lessons.groupBy { it.groupId }
         _model.update { it.copy(

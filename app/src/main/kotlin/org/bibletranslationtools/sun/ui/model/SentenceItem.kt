@@ -1,8 +1,5 @@
 package org.bibletranslationtools.sun.ui.model
 
-import org.bibletranslationtools.sun.data.entity.SentenceData
-import org.bibletranslationtools.sun.data.entity.SentenceEntity
-
 data class SentenceItem(
     val sort: Int,
     val learned: Boolean,
@@ -15,35 +12,4 @@ data class SentenceItem(
 ) {
     val fingerprint: String
         get() = symbols.sortedBy { it.sort }.joinToString("|") { it.name }
-}
-
-fun SentenceItem.toEntity() = SentenceEntity(
-    sort = sort,
-    image = image,
-    learned = learned,
-    tested = tested,
-    lessonId = lessonId,
-    id = id
-)
-
-fun SentenceEntity.toItem() = SentenceItem(
-    sort = sort,
-    image = image,
-    learned = learned,
-    tested = tested,
-    lessonId = lessonId,
-    symbols = emptyList(),
-    passed = false,
-    id = id
-)
-
-fun SentenceData.toItem(): SentenceItem {
-    return SentenceItem(
-        sort = sort,
-        learned = false,
-        tested = false,
-        lessonId = 0,
-        symbols = symbols.map { it.toItem() },
-        image = image
-    )
 }

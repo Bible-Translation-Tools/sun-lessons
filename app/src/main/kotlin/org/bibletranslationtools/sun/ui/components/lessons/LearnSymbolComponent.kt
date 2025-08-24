@@ -9,15 +9,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.bibletranslationtools.sun.data.entity.SettingEntity
 import org.bibletranslationtools.sun.data.repositories.CardRepository
+import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
 import org.bibletranslationtools.sun.ui.model.CardItem
+import org.bibletranslationtools.sun.ui.model.DataMapper
+import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.ui.model.LessonMode
-import org.bibletranslationtools.sun.ui.model.toEntity
-import org.bibletranslationtools.sun.ui.model.toItem
 import org.bibletranslationtools.sun.utils.Section
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -27,7 +29,7 @@ interface LearnSymbolComponent : ParentContext {
     val model: Value<Model>
 
     data class Model(
-        val lessonId: Long = 1,
+        val lesson: LessonItem? = null,
         val cards: List<CardItem> = emptyList(),
         val mode: LessonMode = LessonMode.NORMAL,
         val lastPosition: Int = 0
@@ -45,6 +47,8 @@ class DefaultLearnSymbolComponent(
     private val onFinishSection: (Long, Section) -> Unit
 ) : LearnSymbolComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
+    private val dataMapper: DataMapper by inject()
+    private val lessonRepository: LessonRepository by inject()
     private val cardRepository: CardRepository by inject()
     private val settingsRepository: SettingsRepository by inject()
 
@@ -55,6 +59,11 @@ class DefaultLearnSymbolComponent(
 
     init {
         componentScope.launch {
+            val lesson = withContext(Dispatchers.Default) {
+                lessonRepository.get(lessonId)
+            }
+            _model.update { it.copy(lesson = lesson?.let(dataMapper::toItem)) }
+
             initializeLessonMode()
             loadCards()
         }
@@ -89,7 +98,8 @@ class DefaultLearnSymbolComponent(
 
     private suspend fun saveCard(card: CardItem) {
         if (!card.learned) {
-            cardRepository.update(card.copy(learned = true).toEntity())
+            cardRepository.update(card.copy(learned = true)
+                .let(dataMapper::toEntity))
 
             _model.update { state ->
                 state.copy(cards = state.cards.map {
@@ -123,7 +133,7 @@ class DefaultLearnSymbolComponent(
     }
 
     private suspend fun loadCards() {
-        val cards = cardRepository.getByLesson(lessonId).map { it.toItem() }
+        val cards = cardRepository.getByLesson(lessonId).map(dataMapper::toItem)
         _model.update { it.copy(cards = cards) }
 
         if (model.value.mode == LessonMode.NORMAL) {

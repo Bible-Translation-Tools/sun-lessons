@@ -7,7 +7,7 @@ import org.bibletranslationtools.sun.ui.model.DownloadStatus
 import org.bibletranslationtools.sun.ui.model.GroupId
 import org.bibletranslationtools.sun.ui.model.LessonGroup
 import org.bibletranslationtools.sun.ui.model.LessonItem
-import org.bibletranslationtools.sun.ui.model.toItem
+import org.bibletranslationtools.sun.ui.model.DataMapper
 
 private data class LessonPair(
     val local: LessonGroup?,
@@ -16,6 +16,7 @@ private data class LessonPair(
 
 class GetLessonsWithDownloadStatus(
     private val sunApi: SunApi,
+    private val dataMapper: DataMapper,
     private val lessonRepository: LessonRepository,
 ) {
 
@@ -24,10 +25,10 @@ class GetLessonsWithDownloadStatus(
         val remoteLessons = sunApi.getLessonCatalog(
             LessonRequest(book = book, chapter = chapter)
         )
-            .lessons.map { it.toItem() }
+            .lessons.map(dataMapper::toItem)
 
         val localLessons = lessonRepository.getAll(book, chapter)
-            .map { it.toItem() }
+            .map(dataMapper::toItem)
 
         val localGroups = localLessons
             .groupBy { it.groupId }

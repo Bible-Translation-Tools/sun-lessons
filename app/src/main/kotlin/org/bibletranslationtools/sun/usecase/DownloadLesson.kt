@@ -10,16 +10,16 @@ import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.data.repositories.SentenceRepository
 import org.bibletranslationtools.sun.data.repositories.SymbolRepository
 import org.bibletranslationtools.sun.ui.model.CardItem
+import org.bibletranslationtools.sun.ui.model.DataMapper
 import org.bibletranslationtools.sun.ui.model.GroupId
 import org.bibletranslationtools.sun.ui.model.LessonGroup
 import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.ui.model.SentenceItem
 import org.bibletranslationtools.sun.ui.model.SymbolItem
-import org.bibletranslationtools.sun.ui.model.toEntity
-import org.bibletranslationtools.sun.ui.model.toItem
 
 class DownloadLesson(
     private val sunApi: SunApi,
+    private val dataMapper: DataMapper,
     private val lessonRepository: LessonRepository,
     private val cardRepository: CardRepository,
     private val sentenceRepository: SentenceRepository,
@@ -28,9 +28,8 @@ class DownloadLesson(
     private val imageRequestBuilder: ImageRequest.Builder
 ) {
     suspend operator fun invoke(groupId: GroupId, onProgress: (Float) -> Unit) {
-        val localLessons = lessonRepository.getGroupWithData(groupId).map {
-            it.toItem()
-        }
+        val localLessons = lessonRepository.getGroupWithData(groupId)
+            .map(dataMapper::toItem)
         val localGroup: LessonGroup? = if (localLessons.isNotEmpty()) {
             LessonGroup(
                 groupId = localLessons.first().groupId,
@@ -48,7 +47,7 @@ class DownloadLesson(
                 author = groupId.author
             )
         )
-            .lessons.map { it.toItem() }
+            .lessons.map(dataMapper::toItem)
 
         val remoteGroup: LessonGroup? = if (remoteLessons.isNotEmpty()) {
             LessonGroup(
@@ -114,7 +113,7 @@ class DownloadLesson(
     @Transaction
     private suspend fun insertLesson(lesson: LessonItem, reportProgress: (Int) -> Unit) {
         val lessonId = lessonRepository.insert(
-            lesson.toEntity()
+            lesson.let(dataMapper::toEntity)
         )
 
         reportProgress(1)
@@ -123,7 +122,7 @@ class DownloadLesson(
             .map { it.copy(lessonId = lessonId) }
             .forEach {
                 cacheImage(it.image)
-                cardRepository.insert(it.toEntity())
+                cardRepository.insert(it.let(dataMapper::toEntity))
                 reportProgress(1)
             }
 
@@ -131,11 +130,13 @@ class DownloadLesson(
             .map { it.copy(lessonId = lessonId) }
             .forEach { sentence ->
                 sentence.image?.let { cacheImage(it) }
-                val sentenceId = sentenceRepository.insert(sentence.toEntity())
+                val sentenceId = sentenceRepository.insert(
+                    sentence.let(dataMapper::toEntity)
+                )
                 sentence.symbols
                     .map { it.copy(sentenceId = sentenceId) }
                     .forEach { symbol ->
-                        symbolRepository.insert(symbol.toEntity())
+                        symbolRepository.insert(symbol.let(dataMapper::toEntity))
                     }
                 reportProgress(1)
             }
@@ -148,7 +149,7 @@ class DownloadLesson(
         reportProgress: (Int) -> Unit
     ) {
         val lesson = remote.copy(id = local.id)
-        lessonRepository.update(lesson.toEntity())
+        lessonRepository.update(lesson.let(dataMapper::toEntity))
 
         reportProgress(1)
 
@@ -194,17 +195,17 @@ class DownloadLesson(
 
         if (cardsToInsert.isNotEmpty()) {
             cacheImages(cardsToInsert.map { it.image })
-            cardRepository.insertAll(cardsToInsert.map { it.toEntity() })
+            cardRepository.insertAll(cardsToInsert.map(dataMapper::toEntity))
             reportProgress(cardsToInsert.size)
         }
 
         if (cardsToDelete.isNotEmpty()) {
-            cardRepository.deleteAll(cardsToDelete.map { it.toEntity() })
+            cardRepository.deleteAll(cardsToDelete.map(dataMapper::toEntity))
         }
 
         if (cardsToUpdate.isNotEmpty()) {
             cacheImages(cardsToInsert.map { it.image })
-            cardRepository.updateAll(cardsToUpdate.map { it.toEntity() })
+            cardRepository.updateAll(cardsToUpdate.map(dataMapper::toEntity))
             reportProgress(cardsToUpdate.size)
         }
 
@@ -225,7 +226,7 @@ class DownloadLesson(
         val sentencesToDelete = local.filter { it.fingerprint !in remoteSentenceMap }
         if (sentencesToDelete.isNotEmpty()) {
             sentenceRepository.deleteAll(
-                sentencesToDelete.map { it.toEntity() }
+                sentencesToDelete.map { it.let(dataMapper::toEntity) }
             )
         }
 
@@ -236,16 +237,16 @@ class DownloadLesson(
             if (localSentence == null) {
                 remoteSentence.image?.let { cacheImage(it) }
                 val sentenceId = sentenceRepository.insert(
-                    remoteSentence.copy(lessonId = lessonId).toEntity()
+                    remoteSentence.copy(lessonId = lessonId).let(dataMapper::toEntity)
                 )
                 symbolRepository.insertAll(remoteSentence.symbols.map {
-                    it.copy(sentenceId = sentenceId).toEntity()
+                    it.copy(sentenceId = sentenceId).let(dataMapper::toEntity)
                 })
             } else {
                 if (localSentence.sort != remoteSentence.sort) {
                     val sentenceToUpdate = localSentence.copy(sort = remoteSentence.sort)
                     sentenceToUpdate.image?.let { cacheImage(it) }
-                    sentenceRepository.update(sentenceToUpdate.toEntity())
+                    sentenceRepository.update(sentenceToUpdate.let(dataMapper::toEntity))
                 }
                 updateSymbols(
                     localSymbols = localSentence.symbols,
@@ -284,15 +285,15 @@ class DownloadLesson(
             }
 
         if (symbolsToInsert.isNotEmpty()) {
-            symbolRepository.insertAll(symbolsToInsert.map { it.toEntity() })
+            symbolRepository.insertAll(symbolsToInsert.map(dataMapper::toEntity))
         }
 
         if (symbolsToDelete.isNotEmpty()) {
-            symbolRepository.deleteAll(symbolsToDelete.map { it.toEntity() })
+            symbolRepository.deleteAll(symbolsToDelete.map(dataMapper::toEntity))
         }
 
         if (symbolsToUpdate.isNotEmpty()) {
-            symbolRepository.updateAll(symbolsToUpdate.map { it.toEntity() })
+            symbolRepository.updateAll(symbolsToUpdate.map(dataMapper::toEntity))
         }
     }
 

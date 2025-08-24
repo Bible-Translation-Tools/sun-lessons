@@ -9,15 +9,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.bibletranslationtools.sun.data.entity.SettingEntity
+import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.data.repositories.SentenceRepository
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
+import org.bibletranslationtools.sun.ui.model.DataMapper
+import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.ui.model.LessonMode
 import org.bibletranslationtools.sun.ui.model.SentenceItem
-import org.bibletranslationtools.sun.ui.model.toEntity
-import org.bibletranslationtools.sun.ui.model.toItem
 import org.bibletranslationtools.sun.utils.Section
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -27,7 +29,7 @@ interface LearnSentenceComponent : ParentContext {
     val model: Value<Model>
 
     data class Model(
-        val lessonId: Long = 1,
+        val lesson: LessonItem? = null,
         val sentences: List<SentenceItem> = emptyList(),
         val mode: LessonMode = LessonMode.NORMAL,
         val lastPosition: Int = 0
@@ -45,6 +47,8 @@ class DefaultLearnSentenceComponent(
     private val onFinishSection: (Long, Section) -> Unit
 ) : LearnSentenceComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
+    private val dataMapper: DataMapper by inject()
+    private val lessonRepository: LessonRepository by inject()
     private val sentenceRepository: SentenceRepository by inject()
     private val settingsRepository: SettingsRepository by inject()
 
@@ -55,6 +59,11 @@ class DefaultLearnSentenceComponent(
 
     init {
         componentScope.launch {
+            val lesson = withContext(Dispatchers.Default) {
+                lessonRepository.get(lessonId)
+            }
+            _model.update { it.copy(lesson = lesson?.let(dataMapper::toItem)) }
+
             initializeLessonMode()
             loadSentences()
         }
@@ -89,7 +98,9 @@ class DefaultLearnSentenceComponent(
 
     private suspend fun saveSentence(sentence: SentenceItem) {
         if (!sentence.learned) {
-            sentenceRepository.update(sentence.copy(learned = true).toEntity())
+            sentenceRepository.update(
+                sentence.copy(learned = true).let(dataMapper::toEntity)
+            )
 
             _model.update { state ->
                 state.copy(
@@ -122,7 +133,8 @@ class DefaultLearnSentenceComponent(
     private suspend fun loadSentences() {
         val sentencesWithSymbols = sentenceRepository.getAllWithSymbols(lessonId)
         val sentences = sentencesWithSymbols.map {
-            it.sentence.toItem().copy(symbols = it.symbols.map { symbol -> symbol.toItem() })
+            it.sentence.let(dataMapper::toItem)
+                .copy(symbols = it.symbols.map { symbol -> symbol.let(dataMapper::toItem) })
         }
 
         _model.update { it.copy(sentences = sentences) }

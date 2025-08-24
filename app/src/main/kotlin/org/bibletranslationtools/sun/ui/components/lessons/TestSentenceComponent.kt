@@ -8,18 +8,20 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.bibletranslationtools.sun.data.entity.SettingEntity
 import org.bibletranslationtools.sun.data.repositories.CardRepository
+import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.data.repositories.SentenceRepository
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
 import org.bibletranslationtools.sun.ui.model.CardItem
+import org.bibletranslationtools.sun.ui.model.DataMapper
+import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.ui.model.LessonMode
 import org.bibletranslationtools.sun.ui.model.SentenceItem
 import org.bibletranslationtools.sun.ui.model.SymbolItem
-import org.bibletranslationtools.sun.ui.model.toEntity
-import org.bibletranslationtools.sun.ui.model.toItem
 import org.bibletranslationtools.sun.utils.Section
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -29,7 +31,7 @@ interface TestSentenceComponent : ParentContext {
     val model: Value<Model>
 
     data class Model(
-        val lessonId: Long = 1,
+        val lesson: LessonItem? = null,
         val currentSentence: SentenceItem? = null,
         val sentences: List<SentenceItem> = emptyList(),
         val cards: List<CardItem> = emptyList(),
@@ -54,6 +56,8 @@ class DefaultTestSentenceComponent(
     private val onFinishSection: (Long, Section) -> Unit
 ) : TestSentenceComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
+    private val dataMapper: DataMapper by inject()
+    private val lessonRepository: LessonRepository by inject()
     private val sentenceRepository: SentenceRepository by inject()
     private val cardsRepository: CardRepository by inject()
     private val settingsRepository: SettingsRepository by inject()
@@ -66,23 +70,36 @@ class DefaultTestSentenceComponent(
     private var lastAnswerPosition = -1
 
     init {
-        _model.update { it.copy(lessonId = lessonId) }
-
-        initialize()
+        componentScope.launch {
+            initialize()
+        }
     }
 
-    private fun initialize() {
-        componentScope.launch {
-            val sentences = sentenceRepository.getAllWithSymbols(lessonId).map {
-                it.sentence.toItem().copy(symbols = it.symbols.map { symbol -> symbol.toItem() })
-            }
-            val cards = cardsRepository.getByLesson(lessonId).map { it.toItem() }
-
-            _model.update { it.copy(sentences = sentences, cards = cards) }
-
-            initializeLessonMode()
-            setNextSentence()
+    private suspend fun initialize() {
+        val lesson = withContext(Dispatchers.Default) {
+            lessonRepository.get(lessonId)
         }
+
+        val sentences = withContext(Dispatchers.Default) {
+            sentenceRepository.getAllWithSymbols(lessonId).map {
+                it.sentence.let(dataMapper::toItem)
+                    .copy(symbols = it.symbols.map { symbol ->
+                        symbol.let(dataMapper::toItem)
+                    })
+            }
+        }
+        val cards = withContext(Dispatchers.Default) {
+            cardsRepository.getByLesson(lessonId).map(dataMapper::toItem)
+        }
+
+        _model.update { it.copy(
+            lesson = lesson?.let(dataMapper::toItem),
+            sentences = sentences,
+            cards = cards
+        ) }
+
+        initializeLessonMode()
+        setNextSentence()
     }
 
     override fun setNextSentence() {
@@ -214,7 +231,7 @@ class DefaultTestSentenceComponent(
     }
 
     private suspend fun updateSentence(sentence: SentenceItem) {
-        sentenceRepository.update(sentence.toEntity())
+        sentenceRepository.update(sentence.let(dataMapper::toEntity))
 
         val lastSection = SettingEntity(SettingEntity.LAST_SECTION, Section.TEST_SYMBOLS.id)
         val lastLesson = SettingEntity(SettingEntity.LAST_LESSON, lessonId.toString())

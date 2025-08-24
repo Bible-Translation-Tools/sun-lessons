@@ -23,7 +23,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import org.bibletranslationtools.sun.R
 import org.bibletranslationtools.sun.ui.control.NextButton
 import org.bibletranslationtools.sun.ui.control.TallyText
 import org.bibletranslationtools.sun.ui.control.TopAppBar
@@ -40,10 +39,10 @@ fun StartScreen(component: StartComponent) {
             ) {
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = stringResource(R.string.lesson_name, model.lessonId),
+                    text = model.lesson?.name ?: "error",
                     fontWeight = FontWeight.Bold
                 )
-                TallyText(model.lessonId)
+                TallyText(model.lesson?.order ?: 0)
             }
         }
 
@@ -69,7 +68,7 @@ fun StartScreen(component: StartComponent) {
                     )
 
                     Text(
-                        text = stringResource(id = R.string.lesson_name, model.lessonId),
+                        text = model.lesson?.name ?: "error",
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary

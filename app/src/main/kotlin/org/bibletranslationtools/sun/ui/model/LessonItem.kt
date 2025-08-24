@@ -1,16 +1,6 @@
 package org.bibletranslationtools.sun.ui.model
 
 import kotlinx.datetime.LocalDateTime
-import org.bibletranslationtools.sun.data.entity.LessonData
-import org.bibletranslationtools.sun.data.entity.LessonEntity
-import org.bibletranslationtools.sun.data.entity.LessonWithData
-import org.bibletranslationtools.sun.utils.toLocalDateTime
-import org.bibletranslationtools.sun.utils.toTimestamp
-
-enum class LessonType {
-    BASIC,
-    SCRIPTURE
-}
 
 enum class DownloadStatus {
     DOWNLOAD,
@@ -27,7 +17,7 @@ data class UniqueId(
 )
 
 data class LessonItem(
-    val book: String?,
+    val book: BookItem?,
     val chapter: Int?,
     val verse: Int?,
     val sort: Int,
@@ -43,24 +33,27 @@ data class LessonItem(
     val id: Long = 0
 ) {
     val name: String
-        get() = if (type == LessonType.SCRIPTURE) {
-            "$book $chapter:$verse"
+        get() = if (isScripture) {
+            "${book?.name} $chapter:$verse"
         } else {
             "Lesson $id"
         }
 
-    val type: LessonType
-        get() = if (book == null || chapter == null || verse == null) {
-            LessonType.BASIC
+    val order: Int
+        get() = if (isScripture) {
+            sort
         } else {
-            LessonType.SCRIPTURE
+            id.toInt()
         }
+
+    val isScripture: Boolean
+        get() = book != null && chapter != null && verse != null
 
     val fingerprint: String
         get() = "$name|$sort|$author"
 
     val uniqueId = UniqueId(
-        book = book,
+        book = book?.slug,
         chapter = chapter,
         verse = verse,
         sort = sort,
@@ -68,7 +61,7 @@ data class LessonItem(
     )
 
     val groupId = GroupId(
-        book = book,
+        book = book?.slug,
         chapter = chapter,
         verse = verse,
         author = author
@@ -107,59 +100,4 @@ data class LessonItem(
             val completed = cardsLearned + cardsTested + sentencesLearned + sentencesTested
             return if (total > 0) (completed.toFloat() / total) else 0f
         }
-}
-
-fun LessonEntity.toItem(): LessonItem {
-    return LessonItem(
-        book = book,
-        chapter = chapter,
-        verse = verse,
-        sort = sort,
-        author = author,
-        createdAt = createdAt.toLocalDateTime(),
-        updatedAt = updatedAt.toLocalDateTime(),
-        id = id
-    )
-}
-
-fun LessonItem.toEntity(): LessonEntity {
-    return LessonEntity(
-        book = book,
-        chapter = chapter,
-        verse = verse,
-        sort = sort,
-        author = author,
-        createdAt = createdAt.toTimestamp(),
-        updatedAt = updatedAt.toTimestamp(),
-        id = id
-    )
-}
-
-fun LessonData.toItem(): LessonItem {
-    return LessonItem(
-        book = book,
-        chapter = chapter,
-        verse = verse,
-        sort = sort,
-        author = author ?: "unknown",
-        cards = cards.map { it.toItem() },
-        sentences = sentences.map { it.toItem() },
-        createdAt = createdAt.toLocalDateTime(),
-        updatedAt = updatedAt.toLocalDateTime()
-    )
-}
-
-fun LessonWithData.toItem(): LessonItem {
-    return LessonItem(
-        book = lesson.book,
-        chapter = lesson.chapter,
-        verse = lesson.verse,
-        sort = lesson.sort,
-        author = lesson.author,
-        createdAt = lesson.createdAt.toLocalDateTime(),
-        updatedAt = lesson.updatedAt.toLocalDateTime(),
-        cards = cards.map { it.toItem() },
-        sentences = sentences.map { it.toItem() },
-        id = lesson.id
-    )
 }

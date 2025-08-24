@@ -18,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -57,7 +56,7 @@ fun LessonHeader(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = stringResource(R.string.lesson_name, lesson.id),
+                text = lesson.name,
                 fontSize = 24.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -67,7 +66,7 @@ fun LessonHeader(
                 } else MaterialTheme.colorScheme.onBackground
             )
             Text(
-                text = TallyMarkConverter.toText(lesson.id),
+                text = TallyMarkConverter.toText(lesson.order),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = tallyFontFamily(),

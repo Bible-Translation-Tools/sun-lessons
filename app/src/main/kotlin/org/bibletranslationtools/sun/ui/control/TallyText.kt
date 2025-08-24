@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import org.bibletranslationtools.sun.ui.tallyFontFamily
 
 @Composable
-fun TallyText(lessonId: Long) {
+fun TallyText(lessonId: Int) {
     Text(
         text = lessonId.toString(),
         fontWeight = FontWeight.Bold,

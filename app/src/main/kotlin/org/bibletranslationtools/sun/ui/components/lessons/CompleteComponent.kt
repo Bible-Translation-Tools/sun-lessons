@@ -4,10 +4,12 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.update
+import com.arkivanov.essenty.lifecycle.doOnResume
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.bibletranslationtools.sun.R
 import org.bibletranslationtools.sun.data.entity.SettingEntity
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
@@ -15,6 +17,8 @@ import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
 import org.bibletranslationtools.sun.ui.model.GroupId
+import org.bibletranslationtools.sun.ui.model.LessonItem
+import org.bibletranslationtools.sun.ui.model.DataMapper
 import org.bibletranslationtools.sun.utils.Section
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -23,7 +27,7 @@ interface CompleteComponent : ParentContext {
     val model: Value<Model>
 
     data class Model(
-        val lessonId: Long = 0,
+        val lesson: LessonItem? = null,
         val section: Section = Section.LEARN_SYMBOLS,
         val sectionTitle: Int = R.string.learn_symbols_completed,
         val onNext: () -> Unit = {}
@@ -42,6 +46,7 @@ class DefaultCompleteComponent(
     private val onNextSection: (LessonsComponent.Intent) -> Unit
 ) : CompleteComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
+    private val dataMapper: DataMapper by inject()
     private val settingsRepository: SettingsRepository by inject()
     private val lessonRepository: LessonRepository by inject()
 
@@ -51,8 +56,16 @@ class DefaultCompleteComponent(
     override val model: Value<CompleteComponent.Model> = _model
 
     init {
-        _model.update { it.copy(lessonId = lessonId, section = section) }
-        setupNextAction()
+        componentScope.launch {
+            val lesson = withContext(Dispatchers.Default) {
+                lessonRepository.get(lessonId)
+            }
+            _model.update { it.copy(lesson = lesson?.let(dataMapper::toItem)) }
+        }
+
+        doOnResume {
+            setupNextAction()
+        }
     }
 
     override fun onNextClicked() {

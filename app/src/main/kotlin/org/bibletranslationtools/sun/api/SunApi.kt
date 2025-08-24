@@ -1,7 +1,6 @@
 package org.bibletranslationtools.sun.api
 
 import io.ktor.client.HttpClient
-import org.bibletranslationtools.sun.data.entity.LessonCatalog
 import org.bibletranslationtools.sun.utils.AssetReader
 import org.bibletranslationtools.sun.utils.Utils
 

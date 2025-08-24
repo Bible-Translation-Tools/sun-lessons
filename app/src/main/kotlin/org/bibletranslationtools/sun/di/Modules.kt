@@ -7,6 +7,8 @@ import org.bibletranslationtools.sun.api.SunApi
 import org.bibletranslationtools.sun.api.SunApiImpl
 import org.bibletranslationtools.sun.api.createHttpClient
 import org.bibletranslationtools.sun.data.AppDatabase
+import org.bibletranslationtools.sun.data.BookDataStore
+import org.bibletranslationtools.sun.data.BookDataStoreImpl
 import org.bibletranslationtools.sun.data.repositories.CardRepository
 import org.bibletranslationtools.sun.data.repositories.CardRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
@@ -17,8 +19,10 @@ import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.data.repositories.SettingsRepositoryImpl
 import org.bibletranslationtools.sun.data.repositories.SymbolRepository
 import org.bibletranslationtools.sun.data.repositories.SymbolRepositoryImpl
-import org.bibletranslationtools.sun.usecase.GetLessonsWithDownloadStatus
+import org.bibletranslationtools.sun.ui.model.DataMapper
+import org.bibletranslationtools.sun.ui.model.DataMapperImpl
 import org.bibletranslationtools.sun.usecase.DownloadLesson
+import org.bibletranslationtools.sun.usecase.GetLessonsWithDownloadStatus
 import org.bibletranslationtools.sun.utils.AssetReader
 import org.bibletranslationtools.sun.utils.AssetReaderImpl
 import org.koin.core.module.dsl.factoryOf
@@ -50,5 +54,8 @@ val sharedModule = module {
     singleOf(::SentenceRepositoryImpl).bind<SentenceRepository>()
     singleOf(::SymbolRepositoryImpl).bind<SymbolRepository>()
     singleOf(::SettingsRepositoryImpl).bind<SettingsRepository>()
+
     singleOf(::AssetReaderImpl).bind<AssetReader>()
+    singleOf(::BookDataStoreImpl).bind<BookDataStore>()
+    singleOf(::DataMapperImpl).bind<DataMapper>()
 }

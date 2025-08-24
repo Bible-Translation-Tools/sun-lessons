@@ -1,4 +1,4 @@
-package org.bibletranslationtools.sun.data.entity
+package org.bibletranslationtools.sun.api
 
 import kotlinx.serialization.Serializable
 import org.bibletranslationtools.sun.utils.Utils
@@ -41,33 +41,3 @@ data class SymbolData(
     val name: String,
     val sort: Int = 0
 )
-
-fun LessonData.toEntity(): LessonEntity {
-    return LessonEntity()
-}
-
-fun CardData.toEntity(): CardEntity {
-    return CardEntity(
-        symbol = symbol,
-        sort = sort,
-        image = image,
-        learned = false,
-        tested = false
-    )
-}
-
-fun SentenceData.toEntity(): SentenceEntity {
-    return SentenceEntity(
-        sort = sort,
-        image = image,
-        learned = false,
-        tested = false
-    )
-}
-
-fun SymbolData.toEntity(): SymbolEntity {
-    return SymbolEntity(
-        sort = sort,
-        name = name
-    )
-}
