@@ -8,7 +8,6 @@ import com.arkivanov.essenty.lifecycle.doOnResume
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.bibletranslationtools.sun.ui.components.AppComponent
@@ -81,11 +80,8 @@ class DefaultDownloadLessonsComponent(
             model.value.selectedLesson?.let { lesson ->
                 dismissSelectedLesson()
 
-                downloadLesson(lesson.groupId)
-
-                for (i in 0..100) {
-                    onDownloadProgress(lesson, i / 100f)
-                    delay(2000 / 100)
+                downloadLesson(lesson.groupId) { progress ->
+                    onDownloadProgress(lesson, progress)
                 }
 
                 _model.update { state ->

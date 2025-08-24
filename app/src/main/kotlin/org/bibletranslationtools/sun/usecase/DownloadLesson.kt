@@ -27,7 +27,7 @@ class DownloadLesson(
     private val imageLoader: ImageLoader,
     private val imageRequestBuilder: ImageRequest.Builder
 ) {
-    suspend operator fun invoke(groupId: GroupId) {
+    suspend operator fun invoke(groupId: GroupId, onProgress: (Float) -> Unit) {
         val localLessons = lessonRepository.getGroupWithData(groupId).map {
             it.toItem()
         }
@@ -59,48 +59,72 @@ class DownloadLesson(
             null
         }
 
+        val totalItems = remoteGroup?.lessons?.sumOf {
+            1 + it.cards.size + it.sentences.size
+        } ?: 0
+        var processedItems = 0
+
+        val reportProgress: (Int) -> Unit = { count ->
+            if (totalItems > 0 && count > 0) {
+                processedItems += count
+                val progress = processedItems.toFloat() / totalItems
+                onProgress(progress.coerceIn(0f, 1f))
+            }
+        }
+
         when {
             localGroup != null && remoteGroup != null -> {
-                updateLessons(localGroup, remoteGroup)
+                updateLessons(localGroup, remoteGroup, reportProgress)
             }
-            remoteGroup != null -> insertLessons(remoteGroup)
+            remoteGroup != null -> insertLessons(remoteGroup, reportProgress)
         }
+
+        onProgress(1f)
     }
 
-    private suspend fun insertLessons(group: LessonGroup) {
+    private suspend fun insertLessons(group: LessonGroup, reportProgress: (Int) -> Unit) {
         group.lessons.forEach { lesson ->
-            insertLesson(lesson)
+            insertLesson(lesson, reportProgress)
         }
     }
 
-    private suspend fun updateLessons(local: LessonGroup, remote: LessonGroup) {
+    private suspend fun updateLessons(
+        local: LessonGroup,
+        remote: LessonGroup,
+        reportProgress: (Int) -> Unit
+    ) {
         val localIds = local.lessons.map { it.uniqueId }
         remote.lessons.forEach { remoteLesson ->
             val id = remoteLesson.uniqueId
             if (id in localIds) {
                 val localLesson = local.lessons.first { it.uniqueId == id }
-                if (localLesson.updatedAt == remoteLesson.updatedAt) {
-                    return
+                if (localLesson.updatedAt != remoteLesson.updatedAt) {
+                    updateLesson(localLesson, remoteLesson, reportProgress)
                 } else {
-                    updateLesson(localLesson, remoteLesson)
+                    // Lesson is unchanged; report progress for it and all its contents at once.
+                    val numItemsInLesson = 1 + remoteLesson.cards.size + remoteLesson.sentences.size
+                    reportProgress(numItemsInLesson)
                 }
             } else {
-                insertLesson(remoteLesson)
+                insertLesson(remoteLesson, reportProgress)
             }
         }
     }
 
     @Transaction
-    private suspend fun insertLesson(lesson: LessonItem) {
+    private suspend fun insertLesson(lesson: LessonItem, reportProgress: (Int) -> Unit) {
         val lessonId = lessonRepository.insert(
             lesson.toEntity()
         )
+
+        reportProgress(1)
 
         lesson.cards
             .map { it.copy(lessonId = lessonId) }
             .forEach {
                 cacheImage(it.image)
                 cardRepository.insert(it.toEntity())
+                reportProgress(1)
             }
 
         lesson.sentences
@@ -113,22 +137,40 @@ class DownloadLesson(
                     .forEach { symbol ->
                         symbolRepository.insert(symbol.toEntity())
                     }
+                reportProgress(1)
             }
     }
 
     @Transaction
-    private suspend fun updateLesson(local: LessonItem, remote: LessonItem) {
+    private suspend fun updateLesson(
+        local: LessonItem,
+        remote: LessonItem,
+        reportProgress: (Int) -> Unit
+    ) {
         val lesson = remote.copy(id = local.id)
         lessonRepository.update(lesson.toEntity())
 
-        updateCards(local.cards, remote.cards, local.id)
-        updateSentences(local.sentences, remote.sentences, local.id)
+        reportProgress(1)
+
+        updateCards(
+            local.cards,
+            remote.cards,
+            local.id,
+            reportProgress
+        )
+        updateSentences(
+            local.sentences,
+            remote.sentences,
+            local.id,
+            reportProgress
+        )
     }
 
     private suspend fun updateCards(
         local: List<CardItem>,
         remote: List<CardItem>,
-        lessonId: Long
+        lessonId: Long,
+        reportProgress: (Int) -> Unit
     ) {
         val localMap = local.associateBy { it.symbol }
         val remoteMap = remote.associateBy { it.symbol }
@@ -143,11 +185,17 @@ class DownloadLesson(
                 val localCard = localMap[remoteCard.symbol]
                 localCard != null && localCard.image != remoteCard.image
             }
-            .map { it.copy(lessonId = lessonId) }
+            .map { remoteCard ->
+                val localId = localMap[remoteCard.symbol]!!.id
+                remoteCard.copy(id = localId, lessonId = lessonId)
+            }
+
+        val unchangedCount = remote.size - cardsToInsert.size - cardsToUpdate.size
 
         if (cardsToInsert.isNotEmpty()) {
             cacheImages(cardsToInsert.map { it.image })
             cardRepository.insertAll(cardsToInsert.map { it.toEntity() })
+            reportProgress(cardsToInsert.size)
         }
 
         if (cardsToDelete.isNotEmpty()) {
@@ -157,13 +205,19 @@ class DownloadLesson(
         if (cardsToUpdate.isNotEmpty()) {
             cacheImages(cardsToInsert.map { it.image })
             cardRepository.updateAll(cardsToUpdate.map { it.toEntity() })
+            reportProgress(cardsToUpdate.size)
+        }
+
+        if (unchangedCount > 0) {
+            reportProgress(unchangedCount)
         }
     }
 
     private suspend fun updateSentences(
         local: List<SentenceItem>,
         remote: List<SentenceItem>,
-        lessonId: Long
+        lessonId: Long,
+        reportProgress: (Int) -> Unit
     ) {
         val localSentenceMap = local.associateBy { it.fingerprint }
         val remoteSentenceMap = remote.associateBy { it.fingerprint }
@@ -199,6 +253,7 @@ class DownloadLesson(
                     sentenceId = localSentence.id
                 )
             }
+            reportProgress(1)
         }
     }
 
