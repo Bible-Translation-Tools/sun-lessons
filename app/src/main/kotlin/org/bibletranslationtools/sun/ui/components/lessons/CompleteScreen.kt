@@ -52,7 +52,7 @@ fun CompleteScreen(component: CompleteComponent) {
                     text = model.lesson?.name ?: "error",
                     fontWeight = FontWeight.Bold
                 )
-                TallyText(model.lesson?.part ?: 0)
+                TallyText(model.lesson?.sort ?: 0)
             }
         }
 

@@ -15,7 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -31,7 +31,7 @@ import org.bibletranslationtools.sun.ui.control.list.LessonCard
 fun ListScreen(component: ListComponent) {
     val model by component.model.subscribeAsState()
 
-    var expandedLessonId by rememberSaveable {
+    var expandedLessonId by remember(model.selectedId) {
         mutableLongStateOf(model.selectedId)
     }
 

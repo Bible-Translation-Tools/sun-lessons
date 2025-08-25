@@ -93,7 +93,7 @@ class DefaultMainComponent(
                 DefaultLessonsComponent(
                     componentContext = context,
                     parentContext = this,
-                    groupId = null
+                    groupId = GroupId()
                 )
             )
             is Config.Progress -> MainComponent.Child.Progress(

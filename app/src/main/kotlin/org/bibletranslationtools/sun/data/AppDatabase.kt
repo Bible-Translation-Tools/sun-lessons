@@ -16,6 +16,7 @@ import org.bibletranslationtools.sun.data.entity.LessonEntity
 import org.bibletranslationtools.sun.data.entity.SentenceEntity
 import org.bibletranslationtools.sun.data.entity.SettingEntity
 import org.bibletranslationtools.sun.data.entity.SymbolEntity
+import java.util.concurrent.Executors
 import kotlin.concurrent.Volatile
 
 @Database(
@@ -45,14 +46,14 @@ abstract class AppDatabase : RoomDatabase() {
             return INSTANCE ?: synchronized(this) {
                 INSTANCE = Room
                     .databaseBuilder(context, AppDatabase::class.java, "sun.db")
-//                    .setQueryCallback(
-//                        object : QueryCallback {
-//                            override fun onQuery(sqlQuery: String, bindArgs: List<Any?>) {
-//                                println("RoomQuery - Query: $sqlQuery, Args: $bindArgs")
-//                            }
-//                        },
-//                        Executors.newSingleThreadExecutor()
-//                    )
+                    .setQueryCallback(
+                        object : QueryCallback {
+                            override fun onQuery(sqlQuery: String, bindArgs: List<Any?>) {
+                                println("RoomQuery - Query: $sqlQuery, Args: $bindArgs")
+                            }
+                        },
+                        Executors.newSingleThreadExecutor()
+                    )
                     .addMigrations(MIGRATION_1_2)
                     .build()
                 INSTANCE!!

@@ -10,16 +10,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.bibletranslationtools.sun.data.entity.SettingEntity
 import org.bibletranslationtools.sun.data.repositories.CardRepository
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.data.repositories.SentenceRepository
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
+import org.bibletranslationtools.sun.ui.model.DataMapper
 import org.bibletranslationtools.sun.ui.model.GroupId
 import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.ui.model.LessonMode
-import org.bibletranslationtools.sun.ui.model.DataMapper
 import org.bibletranslationtools.sun.utils.Section
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -44,7 +45,7 @@ interface ListComponent : ParentContext {
 class DefaultListComponent(
     componentContext: ComponentContext,
     parentContext: ParentContext,
-    private val groupId: GroupId?,
+    private val groupId: GroupId,
     private val onContinueLesson: (Long, Section, SectionState) -> Unit,
     private val onStartLesson: (Long, Section, LessonMode) -> Unit
 ) : ListComponent, KoinComponent, AppComponent(componentContext, parentContext) {
@@ -66,8 +67,8 @@ class DefaultListComponent(
         doOnResume {
             componentScope.launch {
                 defineNextSection()
-                setSelectedLesson()
                 loadLessons()
+                setSelectedLesson()
             }
         }
     }
@@ -86,11 +87,9 @@ class DefaultListComponent(
 
     private suspend fun loadLessons() {
         withContext(Dispatchers.Default) {
-            val lessons = if (groupId != null) {
-                lessonRepository.getGroupWithData(groupId).map(dataMapper::toItem)
-            } else {
-                lessonRepository.getBasicWithData().map(dataMapper::toItem)
-            }
+            val lessons = lessonRepository.getGroupWithData(groupId)
+                .map(dataMapper::toItem)
+
             _model.update {
                 it.copy(lessons = lessons.mapIndexed { index, lesson ->
                     lesson.copy(
@@ -103,7 +102,13 @@ class DefaultListComponent(
     }
 
     private suspend fun setSelectedLesson() {
-        val lastLesson = settingsRepository.get("last_lesson")?.value?.toLong() ?: 1
+        val defaultLesson = model.value.lessons.firstOrNull()
+        val defaultId = defaultLesson?.id ?: 1
+        val defaultGroupId = defaultLesson?.groupId?.id ?: "0"
+        val lastLesson = settingsRepository
+            .get(SettingEntity.lastLesson(defaultGroupId))
+            ?.value
+            ?.toLong() ?: defaultId
         _model.update { it.copy(selectedId = lastLesson) }
     }
 
@@ -114,11 +119,19 @@ class DefaultListComponent(
     }
 
     private suspend fun defineNextSection() {
+        val defaultLesson = model.value.lessons.firstOrNull()
+        val defaultId = defaultLesson?.id ?: 1
+        val defaultGroupId = defaultLesson?.groupId?.id ?: "0"
+
         val lastSection = settingsRepository
-            .get("last_section")
+            .get(SettingEntity.lastSection(defaultGroupId))
             ?.value
             ?.let { Section.of(it) } ?: Section.LEARN_SYMBOLS
-        val lastLesson = settingsRepository.get("last_lesson")?.value?.toLong() ?: 1L
+
+        val lastLesson = settingsRepository
+            .get(SettingEntity.lastLesson(defaultGroupId))
+            ?.value
+            ?.toLong() ?: defaultId
 
         val all: Int
         val done: Int
@@ -128,14 +141,17 @@ class DefaultListComponent(
                 all = cardRepository.getByLessonCount(lastLesson)
                 done = cardRepository.getLearnedByLessonCount(lastLesson)
             }
+
             Section.TEST_SYMBOLS -> {
                 all = cardRepository.getByLessonCount(lastLesson)
                 done = cardRepository.getTestedByLessonCount(lastLesson)
             }
+
             Section.LEARN_SENTENCES -> {
                 all = sentenceRepository.getByLessonCount(lastLesson)
                 done = sentenceRepository.getLearnedByLessonCount(lastLesson)
             }
+
             else -> {
                 all = sentenceRepository.getByLessonCount(lastLesson)
                 done = sentenceRepository.getTestedByLessonCount(lastLesson)

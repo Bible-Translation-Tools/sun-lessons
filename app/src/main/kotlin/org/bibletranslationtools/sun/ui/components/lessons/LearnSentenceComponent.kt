@@ -71,7 +71,10 @@ class DefaultLearnSentenceComponent(
 
     override suspend fun saveLastPosition(position: Int) {
         if (model.value.mode == LessonMode.NORMAL) {
-            val lastSentence = SettingEntity(SettingEntity.LAST_SENTENCE, position.toString())
+            val lastSentence = SettingEntity(
+                SettingEntity.lastSentence(model.value.lesson?.groupId?.id ?: "0"),
+                position.toString()
+            )
             settingsRepository.insertOrUpdate(lastSentence)
         }
     }
@@ -111,11 +114,11 @@ class DefaultLearnSentenceComponent(
             }
 
             val lastSection = SettingEntity(
-                SettingEntity.LAST_SECTION,
+                SettingEntity.lastSection(model.value.lesson?.groupId?.id ?: "0"),
                 Section.LEARN_SENTENCES.id
             )
             val lastLesson = SettingEntity(
-                SettingEntity.LAST_LESSON,
+                SettingEntity.lastLesson(model.value.lesson?.groupId?.id ?: "0"),
                 lessonId.toString()
             )
             settingsRepository.insertOrUpdate(lastSection)
@@ -161,7 +164,9 @@ class DefaultLearnSentenceComponent(
     }
 
     private suspend fun getLastPosition(): Int {
-        val pos = settingsRepository.get(SettingEntity.LAST_SENTENCE)?.value?.toInt() ?: 0
+        val pos = settingsRepository.get(
+            SettingEntity.lastSentence(model.value.lesson?.groupId?.id ?: "0")
+        )?.value?.toInt() ?: 0
         return min(pos, model.value.sentences.size - 1)
     }
 }

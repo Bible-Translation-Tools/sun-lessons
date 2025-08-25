@@ -2,6 +2,8 @@ package org.bibletranslationtools.sun.ui.model
 
 import kotlinx.datetime.LocalDateTime
 
+const val SYSTEM_USER = "system"
+
 enum class DownloadStatus {
     DOWNLOAD,
     UPDATE,
@@ -30,13 +32,9 @@ data class LessonItem(
     val sentences: List<SentenceItem> = emptyList(),
     val isAvailable: Boolean = false,
     val isSelected: Boolean = false,
-    val name: String = "unknown",
+    val name: String = "default",
     val id: Long = 0
 ) {
-    val isScripture = book != null && chapter != null && verse != null
-    val part = if (isScripture) sort else id.toInt()
-    val fingerprint = "$name|$sort|$author"
-
     val uniqueId = UniqueId(
         book = book?.slug,
         chapter = chapter,
@@ -51,6 +49,9 @@ data class LessonItem(
         verse = verse,
         author = author
     )
+
+    val isScripture = groupId.isScripture
+    val fingerprint = "$name|$sort|$author"
 
     val cardsLearned get() = cards.count { it.learned }
     val cardsLearnedProgress get() = cardsLearned.toFloat() / cards.size

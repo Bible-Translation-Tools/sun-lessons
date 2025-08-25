@@ -233,8 +233,14 @@ class DefaultTestSentenceComponent(
     private suspend fun updateSentence(sentence: SentenceItem) {
         sentenceRepository.update(sentence.let(dataMapper::toEntity))
 
-        val lastSection = SettingEntity(SettingEntity.LAST_SECTION, Section.TEST_SYMBOLS.id)
-        val lastLesson = SettingEntity(SettingEntity.LAST_LESSON, lessonId.toString())
+        val lastSection = SettingEntity(
+            SettingEntity.lastSection(model.value.lesson?.groupId?.id ?: "0"),
+            Section.TEST_SYMBOLS.id
+        )
+        val lastLesson = SettingEntity(
+            SettingEntity.lastLesson(model.value.lesson?.groupId?.id ?: "0"),
+            lessonId.toString()
+        )
         settingsRepository.insertOrUpdate(lastSection)
         settingsRepository.insertOrUpdate(lastLesson)
     }

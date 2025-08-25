@@ -52,7 +52,7 @@ interface LessonsComponent: ParentContext {
 class DefaultLessonsComponent(
     componentContext: ComponentContext,
     parentContext: ParentContext,
-    private val groupId: GroupId?
+    private val groupId: GroupId
 ) : LessonsComponent, AppComponent(componentContext, parentContext) {
 
     private val navigation = StackNavigation<Config>()

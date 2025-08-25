@@ -48,7 +48,7 @@ fun ScriptureLessonsScreen(component: ScriptureLessonsComponent) {
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
                 LazyColumn {
-                    items(model.lessons, key = { it.groupIdStr }) { lesson ->
+                    items(model.lessons, key = { it.groupId.id }) { lesson ->
                         SmallLessonCard(
                             group = lesson,
                             onClick = {

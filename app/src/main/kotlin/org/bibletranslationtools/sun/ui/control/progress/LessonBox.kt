@@ -60,7 +60,7 @@ fun LessonBox(
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = TallyMarkConverter.toText(lesson.part),
+                    text = TallyMarkConverter.toText(lesson.sort),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = tallyFontFamily()

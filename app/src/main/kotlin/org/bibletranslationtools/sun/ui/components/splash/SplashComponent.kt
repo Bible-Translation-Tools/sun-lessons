@@ -59,21 +59,22 @@ class DefaultSplashComponent(
                 val lessonCatalog: LessonCatalog = Utils.JsonLenient.decodeFromString(json)
 
                 if (lessonCatalog.version > dbVersion) {
+                    var lessonSort = 1
                     for (lesson in lessonCatalog.lessons) {
-                        val lessonId = insertLesson(lesson)
-                        var sort = 0
+                        val lessonId = insertLesson(lesson.copy(sort = lessonSort++))
 
+                        var cardSort = 1
                         for (card in lesson.cards) {
                             insertCard(
-                                card = card.copy(sort = sort++),
+                                card = card.copy(sort = cardSort++),
                                 lessonId = lessonId
                             )
                         }
 
-                        sort = 0
+                        var sentenceSort = 1
                         for (sentence in lesson.sentences) {
                             val sentenceId = insertSentence(
-                                sentence = sentence.copy(sort = sort++),
+                                sentence = sentence.copy(sort = sentenceSort++),
                                 lessonId = lessonId
                             )
                             var symbolSort = 0

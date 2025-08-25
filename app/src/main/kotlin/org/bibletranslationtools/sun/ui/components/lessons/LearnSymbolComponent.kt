@@ -71,7 +71,10 @@ class DefaultLearnSymbolComponent(
 
     override suspend fun saveLastPosition(position: Int) {
         if (model.value.mode == LessonMode.NORMAL) {
-            val lastSymbol = SettingEntity(SettingEntity.LAST_SYMBOL, position.toString())
+            val lastSymbol = SettingEntity(
+                SettingEntity.lastSymbol(model.value.lesson?.groupId?.id ?: "0"),
+                position.toString()
+            )
             settingsRepository.insertOrUpdate(lastSymbol)
         }
     }
@@ -108,11 +111,11 @@ class DefaultLearnSymbolComponent(
             }
 
             val lastSection = SettingEntity(
-                SettingEntity.LAST_SECTION,
+                SettingEntity.lastSection(model.value.lesson?.groupId?.id ?: "0"),
                 Section.LEARN_SYMBOLS.id
             )
             val lastLesson = SettingEntity(
-                SettingEntity.LAST_LESSON,
+                SettingEntity.lastLesson(model.value.lesson?.groupId?.id ?: "0"),
                 lessonId.toString()
             )
             settingsRepository.insertOrUpdate(lastSection)
@@ -128,7 +131,9 @@ class DefaultLearnSymbolComponent(
     }
 
     private suspend fun getLastPosition(): Int {
-        val pos = settingsRepository.get(SettingEntity.LAST_SYMBOL)?.value?.toInt() ?: 0
+        val pos = settingsRepository.get(
+            SettingEntity.lastSymbol(model.value.lesson?.groupId?.id ?: "0")
+        )?.value?.toInt() ?: 0
         return min(pos, model.value.cards.size - 1)
     }
 

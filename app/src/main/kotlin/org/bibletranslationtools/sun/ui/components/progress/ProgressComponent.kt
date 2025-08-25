@@ -12,8 +12,9 @@ import kotlinx.coroutines.launch
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
-import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.ui.model.DataMapper
+import org.bibletranslationtools.sun.ui.model.GroupId
+import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -48,7 +49,7 @@ class DefaultProgressComponent(
     }
 
     private  suspend fun loadLessons() {
-        val lessons = lessonRepository.getBasicLessons().map(dataMapper::toItem)
+        val lessons = lessonRepository.getGroupWithData(GroupId()).map(dataMapper::toItem)
         _model.update {
             it.copy(lessons = lessons.mapIndexed { index, lesson ->
                 lesson.copy(isAvailable = lessonAvailable(lessons, index))

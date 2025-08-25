@@ -62,7 +62,7 @@ class DataMapperImpl(
             chapter = data.chapter,
             verse = data.verse,
             sort = data.sort,
-            author = data.author ?: "unknown",
+            author = data.author ?: SYSTEM_USER,
             cards = data.cards.map(::toItem),
             sentences = data.sentences.map(::toItem),
             createdAt = data.createdAt.toLocalDateTime(),
@@ -181,7 +181,15 @@ class DataMapperImpl(
         sentenceId = 0
     )
 
-    override fun toEntity(data: LessonData) = LessonEntity()
+    override fun toEntity(data: LessonData) = LessonEntity(
+        book = data.book,
+        chapter = data.chapter,
+        verse = data.verse,
+        sort = data.sort,
+        author = data.author ?: SYSTEM_USER,
+        createdAt = data.createdAt,
+        updatedAt = data.updatedAt
+    )
 
     override fun toEntity(data: CardData) = CardEntity(
         symbol = data.symbol,

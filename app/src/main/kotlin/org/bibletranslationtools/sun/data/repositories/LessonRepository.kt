@@ -12,12 +12,7 @@ interface LessonRepository {
     suspend fun update(lesson: LessonEntity)
     suspend fun getAll(book: String?, chapter: Int?): List<LessonEntity>
     suspend fun getGroup(groupId: GroupId): List<LessonEntity>
-    suspend fun getBasicLessons(): List<LessonEntity>
-    suspend fun getScriptureLessons(): List<LessonEntity>
-    suspend fun getAllWithData(book: String?, chapter: Int?): List<LessonWithData>
-    suspend fun getBasicWithData(): List<LessonWithData>
     suspend fun getScriptureWithData(): List<LessonWithData>
-    suspend fun getSingleWithData(id: Long): LessonWithData?
     suspend fun getGroupWithData(id: GroupId): List<LessonWithData>
     suspend fun get(id: Long): LessonEntity?
 }
@@ -56,28 +51,8 @@ class LessonRepositoryImpl(private val lessonDao: LessonDao) : LessonRepository 
         )
     }
 
-    override suspend fun getBasicLessons(): List<LessonEntity> {
-        return lessonDao.getBasicLessons()
-    }
-
-    override suspend fun getScriptureLessons(): List<LessonEntity> {
-        return lessonDao.getScriptureLessons()
-    }
-
-    override suspend fun getAllWithData(book: String?, chapter: Int?): List<LessonWithData> {
-        return lessonDao.getAllWithData(book, chapter)
-    }
-
-    override suspend fun getBasicWithData(): List<LessonWithData> {
-        return lessonDao.getBasicWithData()
-    }
-
     override suspend fun getScriptureWithData(): List<LessonWithData> {
         return lessonDao.getScriptureWithData()
-    }
-
-    override suspend fun getSingleWithData(id: Long): LessonWithData? {
-        return lessonDao.getSingleWithData(id)
     }
 
     override suspend fun getGroupWithData(id: GroupId): List<LessonWithData> {

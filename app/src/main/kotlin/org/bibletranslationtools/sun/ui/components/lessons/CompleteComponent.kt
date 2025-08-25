@@ -16,9 +16,9 @@ import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
+import org.bibletranslationtools.sun.ui.model.DataMapper
 import org.bibletranslationtools.sun.ui.model.GroupId
 import org.bibletranslationtools.sun.ui.model.LessonItem
-import org.bibletranslationtools.sun.ui.model.DataMapper
 import org.bibletranslationtools.sun.utils.Section
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -41,7 +41,7 @@ class DefaultCompleteComponent(
     parentContext: ParentContext,
     private val lessonId: Long,
     private val section: Section,
-    private val groupId: GroupId?,
+    private val groupId: GroupId,
     private val onStartLesson: (Long, Section) -> Unit,
     private val onNextSection: (LessonsComponent.Intent) -> Unit
 ) : CompleteComponent, KoinComponent, AppComponent(componentContext, parentContext) {
@@ -81,13 +81,9 @@ class DefaultCompleteComponent(
     }
 
     private suspend fun getNextLesson(id: Long): Long {
-        val lessons = if (groupId != null) {
-            lessonRepository.getGroup(groupId).map { it.id }
-        } else {
-            lessonRepository.getBasicLessons().map { it.id }
-        }
+        val lessons = lessonRepository.getGroup(groupId).map { it.id }
         val current = lessons.indexOf(id)
-        var next = 1L
+        var next = lessons.first()
         if (current < lessons.size - 1) {
             next = lessons[current + 1]
         }
@@ -95,46 +91,50 @@ class DefaultCompleteComponent(
     }
 
     private suspend fun saveSectionStatus(lessonId: Long, section: Section) {
-        val lastSection = SettingEntity(SettingEntity.LAST_SECTION, section.id)
-        val lastLesson = SettingEntity(SettingEntity.LAST_LESSON, lessonId.toString())
+        val lastSection = SettingEntity(
+            SettingEntity.lastSection(groupId.id),
+            section.id
+        )
+        val lastLesson = SettingEntity(
+            SettingEntity.lastLesson(groupId.id),
+            lessonId.toString()
+        )
         settingsRepository.insertOrUpdate(lastSection)
         settingsRepository.insertOrUpdate(lastLesson)
     }
 
     private fun setupNextAction() {
-        componentScope.launch {
-            when (section) {
-                Section.LEARN_SYMBOLS -> {
-                    _model.update {
-                        it.copy(
-                            sectionTitle = R.string.learn_symbols_completed,
-                            onNext = { onNextSection(LessonsComponent.Intent.TestSymbol(lessonId)) }
-                        )
-                    }
+        when (section) {
+            Section.LEARN_SYMBOLS -> {
+                _model.update {
+                    it.copy(
+                        sectionTitle = R.string.learn_symbols_completed,
+                        onNext = { onNextSection(LessonsComponent.Intent.TestSymbol(lessonId)) }
+                    )
                 }
-                Section.TEST_SYMBOLS -> {
-                    _model.update {
-                        it.copy(
-                            sectionTitle = R.string.test_symbols_completed,
-                            onNext = { onNextSection(LessonsComponent.Intent.LearnSentence(lessonId)) }
-                        )
-                    }
+            }
+            Section.TEST_SYMBOLS -> {
+                _model.update {
+                    it.copy(
+                        sectionTitle = R.string.test_symbols_completed,
+                        onNext = { onNextSection(LessonsComponent.Intent.LearnSentence(lessonId)) }
+                    )
                 }
-                Section.LEARN_SENTENCES -> {
-                    _model.update {
-                        it.copy(
-                            sectionTitle = R.string.learn_sentences_completed,
-                            onNext = { onNextSection(LessonsComponent.Intent.TestSentence(lessonId)) }
-                        )
-                    }
+            }
+            Section.LEARN_SENTENCES -> {
+                _model.update {
+                    it.copy(
+                        sectionTitle = R.string.learn_sentences_completed,
+                        onNext = { onNextSection(LessonsComponent.Intent.TestSentence(lessonId)) }
+                    )
                 }
-                else -> {
-                    _model.update {
-                        it.copy(
-                            sectionTitle = R.string.lesson_completed,
-                            onNext = { navigateToNextLesson() }
-                        )
-                    }
+            }
+            else -> {
+                _model.update {
+                    it.copy(
+                        sectionTitle = R.string.lesson_completed,
+                        onNext = { navigateToNextLesson() }
+                    )
                 }
             }
         }
