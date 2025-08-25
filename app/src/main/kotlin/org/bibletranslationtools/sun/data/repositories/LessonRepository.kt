@@ -10,7 +10,7 @@ interface LessonRepository {
     suspend fun delete(lesson: LessonEntity)
     suspend fun delete(groupId: GroupId)
     suspend fun update(lesson: LessonEntity)
-    suspend fun getAll(book: String?, chapter: Int?): List<LessonEntity>
+    suspend fun getAll(groupId: GroupId): List<LessonEntity>
     suspend fun getGroup(groupId: GroupId): List<LessonEntity>
     suspend fun getScriptureWithData(): List<LessonWithData>
     suspend fun getGroupWithData(id: GroupId): List<LessonWithData>
@@ -38,8 +38,13 @@ class LessonRepositoryImpl(private val lessonDao: LessonDao) : LessonRepository 
         lessonDao.update(lesson)
     }
 
-    override suspend fun getAll(book: String?, chapter: Int?): List<LessonEntity> {
-        return lessonDao.getAll(book, chapter)
+    override suspend fun getAll(groupId: GroupId): List<LessonEntity> {
+        return lessonDao.getAll(
+            groupId.book,
+            groupId.chapter,
+            groupId.verse,
+            groupId.author
+        )
     }
 
     override suspend fun getGroup(groupId: GroupId): List<LessonEntity> {

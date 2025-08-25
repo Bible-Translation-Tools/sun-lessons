@@ -3,7 +3,6 @@ package org.bibletranslationtools.sun.usecase
 import androidx.room.Transaction
 import coil3.ImageLoader
 import coil3.request.ImageRequest
-import org.bibletranslationtools.sun.api.LessonRequest
 import org.bibletranslationtools.sun.api.SunApi
 import org.bibletranslationtools.sun.data.repositories.CardRepository
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
@@ -39,14 +38,7 @@ class DownloadLesson(
             null
         }
 
-        val remoteLessons = sunApi.getLessonCatalog(
-            LessonRequest(
-                book = groupId.book,
-                chapter = groupId.chapter,
-                verse = groupId.verse,
-                author = groupId.author
-            )
-        )
+        val remoteLessons = sunApi.getLessonCatalog(groupId)
             .lessons.map(dataMapper::toItem)
 
         val remoteGroup: LessonGroup? = if (remoteLessons.isNotEmpty()) {

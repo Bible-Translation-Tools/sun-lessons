@@ -2,7 +2,6 @@ package org.bibletranslationtools.sun.usecase
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.bibletranslationtools.sun.api.LessonRequest
 import org.bibletranslationtools.sun.api.SunApi
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.ui.model.DownloadStatus
@@ -19,17 +18,14 @@ private data class LessonPair(
 class CalculateDownloadStatus(
     private val sunApi: SunApi,
     private val dataMapper: DataMapper,
-    private val lessonRepository: LessonRepository,
+    private val lessonRepository: LessonRepository
 ) {
+    suspend operator fun invoke(groupId: GroupId): List<LessonItem> {
 
-    suspend operator fun invoke(book: String, chapter: Int): List<LessonItem> {
-
-        val remoteLessons = sunApi.getLessonCatalog(
-            LessonRequest(book = book, chapter = chapter)
-        )
+        val remoteLessons = sunApi.getLessonCatalog(groupId)
             .lessons.map(dataMapper::toItem)
 
-        val localLessons = lessonRepository.getAll(book, chapter)
+        val localLessons = lessonRepository.getAll(groupId)
             .map(dataMapper::toItem)
 
         val localGroups = localLessons

@@ -35,7 +35,7 @@ fun ListScreen(component: ListComponent) {
         mutableLongStateOf(model.selectedId)
     }
 
-    val (topIcon, topText) = if (model.groupId == null) {
+    val (topIcon, topText) = if (model.groupId?.isScripture != true) {
         R.drawable.home to R.string.home
     } else {
         R.drawable.book to R.string.lessons
@@ -49,11 +49,11 @@ fun ListScreen(component: ListComponent) {
 
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
-            onBackClick = if (model.groupId != null) {
+            onBackClick = if (model.groupId?.isScripture == true) {
                 component::onBackClick
             } else null
         ) {
-            if (model.groupId != null) {
+            if (model.groupId?.isScripture == true) {
                 Spacer(modifier = Modifier.weight(1f))
             }
             Icon(

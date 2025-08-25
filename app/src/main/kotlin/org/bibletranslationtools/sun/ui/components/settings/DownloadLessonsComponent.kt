@@ -9,12 +9,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import org.bibletranslationtools.sun.data.BookDataStore
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
-import org.bibletranslationtools.sun.ui.model.BookItem
 import org.bibletranslationtools.sun.ui.model.DownloadStatus
+import org.bibletranslationtools.sun.ui.model.GroupId
 import org.bibletranslationtools.sun.ui.model.LessonItem
-import org.bibletranslationtools.sun.ui.model.emptyBookItem
 import org.bibletranslationtools.sun.usecase.CalculateDownloadStatus
 import org.bibletranslationtools.sun.usecase.DownloadLesson
 import org.koin.core.component.KoinComponent
@@ -25,8 +25,8 @@ interface DownloadLessonsComponent : ParentContext {
     val model: Value<Model>
 
     data class Model(
-        val bookItem: BookItem = emptyBookItem(),
-        val chapter: Int = 1,
+        val groupId: GroupId? = null,
+        val downloadName: String? = null,
         val lessons: List<LessonItem> = emptyList(),
         val selectedLesson: LessonItem? = null
     )
@@ -39,12 +39,12 @@ interface DownloadLessonsComponent : ParentContext {
 class DefaultDownloadLessonsComponent(
     componentContext: ComponentContext,
     parentContext: ParentContext,
-    private val bookItem: BookItem,
-    private val chapter: Int
+    private val groupId: GroupId?
 ) : DownloadLessonsComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
     private val calculateDownloadStatus: CalculateDownloadStatus by inject()
     private val downloadLesson: DownloadLesson by inject()
+    private val bookDataStore: BookDataStore by inject()
 
     private val _model = MutableValue(DownloadLessonsComponent.Model())
     override val model: Value<DownloadLessonsComponent.Model> = _model
@@ -52,11 +52,9 @@ class DefaultDownloadLessonsComponent(
     private val componentScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     init {
+        val downloadName = getDownloadName()
         _model.update {
-            it.copy(
-                bookItem = bookItem,
-                chapter = chapter
-            )
+            it.copy(groupId = groupId, downloadName = downloadName)
         }
 
         doOnResume {
@@ -100,8 +98,14 @@ class DefaultDownloadLessonsComponent(
     }
 
     private suspend fun loadLessons() {
-        val lessons = calculateDownloadStatus(bookItem.slug, chapter)
+        val lessons = calculateDownloadStatus(groupId ?: GroupId())
+            .filter {
+                if (groupId == null) {
+                    it.downloadStatus != DownloadStatus.DOWNLOAD
+                } else true
+            }
             .sortedBy { it.name }
+
         _model.update { it.copy(lessons = lessons) }
     }
 
@@ -117,5 +121,12 @@ class DefaultDownloadLessonsComponent(
                 }
             )
         }
+    }
+
+    private fun getDownloadName(): String? {
+        if (groupId == null) return null
+        if (groupId.book == null || groupId.chapter == null) return null
+        val book = bookDataStore.getBook(groupId.book) ?: return null
+        return "${book.name} ${groupId.chapter}"
     }
 }

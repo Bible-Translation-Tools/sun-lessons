@@ -18,8 +18,6 @@ fun SettingsScreen(component: SettingsComponent) {
                 SelectChapterScreen(child.component)
             is SettingsComponent.Child.DownloadLessons ->
                 DownloadLessonsScreen(child.component)
-            is SettingsComponent.Child.UpdateLessons ->
-                UpdateLessonsScreen(child.component)
         }
     }
 }

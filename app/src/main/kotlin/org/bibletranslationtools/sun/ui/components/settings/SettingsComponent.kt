@@ -10,7 +10,7 @@ import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.Serializable
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
-import org.bibletranslationtools.sun.ui.model.BookItem
+import org.bibletranslationtools.sun.ui.model.GroupId
 
 interface SettingsComponent : ParentContext {
 
@@ -20,7 +20,6 @@ interface SettingsComponent : ParentContext {
         class SettingsList(val component: SettingsListComponent) : Child()
         class SelectChapter(val component: SelectChapterComponent) : Child()
         class DownloadLessons(val component: DownloadLessonsComponent) : Child()
-        class UpdateLessons(val component: UpdateLessonsComponent) : Child()
     }
 }
 
@@ -58,7 +57,7 @@ class DefaultSettingsComponent(
                         navigation.bringToFront(Config.SelectChapter)
                     },
                     onNavigateCheckUpdates = {
-                        navigation.bringToFront(Config.UpdateLessons)
+                        navigation.bringToFront(Config.DownloadLessons())
                     }
                 )
             )
@@ -68,7 +67,9 @@ class DefaultSettingsComponent(
                     parentContext = this,
                     onNavigateSearchChapter = { book, chapter ->
                         navigation.bringToFront(
-                            Config.DownloadLessons(book, chapter)
+                            Config.DownloadLessons(
+                                GroupId(book.slug, chapter)
+                            )
                         )
                     }
                 )
@@ -77,14 +78,7 @@ class DefaultSettingsComponent(
                 DefaultDownloadLessonsComponent(
                     componentContext = context,
                     parentContext = this,
-                    bookItem = config.bookItem,
-                    chapter = config.chapter
-                )
-            )
-            is Config.UpdateLessons -> SettingsComponent.Child.UpdateLessons(
-                DefaultUpdateLessonsComponent(
-                    componentContext = context,
-                    parentContext = this
+                    groupId = config.groupId
                 )
             )
         }
@@ -96,8 +90,6 @@ class DefaultSettingsComponent(
         @Serializable
         data object SelectChapter : Config
         @Serializable
-        data class DownloadLessons(val bookItem: BookItem, val chapter: Int) : Config
-        @Serializable
-        data object UpdateLessons : Config
+        data class DownloadLessons(val groupId: GroupId? = null) : Config
     }
 }

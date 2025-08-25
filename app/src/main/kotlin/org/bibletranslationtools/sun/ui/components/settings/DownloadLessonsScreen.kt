@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.RestartAlt
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.SystemUpdateAlt
 import androidx.compose.material3.Icon
@@ -43,6 +44,12 @@ fun DownloadLessonsScreen(component: DownloadLessonsComponent) {
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var filteredLessons by remember { mutableStateOf(model.lessons) }
 
+    val (headerIcon, headerText) = if (model.groupId == null) {
+        Icons.Default.RestartAlt to stringResource(R.string.updates)
+    } else {
+        Icons.Default.SystemUpdateAlt to stringResource(R.string.downloads)
+    }
+
     LaunchedEffect(searchQuery, model.lessons) {
         filteredLessons = model.lessons.filter { lesson ->
             lesson.verse.toString().contains(searchQuery, ignoreCase = true)
@@ -54,11 +61,11 @@ fun DownloadLessonsScreen(component: DownloadLessonsComponent) {
         TopAppBar(onBackClick = component::onBackClick) {
             Spacer(modifier = Modifier.weight(1f))
             Icon(
-                imageVector = Icons.Default.SystemUpdateAlt,
-                contentDescription = "Lessons"
+                imageVector = headerIcon,
+                contentDescription = headerText
             )
             Text(
-                text = stringResource(R.string.downloads),
+                text = headerText,
                 fontWeight = FontWeight.Bold
             )
         }
@@ -94,10 +101,12 @@ fun DownloadLessonsScreen(component: DownloadLessonsComponent) {
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                Text(
-                    text = "${model.bookItem.name} ${model.chapter}",
-                    fontSize = 28.sp
-                )
+                model.downloadName?.let {
+                    Text(
+                        text = it,
+                        fontSize = 28.sp
+                    )
+                }
 
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp),

@@ -7,7 +7,7 @@ data class GroupId(
     val book: String? = null,
     val chapter: Int? = null,
     val verse: Int? = null,
-    val author: String = SYSTEM_USER
+    val author: String? = null
 ) {
     val id = listOfNotNull(book, chapter, verse, author)
         .joinToString("_")

@@ -9,8 +9,6 @@ import androidx.room.Update
 import org.bibletranslationtools.sun.data.entity.LessonEntity
 import org.bibletranslationtools.sun.data.entity.LessonWithData
 
-private const val SCRIPTURE_FILTER = "book IS NOT NULL AND chapter IS NOT NULL AND verse IS NOT NULL"
-
 @Dao
 interface LessonDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -19,63 +17,79 @@ interface LessonDao {
     @Delete
     suspend fun delete(lesson: LessonEntity)
 
-    @Query("""
+    @Query(
+        """
     DELETE FROM lessons
     WHERE
-        ((:book IS NULL AND book IS NULL) OR (book = :book)) AND
-        ((:chapter IS NULL AND chapter IS NULL) OR (chapter = :chapter)) AND
-        ((:verse IS NULL AND verse IS NULL) OR (verse = :verse)) AND
-        author = :author
-    """)
-    suspend fun delete(book: String?, chapter: Int?, verse: Int?, author: String)
+        ((:book IS NULL AND book IS NOT NULL) OR (book = :book)) AND
+        ((:chapter IS NULL AND chapter IS NOT NULL) OR (chapter = :chapter)) AND
+        ((:verse IS NULL AND verse IS NOT NULL) OR (verse = :verse)) AND
+        ((:author IS NULL AND author IS NOT NULL) OR (author = :author))
+    """
+    )
+    suspend fun delete(book: String?, chapter: Int?, verse: Int?, author: String?)
 
     @Update
     suspend fun update(lesson: LessonEntity)
 
-    @Query("""
+    @Query(
+        """
     SELECT * FROM lessons
     WHERE
-        ((:book IS NULL AND book IS NULL) OR (book = :book)) AND
-        ((:chapter IS NULL AND chapter IS NULL) OR (chapter = :chapter))
+        ((:book IS NULL AND book IS NOT NULL) OR (book = :book)) AND
+        ((:chapter IS NULL AND chapter IS NOT NULL) OR (chapter = :chapter)) AND
+        ((:verse IS NULL AND verse IS NOT NULL) OR (verse = :verse)) AND
+        ((:author IS NULL AND author IS NOT NULL) OR (author = :author))
     ORDER BY verse, sort
-    """)
-    suspend fun getAll(book: String?, chapter: Int?): List<LessonEntity>
+    """
+    )
+    suspend fun getAll(book: String?, chapter: Int?, verse: Int?, author: String?): List<LessonEntity>
 
-    @Query("SELECT * FROM lessons WHERE $SCRIPTURE_FILTER")
+    @Query("""
+        SELECT * FROM lessons 
+        WHERE book IS NOT NULL 
+        AND chapter IS NOT NULL 
+        AND verse IS NOT NULL 
+        AND author IS NOT NULL
+    """)
     suspend fun getScriptureWithData(): List<LessonWithData>
 
     @Query("SELECT * FROM lessons WHERE id = :id")
     suspend fun get(id: Long): LessonEntity?
 
-    @Query("""
+    @Query(
+        """
     SELECT * FROM lessons
     WHERE
-        ((:book IS NULL AND book IS NULL) OR (book = :book)) AND
-        ((:chapter IS NULL AND chapter IS NULL) OR (chapter = :chapter)) AND
-        ((:verse IS NULL AND verse IS NULL) OR (verse = :verse)) AND
-        author = :author
+        ((:book IS NULL AND book IS NOT NULL) OR (book = :book)) AND
+        ((:chapter IS NULL AND chapter IS NOT NULL) OR (chapter = :chapter)) AND
+        ((:verse IS NULL AND verse IS NOT NULL) OR (verse = :verse)) AND
+        ((:author IS NULL AND author IS NOT NULL) OR (author = :author))
     ORDER BY sort
-    """)
+    """
+    )
     suspend fun getGroup(
         book: String?,
         chapter: Int?,
         verse: Int?,
-        author: String
+        author: String?
     ): List<LessonEntity>
 
-    @Query("""
+    @Query(
+        """
     SELECT * FROM lessons
     WHERE
-        ((:book IS NULL AND book IS NULL) OR (book = :book)) AND
-        ((:chapter IS NULL AND chapter IS NULL) OR (chapter = :chapter)) AND
-        ((:verse IS NULL AND verse IS NULL) OR (verse = :verse)) AND
-        author = :author
+        ((:book IS NULL AND book IS NOT NULL) OR (book = :book)) AND
+        ((:chapter IS NULL AND chapter IS NOT NULL) OR (chapter = :chapter)) AND
+        ((:verse IS NULL AND verse IS NOT NULL) OR (verse = :verse)) AND
+        ((:author IS NULL AND author IS NOT NULL) OR (author = :author))
     ORDER BY sort
-    """)
+    """
+    )
     suspend fun getGroupWithData(
         book: String?,
         chapter: Int?,
         verse: Int?,
-        author: String
+        author: String?
     ): List<LessonWithData>
 }
