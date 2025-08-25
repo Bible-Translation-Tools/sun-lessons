@@ -8,7 +8,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.bibletranslationtools.sun.R
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.data.repositories.SentenceRepository
@@ -26,8 +25,8 @@ interface StartComponent : ParentContext {
 
     data class Model(
         val lesson: LessonItem? = null,
-        val sectionTitle: Int = 0,
-        val imageResource: Int = 0,
+        val sectionTitle: Int = R.string.learn_symbols,
+        val imageResource: Int = R.drawable.learn,
         val onNext: () -> Unit = {}
     )
 
@@ -54,11 +53,8 @@ class DefaultStartComponent(
 
     init {
         componentScope.launch {
-            val (lesson, sentenceCount) = withContext(Dispatchers.IO) {
-                val lessonData = lessonRepository.get(lessonId)
-                val count = sentenceRepository.getByLessonCount(lessonId)
-                lessonData to count
-            }
+            val lesson = lessonRepository.get(lessonId)
+            val sentenceCount = sentenceRepository.getByLessonCount(lessonId)
             _model.update { it.copy(lesson = lesson?.let(dataMapper::toItem)) }
 
             val shouldSkipSection = (section == Section.LEARN_SENTENCES

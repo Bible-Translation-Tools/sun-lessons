@@ -8,7 +8,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.bibletranslationtools.sun.data.entity.SettingEntity
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.data.repositories.SentenceRepository
@@ -19,7 +18,6 @@ import org.bibletranslationtools.sun.ui.model.DataMapper
 import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.ui.model.LessonMode
 import org.bibletranslationtools.sun.ui.model.SentenceItem
-import org.bibletranslationtools.sun.utils.Quadruple
 import org.bibletranslationtools.sun.utils.Section
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -64,33 +62,29 @@ class DefaultLearnSentenceComponent(
     }
 
     private suspend fun initialize() {
-        val (lesson, sentences, mode, lastPosition) = withContext(Dispatchers.IO) {
-            val lesson = lessonRepository.get(lessonId)?.let(dataMapper::toItem)
+        val lesson = lessonRepository.get(lessonId)?.let(dataMapper::toItem)
 
-            val allSentencesCount = sentenceRepository.getByLessonCount(lessonId)
-            val learnedSentencesCount = sentenceRepository.getLearnedByLessonCount(lessonId)
-            val mode = if (allSentencesCount > 0 && allSentencesCount == learnedSentencesCount) {
-                LessonMode.REPEAT
-            } else {
-                LessonMode.NORMAL
-            }
-
-            val sentences = sentenceRepository.getAllWithSymbols(lessonId).map {
-                it.sentence.let(dataMapper::toItem).copy(
-                    symbols = it.symbols.map(dataMapper::toItem)
-                )
-            }
-
-            val lastPosSetting = settingsRepository.get(
-                SettingEntity.lastSentence(lesson?.groupId?.id ?: "0")
-            )?.value?.toInt() ?: 0
-
-            val lastPosition = if (sentences.isNotEmpty()) {
-                min(lastPosSetting, sentences.size - 1)
-            } else 0
-
-            Quadruple(lesson, sentences, mode, lastPosition)
+        val allSentencesCount = sentenceRepository.getByLessonCount(lessonId)
+        val learnedSentencesCount = sentenceRepository.getLearnedByLessonCount(lessonId)
+        val mode = if (allSentencesCount > 0 && allSentencesCount == learnedSentencesCount) {
+            LessonMode.REPEAT
+        } else {
+            LessonMode.NORMAL
         }
+
+        val sentences = sentenceRepository.getAllWithSymbols(lessonId).map {
+            it.sentence.let(dataMapper::toItem).copy(
+                symbols = it.symbols.map(dataMapper::toItem)
+            )
+        }
+
+        val lastPosSetting = settingsRepository.get(
+            SettingEntity.lastSentence(lesson?.groupId?.id ?: "0")
+        )?.value?.toInt() ?: 0
+
+        val lastPosition = if (sentences.isNotEmpty()) {
+            min(lastPosSetting, sentences.size - 1)
+        } else 0
 
         _model.update {
             it.copy(
@@ -109,9 +103,7 @@ class DefaultLearnSentenceComponent(
                 SettingEntity.lastSentence(lesson.groupId.id),
                 position.toString()
             )
-            withContext(Dispatchers.IO) {
-                settingsRepository.insertOrUpdate(lastSentence)
-            }
+            settingsRepository.insertOrUpdate(lastSentence)
         }
     }
 
@@ -141,15 +133,13 @@ class DefaultLearnSentenceComponent(
         val lesson = model.value.lesson ?: return
         val updatedSentenceEntity = sentence.copy(learned = true).let(dataMapper::toEntity)
 
-        withContext(Dispatchers.IO) {
-            sentenceRepository.update(updatedSentenceEntity)
+        sentenceRepository.update(updatedSentenceEntity)
 
-            val lastSection = SettingEntity(SettingEntity.lastSection(lesson.groupId.id), Section.LEARN_SENTENCES.id)
-            val lastLesson = SettingEntity(SettingEntity.lastLesson(lesson.groupId.id), lessonId.toString())
+        val lastSection = SettingEntity(SettingEntity.lastSection(lesson.groupId.id), Section.LEARN_SENTENCES.id)
+        val lastLesson = SettingEntity(SettingEntity.lastLesson(lesson.groupId.id), lessonId.toString())
 
-            settingsRepository.insertOrUpdate(lastSection)
-            settingsRepository.insertOrUpdate(lastLesson)
-        }
+        settingsRepository.insertOrUpdate(lastSection)
+        settingsRepository.insertOrUpdate(lastLesson)
 
         _model.update { state ->
             state.copy(sentences = state.sentences.map {

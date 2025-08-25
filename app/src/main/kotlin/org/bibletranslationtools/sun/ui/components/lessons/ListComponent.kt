@@ -9,7 +9,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.bibletranslationtools.sun.data.entity.SettingEntity
 import org.bibletranslationtools.sun.data.repositories.CardRepository
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
@@ -86,18 +85,16 @@ class DefaultListComponent(
     }
 
     private suspend fun loadLessons() {
-        withContext(Dispatchers.Default) {
-            val lessons = lessonRepository.getGroupWithData(groupId)
-                .map(dataMapper::toItem)
+        val lessons = lessonRepository.getGroupWithData(groupId)
+            .map(dataMapper::toItem)
 
-            _model.update {
-                it.copy(lessons = lessons.mapIndexed { index, lesson ->
-                    lesson.copy(
-                        isAvailable = lessonAvailable(lessons, index),
-                        isSelected = lesson.id == model.value.selectedId
-                    )
-                })
-            }
+        _model.update {
+            it.copy(lessons = lessons.mapIndexed { index, lesson ->
+                lesson.copy(
+                    isAvailable = lessonAvailable(lessons, index),
+                    isSelected = lesson.id == model.value.selectedId
+                )
+            })
         }
     }
 
@@ -123,49 +120,45 @@ class DefaultListComponent(
         val defaultId = defaultLesson?.id ?: 1
         val defaultGroupId = defaultLesson?.groupId?.id ?: "0"
 
-        val (lastSection, lastLesson, sectionState) = withContext(Dispatchers.Default) {
-            val lastSection = settingsRepository
-                .get(SettingEntity.lastSection(defaultGroupId))
-                ?.value
-                ?.let { Section.of(it) } ?: Section.LEARN_SYMBOLS
+        val lastSection = settingsRepository
+            .get(SettingEntity.lastSection(defaultGroupId))
+            ?.value
+            ?.let { Section.of(it) } ?: Section.LEARN_SYMBOLS
 
-            val lastLesson = settingsRepository
-                .get(SettingEntity.lastLesson(defaultGroupId))
-                ?.value
-                ?.toLong() ?: defaultId
+        val lastLesson = settingsRepository
+            .get(SettingEntity.lastLesson(defaultGroupId))
+            ?.value
+            ?.toLong() ?: defaultId
 
-            val all: Int
-            val done: Int
+        val all: Int
+        val done: Int
 
-            when (lastSection) {
-                Section.LEARN_SYMBOLS -> {
-                    all = cardRepository.getByLessonCount(lastLesson)
-                    done = cardRepository.getLearnedByLessonCount(lastLesson)
-                }
-
-                Section.TEST_SYMBOLS -> {
-                    all = cardRepository.getByLessonCount(lastLesson)
-                    done = cardRepository.getTestedByLessonCount(lastLesson)
-                }
-
-                Section.LEARN_SENTENCES -> {
-                    all = sentenceRepository.getByLessonCount(lastLesson)
-                    done = sentenceRepository.getLearnedByLessonCount(lastLesson)
-                }
-
-                else -> {
-                    all = sentenceRepository.getByLessonCount(lastLesson)
-                    done = sentenceRepository.getTestedByLessonCount(lastLesson)
-                }
+        when (lastSection) {
+            Section.LEARN_SYMBOLS -> {
+                all = cardRepository.getByLessonCount(lastLesson)
+                done = cardRepository.getLearnedByLessonCount(lastLesson)
             }
 
-            val sectionState = when {
-                done == all -> SectionState.COMPLETED
-                done > 0 -> SectionState.IN_PROGRESS
-                else -> SectionState.NOT_STARTED
+            Section.TEST_SYMBOLS -> {
+                all = cardRepository.getByLessonCount(lastLesson)
+                done = cardRepository.getTestedByLessonCount(lastLesson)
             }
 
-            Triple(lastSection, lastLesson, sectionState)
+            Section.LEARN_SENTENCES -> {
+                all = sentenceRepository.getByLessonCount(lastLesson)
+                done = sentenceRepository.getLearnedByLessonCount(lastLesson)
+            }
+
+            else -> {
+                all = sentenceRepository.getByLessonCount(lastLesson)
+                done = sentenceRepository.getTestedByLessonCount(lastLesson)
+            }
+        }
+
+        val sectionState = when {
+            done == all -> SectionState.COMPLETED
+            done > 0 -> SectionState.IN_PROGRESS
+            else -> SectionState.NOT_STARTED
         }
 
         _model.update {

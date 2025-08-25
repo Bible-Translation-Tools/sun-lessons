@@ -9,7 +9,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
@@ -76,9 +75,7 @@ class DefaultScriptureLessonsComponent(
     }
 
     private suspend fun loadLessons() {
-        val lessons = withContext(Dispatchers.Default) {
-            lessonRepository.getScriptureWithData().map(dataMapper::toItem)
-        }
+        val lessons = lessonRepository.getScriptureWithData().map(dataMapper::toItem)
         val group = lessons.groupBy { it.groupId }
         _model.update { it.copy(
             lessons = group.map { (key, value) ->

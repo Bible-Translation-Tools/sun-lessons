@@ -7,7 +7,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
 import org.bibletranslationtools.sun.ui.model.LessonItem
@@ -55,64 +54,5 @@ class DefaultUpdateLessonsComponent(
     }
 
     private suspend fun loadLessons() {
-        withContext(Dispatchers.Default) {
-//            val lessons = listOf(
-//                LessonItem(
-//                    "gen",
-//                    4,
-//                    21,
-//                    1,
-//                    "username1",
-//                    Utils.getCurrentTime(),
-//                    Utils.getCurrentTime()
-//                ),
-//                LessonItem(
-//                    "psa",
-//                    144,
-//                    37,
-//                    1,
-//                    "username2",
-//                    Utils.getCurrentTime(),
-//                    Utils.getCurrentTime()
-//                ),
-//                LessonItem(
-//                    "mat",
-//                    1,
-//                    1,
-//                    1,
-//                    "username1",
-//                    Utils.getCurrentTime(),
-//                    Utils.getCurrentTime()
-//                ),
-//                LessonItem(
-//                    "jhn",
-//                    3,
-//                    16,
-//                    1,
-//                    "username1",
-//                    Utils.getCurrentTime(),
-//                    Utils.getCurrentTime()
-//                ),
-//                LessonItem(
-//                    "act",
-//                    14,
-//                    2,
-//                    1,
-//                    "max",
-//                    Utils.getCurrentTime(),
-//                    Utils.getCurrentTime()
-//                ),
-//                LessonItem(
-//                    "rev",
-//                    22,
-//                    12,
-//                    1,
-//                    "username2",
-//                    Utils.getCurrentTime(),
-//                    Utils.getCurrentTime()
-//                ),
-//            )
-//            _model.update { it.copy(lessons = lessons) }
-        }
     }
 }

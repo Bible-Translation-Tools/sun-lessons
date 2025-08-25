@@ -8,7 +8,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.bibletranslationtools.sun.data.entity.SettingEntity
 import org.bibletranslationtools.sun.data.repositories.CardRepository
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
@@ -66,20 +65,17 @@ class DefaultTestSymbolComponent(
     }
 
     private suspend fun initialize() {
-        val (lesson, cards, mode) = withContext(Dispatchers.IO) {
-            val lesson = lessonRepository.get(lessonId)?.let(dataMapper::toItem)
+        val lesson = lessonRepository.get(lessonId)?.let(dataMapper::toItem)
 
-            val allCardsCount = cardRepository.getByLessonCount(lessonId)
-            val testedCardsCount = cardRepository.getTestedByLessonCount(lessonId)
-            val mode = if (allCardsCount > 0 && allCardsCount == testedCardsCount) {
-                LessonMode.REPEAT
-            } else {
-                LessonMode.NORMAL
-            }
-
-            val cards = cardRepository.getByLesson(lessonId).map(dataMapper::toItem)
-            Triple(lesson, cards, mode)
+        val allCardsCount = cardRepository.getByLessonCount(lessonId)
+        val testedCardsCount = cardRepository.getTestedByLessonCount(lessonId)
+        val mode = if (allCardsCount > 0 && allCardsCount == testedCardsCount) {
+            LessonMode.REPEAT
+        } else {
+            LessonMode.NORMAL
         }
+
+        val cards = cardRepository.getByLesson(lessonId).map(dataMapper::toItem)
 
         _model.update {
             it.copy(
@@ -167,27 +163,23 @@ class DefaultTestSymbolComponent(
     }
 
     private suspend fun getSentencesCount(): Int {
-        return withContext(Dispatchers.IO) {
-            sentenceRepository.getByLessonCount(lessonId)
-        }
+        return sentenceRepository.getByLessonCount(lessonId)
     }
 
     private suspend fun updateCard(card: CardItem) {
         val lesson = model.value.lesson ?: return
-        withContext(Dispatchers.IO) {
-            cardRepository.update(card.let(dataMapper::toEntity))
+        cardRepository.update(card.let(dataMapper::toEntity))
 
-            val lastSection = SettingEntity(
-                SettingEntity.lastSection(lesson.groupId.id),
-                Section.TEST_SYMBOLS.id
-            )
-            val lastLesson = SettingEntity(
-                SettingEntity.lastLesson(lesson.groupId.id),
-                lessonId.toString()
-            )
+        val lastSection = SettingEntity(
+            SettingEntity.lastSection(lesson.groupId.id),
+            Section.TEST_SYMBOLS.id
+        )
+        val lastLesson = SettingEntity(
+            SettingEntity.lastLesson(lesson.groupId.id),
+            lessonId.toString()
+        )
 
-            settingsRepository.insertOrUpdate(lastSection)
-            settingsRepository.insertOrUpdate(lastLesson)
-        }
+        settingsRepository.insertOrUpdate(lastSection)
+        settingsRepository.insertOrUpdate(lastLesson)
     }
 }

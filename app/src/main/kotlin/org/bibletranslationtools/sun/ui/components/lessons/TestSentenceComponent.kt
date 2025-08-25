@@ -8,7 +8,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.bibletranslationtools.sun.data.entity.SettingEntity
 import org.bibletranslationtools.sun.data.repositories.CardRepository
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
@@ -22,7 +21,6 @@ import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.ui.model.LessonMode
 import org.bibletranslationtools.sun.ui.model.SentenceItem
 import org.bibletranslationtools.sun.ui.model.SymbolItem
-import org.bibletranslationtools.sun.utils.Quadruple
 import org.bibletranslationtools.sun.utils.Section
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -77,25 +75,21 @@ class DefaultTestSentenceComponent(
     }
 
     private suspend fun initialize() {
-        val (lesson, sentences, cards, mode) = withContext(Dispatchers.IO) {
-            val lesson = lessonRepository.get(lessonId)?.let(dataMapper::toItem)
+        val lesson = lessonRepository.get(lessonId)?.let(dataMapper::toItem)
 
-            val sentences = sentenceRepository.getAllWithSymbols(lessonId).map {
-                it.sentence.let(dataMapper::toItem).copy(
-                    symbols = it.symbols.map(dataMapper::toItem)
-                )
-            }
-            val cards = cardsRepository.getByLesson(lessonId).map(dataMapper::toItem)
+        val sentences = sentenceRepository.getAllWithSymbols(lessonId).map {
+            it.sentence.let(dataMapper::toItem).copy(
+                symbols = it.symbols.map(dataMapper::toItem)
+            )
+        }
+        val cards = cardsRepository.getByLesson(lessonId).map(dataMapper::toItem)
 
-            val allSentencesCount = sentenceRepository.getByLessonCount(lessonId)
-            val testedSentencesCount = sentenceRepository.getTestedByLessonCount(lessonId)
-            val mode = if (allSentencesCount > 0 && allSentencesCount == testedSentencesCount) {
-                LessonMode.REPEAT
-            } else {
-                LessonMode.NORMAL
-            }
-
-            Quadruple(lesson, sentences, cards, mode)
+        val allSentencesCount = sentenceRepository.getByLessonCount(lessonId)
+        val testedSentencesCount = sentenceRepository.getTestedByLessonCount(lessonId)
+        val mode = if (allSentencesCount > 0 && allSentencesCount == testedSentencesCount) {
+            LessonMode.REPEAT
+        } else {
+            LessonMode.NORMAL
         }
 
         _model.update {
@@ -239,19 +233,17 @@ class DefaultTestSentenceComponent(
 
     private suspend fun updateSentence(sentence: SentenceItem) {
         val lesson = model.value.lesson ?: return
-        withContext(Dispatchers.IO) {
-            sentenceRepository.update(sentence.let(dataMapper::toEntity))
+        sentenceRepository.update(sentence.let(dataMapper::toEntity))
 
-            val lastSection = SettingEntity(
-                SettingEntity.lastSection(lesson.groupId.id),
-                Section.TEST_SENTENCES.id
-            )
-            val lastLesson = SettingEntity(
-                SettingEntity.lastLesson(lesson.groupId.id),
-                lessonId.toString()
-            )
-            settingsRepository.insertOrUpdate(lastSection)
-            settingsRepository.insertOrUpdate(lastLesson)
-        }
+        val lastSection = SettingEntity(
+            SettingEntity.lastSection(lesson.groupId.id),
+            Section.TEST_SENTENCES.id
+        )
+        val lastLesson = SettingEntity(
+            SettingEntity.lastLesson(lesson.groupId.id),
+            lessonId.toString()
+        )
+        settingsRepository.insertOrUpdate(lastSection)
+        settingsRepository.insertOrUpdate(lastLesson)
     }
 }

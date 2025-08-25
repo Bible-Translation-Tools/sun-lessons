@@ -22,7 +22,7 @@ import org.bibletranslationtools.sun.data.repositories.SymbolRepositoryImpl
 import org.bibletranslationtools.sun.ui.model.DataMapper
 import org.bibletranslationtools.sun.ui.model.DataMapperImpl
 import org.bibletranslationtools.sun.usecase.DownloadLesson
-import org.bibletranslationtools.sun.usecase.GetLessonsWithDownloadStatus
+import org.bibletranslationtools.sun.usecase.CalculateDownloadStatus
 import org.bibletranslationtools.sun.utils.AssetReader
 import org.bibletranslationtools.sun.utils.AssetReaderImpl
 import org.koin.core.module.dsl.factoryOf
@@ -46,7 +46,7 @@ val sharedModule = module {
     factory { get<Context>().imageLoader }
     factory { ImageRequest.Builder(get<Context>()) }
 
-    factoryOf(::GetLessonsWithDownloadStatus)
+    factoryOf(::CalculateDownloadStatus)
     factoryOf(::DownloadLesson)
 
     singleOf(::LessonRepositoryImpl).bind<LessonRepository>()

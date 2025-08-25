@@ -8,7 +8,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.bibletranslationtools.sun.data.entity.SettingEntity
 import org.bibletranslationtools.sun.data.repositories.CardRepository
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
@@ -19,7 +18,6 @@ import org.bibletranslationtools.sun.ui.model.CardItem
 import org.bibletranslationtools.sun.ui.model.DataMapper
 import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.ui.model.LessonMode
-import org.bibletranslationtools.sun.utils.Quadruple
 import org.bibletranslationtools.sun.utils.Section
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -64,29 +62,25 @@ class DefaultLearnSymbolComponent(
     }
 
     private suspend fun initialize() {
-        val (lesson, cards, mode, lastPosition) = withContext(Dispatchers.IO) {
-            val lessonEntity = lessonRepository.get(lessonId)
-            val lesson = lessonEntity?.let(dataMapper::toItem)
+        val lessonEntity = lessonRepository.get(lessonId)
+        val lesson = lessonEntity?.let(dataMapper::toItem)
 
-            val allCardsCount = cardRepository.getByLessonCount(lessonId)
-            val learnedCardsCount = cardRepository.getLearnedByLessonCount(lessonId)
-            val mode = if (allCardsCount == learnedCardsCount && allCardsCount > 0) {
-                LessonMode.REPEAT
-            } else {
-                LessonMode.NORMAL
-            }
-
-            val cards = cardRepository.getByLesson(lessonId).map(dataMapper::toItem)
-            val lastPosSetting = settingsRepository.get(
-                SettingEntity.lastSymbol(lesson?.groupId?.id ?: "0")
-            )?.value?.toInt() ?: 0
-
-            val lastPosition = if (cards.isNotEmpty()) {
-                min(lastPosSetting, cards.size - 1)
-            } else 0
-
-            Quadruple(lesson, cards, mode, lastPosition)
+        val allCardsCount = cardRepository.getByLessonCount(lessonId)
+        val learnedCardsCount = cardRepository.getLearnedByLessonCount(lessonId)
+        val mode = if (allCardsCount == learnedCardsCount && allCardsCount > 0) {
+            LessonMode.REPEAT
+        } else {
+            LessonMode.NORMAL
         }
+
+        val cards = cardRepository.getByLesson(lessonId).map(dataMapper::toItem)
+        val lastPosSetting = settingsRepository.get(
+            SettingEntity.lastSymbol(lesson?.groupId?.id ?: "0")
+        )?.value?.toInt() ?: 0
+
+        val lastPosition = if (cards.isNotEmpty()) {
+            min(lastPosSetting, cards.size - 1)
+        } else 0
 
         _model.update {
             it.copy(
@@ -105,9 +99,7 @@ class DefaultLearnSymbolComponent(
                 SettingEntity.lastSymbol(lesson.groupId.id),
                 position.toString()
             )
-            withContext(Dispatchers.IO) {
-                settingsRepository.insertOrUpdate(lastSymbol)
-            }
+            settingsRepository.insertOrUpdate(lastSymbol)
         }
     }
 
@@ -135,21 +127,19 @@ class DefaultLearnSymbolComponent(
         val lesson = model.value.lesson ?: return
         val updatedCardEntity = card.copy(learned = true).let(dataMapper::toEntity)
 
-        withContext(Dispatchers.IO) {
-            cardRepository.update(updatedCardEntity)
+        cardRepository.update(updatedCardEntity)
 
-            val lastSection = SettingEntity(
-                SettingEntity.lastSection(lesson.groupId.id),
-                Section.LEARN_SYMBOLS.id
-            )
-            val lastLesson = SettingEntity(
-                SettingEntity.lastLesson(lesson.groupId.id),
-                lessonId.toString()
-            )
+        val lastSection = SettingEntity(
+            SettingEntity.lastSection(lesson.groupId.id),
+            Section.LEARN_SYMBOLS.id
+        )
+        val lastLesson = SettingEntity(
+            SettingEntity.lastLesson(lesson.groupId.id),
+            lessonId.toString()
+        )
 
-            settingsRepository.insertOrUpdate(lastSection)
-            settingsRepository.insertOrUpdate(lastLesson)
-        }
+        settingsRepository.insertOrUpdate(lastSection)
+        settingsRepository.insertOrUpdate(lastLesson)
 
         _model.update { state ->
             state.copy(cards = state.cards.map {

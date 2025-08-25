@@ -1,5 +1,7 @@
 package org.bibletranslationtools.sun.usecase
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.bibletranslationtools.sun.api.LessonRequest
 import org.bibletranslationtools.sun.api.SunApi
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
@@ -14,7 +16,7 @@ private data class LessonPair(
     val remote: LessonGroup?
 )
 
-class GetLessonsWithDownloadStatus(
+class CalculateDownloadStatus(
     private val sunApi: SunApi,
     private val dataMapper: DataMapper,
     private val lessonRepository: LessonRepository,
@@ -63,7 +65,7 @@ class GetLessonsWithDownloadStatus(
         return setStatus(group.lessons.first(), DownloadStatus.DOWNLOAD)
     }
 
-    private fun setUpdateStatus(local: LessonGroup, remote: LessonGroup): LessonItem {
+    private suspend fun setUpdateStatus(local: LessonGroup, remote: LessonGroup): LessonItem {
         val hasUpdates = hasGroupDifferences(local, remote)
 
         return if (hasUpdates) {
@@ -81,21 +83,23 @@ class GetLessonsWithDownloadStatus(
         return lesson.copy(downloadStatus = status)
     }
 
-    private fun hasGroupDifferences(local: LessonGroup, remote: LessonGroup): Boolean {
-        val localLessons = local.lessons
-        val remoteLessons = remote.lessons
+    private suspend fun hasGroupDifferences(local: LessonGroup, remote: LessonGroup): Boolean {
+        return withContext(Dispatchers.Default) {
+            val localLessons = local.lessons
+            val remoteLessons = remote.lessons
 
-        if (localLessons.size != remoteLessons.size) return true
+            if (localLessons.size != remoteLessons.size) return@withContext true
 
-        val localLessonsById = localLessons.associateBy { it.uniqueId }
-        val remoteLessonsById = remoteLessons.associateBy { it.uniqueId }
+            val localLessonsById = localLessons.associateBy { it.uniqueId }
+            val remoteLessonsById = remoteLessons.associateBy { it.uniqueId }
 
-        if (localLessonsById.keys != remoteLessonsById.keys) return true
+            if (localLessonsById.keys != remoteLessonsById.keys) return@withContext true
 
-        return localLessonsById.keys.any { id ->
-            val localItem = localLessonsById[id]!!
-            val remoteItem = remoteLessonsById[id]!!
-            localItem.updatedAt != remoteItem.updatedAt
+            localLessonsById.keys.any { id ->
+                val localItem = localLessonsById[id]!!
+                val remoteItem = remoteLessonsById[id]!!
+                localItem.updatedAt != remoteItem.updatedAt
+            }
         }
     }
 }

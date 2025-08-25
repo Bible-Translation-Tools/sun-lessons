@@ -9,15 +9,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
 import org.bibletranslationtools.sun.ui.model.BookItem
 import org.bibletranslationtools.sun.ui.model.DownloadStatus
 import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.ui.model.emptyBookItem
+import org.bibletranslationtools.sun.usecase.CalculateDownloadStatus
 import org.bibletranslationtools.sun.usecase.DownloadLesson
-import org.bibletranslationtools.sun.usecase.GetLessonsWithDownloadStatus
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -44,7 +43,7 @@ class DefaultDownloadLessonsComponent(
     private val chapter: Int
 ) : DownloadLessonsComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
-    private val getLessonsWithDownloadStatus: GetLessonsWithDownloadStatus by inject()
+    private val calculateDownloadStatus: CalculateDownloadStatus by inject()
     private val downloadLesson: DownloadLesson by inject()
 
     private val _model = MutableValue(DownloadLessonsComponent.Model())
@@ -101,11 +100,8 @@ class DefaultDownloadLessonsComponent(
     }
 
     private suspend fun loadLessons() {
-        val lessons = withContext(Dispatchers.Default) {
-            getLessonsWithDownloadStatus(bookItem.slug, chapter).sortedBy {
-                it.name
-            }
-        }
+        val lessons = calculateDownloadStatus(bookItem.slug, chapter)
+            .sortedBy { it.name }
         _model.update { it.copy(lessons = lessons) }
     }
 

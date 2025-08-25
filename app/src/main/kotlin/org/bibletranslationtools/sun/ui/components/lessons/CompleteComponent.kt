@@ -8,7 +8,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.bibletranslationtools.sun.R
 import org.bibletranslationtools.sun.data.entity.SettingEntity
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
@@ -56,9 +55,7 @@ class DefaultCompleteComponent(
 
     init {
         componentScope.launch {
-            val lesson = withContext(Dispatchers.IO) {
-                lessonRepository.get(lessonId)
-            }
+            val lesson = lessonRepository.get(lessonId)
             _model.update { it.copy(lesson = lesson?.let(dataMapper::toItem)) }
 
             setupNextAction()
@@ -71,11 +68,8 @@ class DefaultCompleteComponent(
 
     private fun navigateToNextLesson() {
         componentScope.launch {
-            val next = withContext(Dispatchers.IO) {
-                val next = getNextLesson(lessonId)
-                saveSectionStatus(next, Section.LEARN_SYMBOLS)
-                next
-            }
+            val next = getNextLesson(lessonId)
+            saveSectionStatus(next, Section.LEARN_SYMBOLS)
             onStartLesson(next, Section.LEARN_SYMBOLS)
         }
     }
