@@ -4,7 +4,6 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.update
-import com.arkivanov.essenty.lifecycle.doOnResume
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -59,17 +58,14 @@ class DefaultStartComponent(
                 lessonRepository.get(lessonId)
             }
             _model.update { it.copy(lesson = lesson?.let(dataMapper::toItem)) }
-        }
 
-        doOnResume {
-            componentScope.launch {
-                if ((section == Section.LEARN_SENTENCES || section == Section.TEST_SENTENCES) &&
-                    sentencesByLessonCount(lessonId) == 0
-                ) {
-                    finishLesson()
-                    return@launch
-                }
+            if ((section == Section.LEARN_SENTENCES || section == Section.TEST_SENTENCES) &&
+                sentencesByLessonCount(lessonId) == 0
+            ) {
+                finishLesson()
+                return@launch
             }
+
             setupNextAction()
         }
     }
@@ -79,7 +75,9 @@ class DefaultStartComponent(
     }
 
     suspend fun sentencesByLessonCount(lessonId: Long): Int {
-        return sentenceRepository.getByLessonCount(lessonId)
+        return withContext(Dispatchers.Default) {
+            sentenceRepository.getByLessonCount(lessonId)
+        }
     }
 
     private suspend fun finishLesson() {

@@ -235,7 +235,7 @@ class DefaultTestSentenceComponent(
 
         val lastSection = SettingEntity(
             SettingEntity.lastSection(model.value.lesson?.groupId?.id ?: "0"),
-            Section.TEST_SYMBOLS.id
+            Section.TEST_SENTENCES.id
         )
         val lastLesson = SettingEntity(
             SettingEntity.lastLesson(model.value.lesson?.groupId?.id ?: "0"),

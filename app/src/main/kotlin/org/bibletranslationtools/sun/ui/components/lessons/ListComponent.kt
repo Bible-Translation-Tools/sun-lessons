@@ -66,9 +66,9 @@ class DefaultListComponent(
 
         doOnResume {
             componentScope.launch {
-                defineNextSection()
                 loadLessons()
                 setSelectedLesson()
+                defineNextSection()
             }
         }
     }
@@ -123,50 +123,54 @@ class DefaultListComponent(
         val defaultId = defaultLesson?.id ?: 1
         val defaultGroupId = defaultLesson?.groupId?.id ?: "0"
 
-        val lastSection = settingsRepository
-            .get(SettingEntity.lastSection(defaultGroupId))
-            ?.value
-            ?.let { Section.of(it) } ?: Section.LEARN_SYMBOLS
+        val (lastSection, lastLesson, sectionState) = withContext(Dispatchers.Default) {
+            val lastSection = settingsRepository
+                .get(SettingEntity.lastSection(defaultGroupId))
+                ?.value
+                ?.let { Section.of(it) } ?: Section.LEARN_SYMBOLS
 
-        val lastLesson = settingsRepository
-            .get(SettingEntity.lastLesson(defaultGroupId))
-            ?.value
-            ?.toLong() ?: defaultId
+            val lastLesson = settingsRepository
+                .get(SettingEntity.lastLesson(defaultGroupId))
+                ?.value
+                ?.toLong() ?: defaultId
 
-        val all: Int
-        val done: Int
+            val all: Int
+            val done: Int
 
-        when (lastSection) {
-            Section.LEARN_SYMBOLS -> {
-                all = cardRepository.getByLessonCount(lastLesson)
-                done = cardRepository.getLearnedByLessonCount(lastLesson)
+            when (lastSection) {
+                Section.LEARN_SYMBOLS -> {
+                    all = cardRepository.getByLessonCount(lastLesson)
+                    done = cardRepository.getLearnedByLessonCount(lastLesson)
+                }
+
+                Section.TEST_SYMBOLS -> {
+                    all = cardRepository.getByLessonCount(lastLesson)
+                    done = cardRepository.getTestedByLessonCount(lastLesson)
+                }
+
+                Section.LEARN_SENTENCES -> {
+                    all = sentenceRepository.getByLessonCount(lastLesson)
+                    done = sentenceRepository.getLearnedByLessonCount(lastLesson)
+                }
+
+                else -> {
+                    all = sentenceRepository.getByLessonCount(lastLesson)
+                    done = sentenceRepository.getTestedByLessonCount(lastLesson)
+                }
             }
 
-            Section.TEST_SYMBOLS -> {
-                all = cardRepository.getByLessonCount(lastLesson)
-                done = cardRepository.getTestedByLessonCount(lastLesson)
+            val sectionState = when {
+                done == all -> SectionState.COMPLETED
+                done > 0 -> SectionState.IN_PROGRESS
+                else -> SectionState.NOT_STARTED
             }
 
-            Section.LEARN_SENTENCES -> {
-                all = sentenceRepository.getByLessonCount(lastLesson)
-                done = sentenceRepository.getLearnedByLessonCount(lastLesson)
-            }
-
-            else -> {
-                all = sentenceRepository.getByLessonCount(lastLesson)
-                done = sentenceRepository.getTestedByLessonCount(lastLesson)
-            }
-        }
-
-        val sectionState = when {
-            done == all -> SectionState.COMPLETED
-            done > 0 -> SectionState.IN_PROGRESS
-            else -> SectionState.NOT_STARTED
+            Triple(lastSection, lastLesson, sectionState)
         }
 
         _model.update {
             it.copy(
-                nextLessonId = lastLesson + 1,
+                nextLessonId = lastLesson,
                 nextSection = lastSection,
                 nextState = sectionState
             )
