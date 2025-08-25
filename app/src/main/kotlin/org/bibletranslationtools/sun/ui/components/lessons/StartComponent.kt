@@ -54,36 +54,27 @@ class DefaultStartComponent(
 
     init {
         componentScope.launch {
-            val lesson = withContext(Dispatchers.Default) {
-                lessonRepository.get(lessonId)
+            val (lesson, sentenceCount) = withContext(Dispatchers.IO) {
+                val lessonData = lessonRepository.get(lessonId)
+                val count = sentenceRepository.getByLessonCount(lessonId)
+                lessonData to count
             }
             _model.update { it.copy(lesson = lesson?.let(dataMapper::toItem)) }
 
-            if ((section == Section.LEARN_SENTENCES || section == Section.TEST_SENTENCES) &&
-                sentencesByLessonCount(lessonId) == 0
-            ) {
-                finishLesson()
-                return@launch
-            }
+            val shouldSkipSection = (section == Section.LEARN_SENTENCES
+                    || section == Section.TEST_SENTENCES)
+                    && sentenceCount == 0
 
-            setupNextAction()
+            if (shouldSkipSection) {
+                onFinishLesson(lessonId, Section.TEST_SENTENCES)
+            } else {
+                setupNextAction()
+            }
         }
     }
 
     override fun onNextClicked() {
         _model.value.onNext()
-    }
-
-    suspend fun sentencesByLessonCount(lessonId: Long): Int {
-        return withContext(Dispatchers.Default) {
-            sentenceRepository.getByLessonCount(lessonId)
-        }
-    }
-
-    private suspend fun finishLesson() {
-        if (sentencesByLessonCount(lessonId) == 0) {
-            onFinishLesson(lessonId, Section.TEST_SENTENCES)
-        }
     }
 
     private fun setupNextAction() {

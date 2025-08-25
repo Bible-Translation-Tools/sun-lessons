@@ -4,7 +4,6 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.update
-import com.arkivanov.essenty.lifecycle.doOnResume
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -57,13 +56,11 @@ class DefaultCompleteComponent(
 
     init {
         componentScope.launch {
-            val lesson = withContext(Dispatchers.Default) {
+            val lesson = withContext(Dispatchers.IO) {
                 lessonRepository.get(lessonId)
             }
             _model.update { it.copy(lesson = lesson?.let(dataMapper::toItem)) }
-        }
 
-        doOnResume {
             setupNextAction()
         }
     }
@@ -74,8 +71,11 @@ class DefaultCompleteComponent(
 
     private fun navigateToNextLesson() {
         componentScope.launch {
-            val next = getNextLesson(lessonId)
-            saveSectionStatus(next, Section.LEARN_SYMBOLS)
+            val next = withContext(Dispatchers.IO) {
+                val next = getNextLesson(lessonId)
+                saveSectionStatus(next, Section.LEARN_SYMBOLS)
+                next
+            }
             onStartLesson(next, Section.LEARN_SYMBOLS)
         }
     }

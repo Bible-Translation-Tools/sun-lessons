@@ -61,15 +61,35 @@ class DefaultTestSymbolComponent(
 
     init {
         componentScope.launch {
-            val lesson = withContext(Dispatchers.Default) {
-                lessonRepository.get(lessonId)
-            }
-            _model.update { it.copy(lesson = lesson?.let(dataMapper::toItem)) }
-
-            initializeLessonMode()
-            loadLessonCards()
-            setNextQuestion()
+            initialize()
         }
+    }
+
+    private suspend fun initialize() {
+        val (lesson, cards, mode) = withContext(Dispatchers.IO) {
+            val lesson = lessonRepository.get(lessonId)?.let(dataMapper::toItem)
+
+            val allCardsCount = cardRepository.getByLessonCount(lessonId)
+            val testedCardsCount = cardRepository.getTestedByLessonCount(lessonId)
+            val mode = if (allCardsCount > 0 && allCardsCount == testedCardsCount) {
+                LessonMode.REPEAT
+            } else {
+                LessonMode.NORMAL
+            }
+
+            val cards = cardRepository.getByLesson(lessonId).map(dataMapper::toItem)
+            Triple(lesson, cards, mode)
+        }
+
+        _model.update {
+            it.copy(
+                lesson = lesson,
+                cards = cards,
+                mode = mode
+            )
+        }
+
+        setNextQuestion()
     }
 
     override fun setNextQuestion() {
@@ -147,42 +167,27 @@ class DefaultTestSymbolComponent(
     }
 
     private suspend fun getSentencesCount(): Int {
-        return withContext(Dispatchers.Default) {
+        return withContext(Dispatchers.IO) {
             sentenceRepository.getByLessonCount(lessonId)
         }
     }
 
     private suspend fun updateCard(card: CardItem) {
-        withContext(Dispatchers.Default) {
+        val lesson = model.value.lesson ?: return
+        withContext(Dispatchers.IO) {
             cardRepository.update(card.let(dataMapper::toEntity))
 
             val lastSection = SettingEntity(
-                SettingEntity.lastSection(model.value.lesson?.groupId?.id ?: "0"),
+                SettingEntity.lastSection(lesson.groupId.id),
                 Section.TEST_SYMBOLS.id
             )
             val lastLesson = SettingEntity(
-                SettingEntity.lastLesson(model.value.lesson?.groupId?.id ?: "0"),
+                SettingEntity.lastLesson(lesson.groupId.id),
                 lessonId.toString()
             )
+
             settingsRepository.insertOrUpdate(lastSection)
             settingsRepository.insertOrUpdate(lastLesson)
         }
-    }
-
-    private suspend fun initializeLessonMode() {
-        val mode = withContext(Dispatchers.Default) {
-            val all = cardRepository.getByLessonCount(lessonId)
-            val done = cardRepository.getTestedByLessonCount(lessonId)
-            if (all == done) LessonMode.REPEAT else LessonMode.NORMAL
-        }
-
-        _model.update { it.copy(mode = mode) }
-    }
-
-    private suspend fun loadLessonCards() {
-        val cards = withContext(Dispatchers.Default) {
-            cardRepository.getByLesson(lessonId).map(dataMapper::toItem)
-        }
-        _model.update { it.copy(cards = cards) }
     }
 }

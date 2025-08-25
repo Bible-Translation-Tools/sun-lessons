@@ -13,6 +13,13 @@ import java.util.UUID
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
+data class Quadruple<A, B, C, D>(
+    val first: A,
+    val second: B,
+    val third: C,
+    val fourth: D
+)
+
 object Utils {
     val JsonLenient = Json {
         isLenient = true

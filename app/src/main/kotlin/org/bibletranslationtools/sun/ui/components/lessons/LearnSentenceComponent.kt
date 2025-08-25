@@ -7,7 +7,6 @@ import com.arkivanov.decompose.value.update
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.bibletranslationtools.sun.data.entity.SettingEntity
@@ -20,6 +19,7 @@ import org.bibletranslationtools.sun.ui.model.DataMapper
 import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.ui.model.LessonMode
 import org.bibletranslationtools.sun.ui.model.SentenceItem
+import org.bibletranslationtools.sun.utils.Quadruple
 import org.bibletranslationtools.sun.utils.Section
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -59,31 +59,67 @@ class DefaultLearnSentenceComponent(
 
     init {
         componentScope.launch {
-            val lesson = withContext(Dispatchers.Default) {
-                lessonRepository.get(lessonId)
-            }
-            _model.update { it.copy(lesson = lesson?.let(dataMapper::toItem)) }
+            initialize()
+        }
+    }
 
-            initializeLessonMode()
-            loadSentences()
+    private suspend fun initialize() {
+        val (lesson, sentences, mode, lastPosition) = withContext(Dispatchers.IO) {
+            val lesson = lessonRepository.get(lessonId)?.let(dataMapper::toItem)
+
+            val allSentencesCount = sentenceRepository.getByLessonCount(lessonId)
+            val learnedSentencesCount = sentenceRepository.getLearnedByLessonCount(lessonId)
+            val mode = if (allSentencesCount > 0 && allSentencesCount == learnedSentencesCount) {
+                LessonMode.REPEAT
+            } else {
+                LessonMode.NORMAL
+            }
+
+            val sentences = sentenceRepository.getAllWithSymbols(lessonId).map {
+                it.sentence.let(dataMapper::toItem).copy(
+                    symbols = it.symbols.map(dataMapper::toItem)
+                )
+            }
+
+            val lastPosSetting = settingsRepository.get(
+                SettingEntity.lastSentence(lesson?.groupId?.id ?: "0")
+            )?.value?.toInt() ?: 0
+
+            val lastPosition = if (sentences.isNotEmpty()) {
+                min(lastPosSetting, sentences.size - 1)
+            } else 0
+
+            Quadruple(lesson, sentences, mode, lastPosition)
+        }
+
+        _model.update {
+            it.copy(
+                lesson = lesson,
+                sentences = sentences,
+                mode = mode,
+                lastPosition = lastPosition
+            )
         }
     }
 
     override suspend fun saveLastPosition(position: Int) {
         if (model.value.mode == LessonMode.NORMAL) {
+            val lesson = model.value.lesson ?: return
             val lastSentence = SettingEntity(
-                SettingEntity.lastSentence(model.value.lesson?.groupId?.id ?: "0"),
+                SettingEntity.lastSentence(lesson.groupId.id),
                 position.toString()
             )
-            settingsRepository.insertOrUpdate(lastSentence)
+            withContext(Dispatchers.IO) {
+                settingsRepository.insertOrUpdate(lastSentence)
+            }
         }
     }
 
     override fun onCardFlipped(sentence: SentenceItem) {
-        componentScope.launch {
-            if (model.value.mode == LessonMode.REPEAT) {
-                setPassed(sentence)
-            } else {
+        if (model.value.mode == LessonMode.REPEAT) {
+            setPassed(sentence)
+        } else {
+            componentScope.launch {
                 saveSentence(sentence)
             }
         }
@@ -100,29 +136,25 @@ class DefaultLearnSentenceComponent(
     }
 
     private suspend fun saveSentence(sentence: SentenceItem) {
-        if (!sentence.learned) {
-            sentenceRepository.update(
-                sentence.copy(learned = true).let(dataMapper::toEntity)
-            )
+        if (sentence.learned) return
 
-            _model.update { state ->
-                state.copy(
-                    sentences = state.sentences.map {
-                        if (it.id == sentence.id) it.copy(learned = true) else it
-                    }
-                )
-            }
+        val lesson = model.value.lesson ?: return
+        val updatedSentenceEntity = sentence.copy(learned = true).let(dataMapper::toEntity)
 
-            val lastSection = SettingEntity(
-                SettingEntity.lastSection(model.value.lesson?.groupId?.id ?: "0"),
-                Section.LEARN_SENTENCES.id
-            )
-            val lastLesson = SettingEntity(
-                SettingEntity.lastLesson(model.value.lesson?.groupId?.id ?: "0"),
-                lessonId.toString()
-            )
+        withContext(Dispatchers.IO) {
+            sentenceRepository.update(updatedSentenceEntity)
+
+            val lastSection = SettingEntity(SettingEntity.lastSection(lesson.groupId.id), Section.LEARN_SENTENCES.id)
+            val lastLesson = SettingEntity(SettingEntity.lastLesson(lesson.groupId.id), lessonId.toString())
+
             settingsRepository.insertOrUpdate(lastSection)
             settingsRepository.insertOrUpdate(lastLesson)
+        }
+
+        _model.update { state ->
+            state.copy(sentences = state.sentences.map {
+                if (it.id == sentence.id) it.copy(learned = true) else it
+            })
         }
     }
 
@@ -131,42 +163,5 @@ class DefaultLearnSentenceComponent(
             saveLastPosition(0)
             onFinishSection(lessonId, Section.LEARN_SENTENCES)
         }
-    }
-
-    private suspend fun loadSentences() {
-        val sentencesWithSymbols = sentenceRepository.getAllWithSymbols(lessonId)
-        val sentences = sentencesWithSymbols.map {
-            it.sentence.let(dataMapper::toItem)
-                .copy(symbols = it.symbols.map { symbol -> symbol.let(dataMapper::toItem) })
-        }
-
-        _model.update { it.copy(sentences = sentences) }
-
-        if (model.value.mode == LessonMode.NORMAL) {
-            delay(100)
-
-            val lastPosition = getLastPosition()
-            _model.update { it.copy(lastPosition = lastPosition) }
-        }
-    }
-
-    private suspend fun initializeLessonMode() {
-        val all = sentenceRepository.getByLessonCount(lessonId)
-        val done = sentenceRepository.getLearnedByLessonCount(lessonId)
-
-        val mode = if (all == done) {
-            LessonMode.REPEAT
-        } else {
-            LessonMode.NORMAL
-        }
-
-        _model.update { it.copy(mode = mode) }
-    }
-
-    private suspend fun getLastPosition(): Int {
-        val pos = settingsRepository.get(
-            SettingEntity.lastSentence(model.value.lesson?.groupId?.id ?: "0")
-        )?.value?.toInt() ?: 0
-        return min(pos, model.value.sentences.size - 1)
     }
 }

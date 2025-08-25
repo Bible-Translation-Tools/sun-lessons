@@ -22,6 +22,7 @@ import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.ui.model.LessonMode
 import org.bibletranslationtools.sun.ui.model.SentenceItem
 import org.bibletranslationtools.sun.ui.model.SymbolItem
+import org.bibletranslationtools.sun.utils.Quadruple
 import org.bibletranslationtools.sun.utils.Section
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -76,29 +77,35 @@ class DefaultTestSentenceComponent(
     }
 
     private suspend fun initialize() {
-        val lesson = withContext(Dispatchers.Default) {
-            lessonRepository.get(lessonId)
-        }
+        val (lesson, sentences, cards, mode) = withContext(Dispatchers.IO) {
+            val lesson = lessonRepository.get(lessonId)?.let(dataMapper::toItem)
 
-        val sentences = withContext(Dispatchers.Default) {
-            sentenceRepository.getAllWithSymbols(lessonId).map {
-                it.sentence.let(dataMapper::toItem)
-                    .copy(symbols = it.symbols.map { symbol ->
-                        symbol.let(dataMapper::toItem)
-                    })
+            val sentences = sentenceRepository.getAllWithSymbols(lessonId).map {
+                it.sentence.let(dataMapper::toItem).copy(
+                    symbols = it.symbols.map(dataMapper::toItem)
+                )
             }
-        }
-        val cards = withContext(Dispatchers.Default) {
-            cardsRepository.getByLesson(lessonId).map(dataMapper::toItem)
+            val cards = cardsRepository.getByLesson(lessonId).map(dataMapper::toItem)
+
+            val allSentencesCount = sentenceRepository.getByLessonCount(lessonId)
+            val testedSentencesCount = sentenceRepository.getTestedByLessonCount(lessonId)
+            val mode = if (allSentencesCount > 0 && allSentencesCount == testedSentencesCount) {
+                LessonMode.REPEAT
+            } else {
+                LessonMode.NORMAL
+            }
+
+            Quadruple(lesson, sentences, cards, mode)
         }
 
-        _model.update { it.copy(
-            lesson = lesson?.let(dataMapper::toItem),
-            sentences = sentences,
-            cards = cards
-        ) }
-
-        initializeLessonMode()
+        _model.update {
+            it.copy(
+                lesson = lesson,
+                sentences = sentences,
+                cards = cards,
+                mode = mode
+            )
+        }
         setNextSentence()
     }
 
@@ -231,30 +238,20 @@ class DefaultTestSentenceComponent(
     }
 
     private suspend fun updateSentence(sentence: SentenceItem) {
-        sentenceRepository.update(sentence.let(dataMapper::toEntity))
+        val lesson = model.value.lesson ?: return
+        withContext(Dispatchers.IO) {
+            sentenceRepository.update(sentence.let(dataMapper::toEntity))
 
-        val lastSection = SettingEntity(
-            SettingEntity.lastSection(model.value.lesson?.groupId?.id ?: "0"),
-            Section.TEST_SENTENCES.id
-        )
-        val lastLesson = SettingEntity(
-            SettingEntity.lastLesson(model.value.lesson?.groupId?.id ?: "0"),
-            lessonId.toString()
-        )
-        settingsRepository.insertOrUpdate(lastSection)
-        settingsRepository.insertOrUpdate(lastLesson)
-    }
-
-    private suspend fun initializeLessonMode() {
-        val all = sentenceRepository.getByLessonCount(lessonId)
-        val done = sentenceRepository.getTestedByLessonCount(lessonId)
-
-        val mode = if (all == done) {
-            LessonMode.REPEAT
-        } else {
-            LessonMode.NORMAL
+            val lastSection = SettingEntity(
+                SettingEntity.lastSection(lesson.groupId.id),
+                Section.TEST_SENTENCES.id
+            )
+            val lastLesson = SettingEntity(
+                SettingEntity.lastLesson(lesson.groupId.id),
+                lessonId.toString()
+            )
+            settingsRepository.insertOrUpdate(lastSection)
+            settingsRepository.insertOrUpdate(lastLesson)
         }
-
-        _model.update { it.copy(mode = mode) }
     }
 }
