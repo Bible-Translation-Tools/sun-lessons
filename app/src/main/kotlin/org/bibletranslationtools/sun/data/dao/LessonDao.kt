@@ -27,7 +27,7 @@ interface LessonDao {
         ((:author IS NULL AND author IS NOT NULL) OR (author = :author))
     """
     )
-    suspend fun delete(book: String?, chapter: Int?, verse: Int?, author: String?)
+    suspend fun deleteScripture(book: String?, chapter: Int?, verse: Int?, author: String?)
 
     @Update
     suspend fun update(lesson: LessonEntity)
@@ -43,7 +43,12 @@ interface LessonDao {
     ORDER BY verse, sort
     """
     )
-    suspend fun getAll(book: String?, chapter: Int?, verse: Int?, author: String?): List<LessonEntity>
+    suspend fun getAllScripture(
+        book: String?,
+        chapter: Int?,
+        verse: Int?,
+        author: String?
+    ): List<LessonEntity>
 
     @Query("""
         SELECT * FROM lessons 
@@ -61,10 +66,10 @@ interface LessonDao {
         """
     SELECT * FROM lessons
     WHERE
-        ((:book IS NULL AND book IS NOT NULL) OR (book = :book)) AND
-        ((:chapter IS NULL AND chapter IS NOT NULL) OR (chapter = :chapter)) AND
-        ((:verse IS NULL AND verse IS NOT NULL) OR (verse = :verse)) AND
-        ((:author IS NULL AND author IS NOT NULL) OR (author = :author))
+        ((:book IS NULL AND book IS NULL) OR (book = :book)) AND
+        ((:chapter IS NULL AND chapter IS NULL) OR (chapter = :chapter)) AND
+        ((:verse IS NULL AND verse IS NULL) OR (verse = :verse)) AND
+        ((:author IS NULL AND author IS NULL) OR (author = :author))
     ORDER BY sort
     """
     )
@@ -79,10 +84,10 @@ interface LessonDao {
         """
     SELECT * FROM lessons
     WHERE
-        ((:book IS NULL AND book IS NOT NULL) OR (book = :book)) AND
-        ((:chapter IS NULL AND chapter IS NOT NULL) OR (chapter = :chapter)) AND
-        ((:verse IS NULL AND verse IS NOT NULL) OR (verse = :verse)) AND
-        ((:author IS NULL AND author IS NOT NULL) OR (author = :author))
+        ((:book IS NULL AND book IS NULL) OR (book = :book)) AND
+        ((:chapter IS NULL AND chapter IS NULL) OR (chapter = :chapter)) AND
+        ((:verse IS NULL AND verse IS NULL) OR (verse = :verse)) AND
+        ((:author IS NULL AND author IS NULL) OR (author = :author))
     ORDER BY sort
     """
     )

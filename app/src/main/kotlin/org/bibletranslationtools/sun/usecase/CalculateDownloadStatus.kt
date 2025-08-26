@@ -25,7 +25,7 @@ class CalculateDownloadStatus(
         val remoteLessons = sunApi.getLessonCatalog(groupId)
             .lessons.map(dataMapper::toItem)
 
-        val localLessons = lessonRepository.getAll(groupId)
+        val localLessons = lessonRepository.getAllScripture(groupId)
             .map(dataMapper::toItem)
 
         val localGroups = localLessons

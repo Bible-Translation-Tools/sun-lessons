@@ -12,9 +12,9 @@ import kotlinx.coroutines.launch
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
+import org.bibletranslationtools.sun.ui.model.DataMapper
 import org.bibletranslationtools.sun.ui.model.GroupId
 import org.bibletranslationtools.sun.ui.model.LessonGroup
-import org.bibletranslationtools.sun.ui.model.DataMapper
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -62,7 +62,7 @@ class DefaultScriptureLessonsComponent(
         if (confirm) {
             componentScope.launch {
                 clearLessonToDelete()
-                lessonRepository.delete(lesson.groupId)
+                lessonRepository.deleteScripture(lesson.groupId)
                 loadLessons()
             }
         } else {

@@ -8,6 +8,7 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackCallback
 import kotlinx.serialization.Serializable
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
@@ -56,6 +57,7 @@ class DefaultLessonsComponent(
 ) : LessonsComponent, AppComponent(componentContext, parentContext) {
 
     private val navigation = StackNavigation<Config>()
+    private val backCallback = BackCallback(onBack = ::onBackClick)
 
     override val stack: Value<ChildStack<*, LessonsComponent.Child>> =
         childStack(
@@ -65,6 +67,10 @@ class DefaultLessonsComponent(
             handleBackButton = true,
             childFactory = ::createChild
         )
+
+    init {
+        backHandler.register(backCallback)
+    }
 
     override fun onBackClick() {
         if (stack.value.backStack.isEmpty()) {

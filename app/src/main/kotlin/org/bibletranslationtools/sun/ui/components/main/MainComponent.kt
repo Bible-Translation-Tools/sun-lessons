@@ -5,7 +5,6 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.backhandler.BackCallback
@@ -24,6 +23,7 @@ import org.bibletranslationtools.sun.ui.components.progress.ProgressComponent
 import org.bibletranslationtools.sun.ui.components.settings.DefaultSettingsComponent
 import org.bibletranslationtools.sun.ui.components.settings.SettingsComponent
 import org.bibletranslationtools.sun.ui.model.GroupId
+import org.bibletranslationtools.sun.ui.model.SYSTEM_USER
 import org.bibletranslationtools.sun.ui.navigation.MainTab
 
 interface MainComponent: ParentContext {
@@ -84,7 +84,7 @@ class DefaultMainComponent(
     }
 
     override fun onBackClick() {
-        navigation.pop()
+        onNavigateBack()
     }
 
     private fun createChild(config: Config, context: ComponentContext): MainComponent.Child =
@@ -93,7 +93,7 @@ class DefaultMainComponent(
                 DefaultLessonsComponent(
                     componentContext = context,
                     parentContext = this,
-                    groupId = GroupId()
+                    groupId = GroupId(author = SYSTEM_USER)
                 )
             )
             is Config.Progress -> MainComponent.Child.Progress(
