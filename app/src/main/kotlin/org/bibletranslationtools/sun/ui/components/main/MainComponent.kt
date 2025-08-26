@@ -67,18 +67,18 @@ class DefaultMainComponent(
     override fun onTabClicked(tab: MainTab) {
         when (tab) {
             MainTab.Home -> {
-                navigation.bringToFront(Config.Home)
+                navigation.replaceAll(Config.Home)
             }
             MainTab.Progress -> {
-                navigation.bringToFront(Config.Progress)
+                navigation.replaceAll(Config.Progress)
             }
             MainTab.Lessons -> {
                 componentScope.launch {
-                    navigation.bringToFront(Config.ScriptureLessons)
+                    navigation.replaceAll(Config.ScriptureLessons)
                 }
             }
             MainTab.Settings -> {
-                navigation.bringToFront(Config.Settings)
+                navigation.replaceAll(Config.Settings)
             }
         }
     }
