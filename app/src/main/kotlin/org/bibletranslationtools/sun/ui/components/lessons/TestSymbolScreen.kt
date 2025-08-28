@@ -12,9 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import org.bibletranslationtools.sun.R
 import org.bibletranslationtools.sun.ui.control.TallyText
 import org.bibletranslationtools.sun.ui.control.TopAppBar
 import org.bibletranslationtools.sun.ui.control.test.AnswerGrid
@@ -50,6 +52,7 @@ fun TestSymbolScreen(component: TestSymbolComponent) {
             ) {
                 QuestionSection(
                     imageUri = imageUri,
+                    text = stringResource(id = R.string.test_symbols_hint),
                     modifier = Modifier.weight(1f)
                 )
 
