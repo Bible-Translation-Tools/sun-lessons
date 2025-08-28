@@ -1,5 +1,6 @@
 package org.bibletranslationtools.sun.ui.components.main
 
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -44,7 +45,8 @@ fun MainScreen(component: MainComponent) {
                 }
             }
         },
-        containerColor = MaterialTheme.colorScheme.surface
+        containerColor = MaterialTheme.colorScheme.surface,
+        modifier = Modifier.navigationBarsPadding()
     ) { paddingValues ->
         Children(
             stack = component.stack,

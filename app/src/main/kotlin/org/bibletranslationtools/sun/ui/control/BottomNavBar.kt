@@ -24,7 +24,7 @@ fun BottomNavBar(
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surface,
         modifier = Modifier
-            .height(80.dp)
+            .height(60.dp)
             .drawBehind {
                 val strokeWidth = 1.dp.toPx()
                 drawLine(

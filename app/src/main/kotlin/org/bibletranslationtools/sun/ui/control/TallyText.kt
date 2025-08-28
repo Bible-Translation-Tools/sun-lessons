@@ -10,11 +10,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.bibletranslationtools.sun.ui.tallyFontFamily
+import org.bibletranslationtools.sun.utils.TallyMarkConverter
 
 @Composable
 fun TallyText(lessonId: Int) {
     Text(
-        text = lessonId.toString(),
+        text = TallyMarkConverter.toText(lessonId),
         fontWeight = FontWeight.Bold,
         fontFamily = tallyFontFamily(),
         textAlign = TextAlign.Center,
