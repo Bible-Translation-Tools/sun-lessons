@@ -4,10 +4,10 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -35,7 +35,9 @@ fun CardBack(
     modifier: Modifier = Modifier,
     onFlip: () -> Unit
 ) {
-    Box(
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
             .fillMaxHeight()
             .width(250.dp)
@@ -50,16 +52,15 @@ fun CardBack(
         AsyncImage(
             model = card.image,
             contentDescription = "card image",
-            modifier = Modifier
-                .fillMaxSize()
-                .align(Alignment.Center),
+            modifier = Modifier.fillMaxHeight(0.8f),
             contentScale = ContentScale.Fit
         )
+
+        Spacer(modifier = Modifier.weight(1f))
+
         OutlinedButton(
             onClick = onFlip,
-            modifier = Modifier
-                .height(40.dp)
-                .align(Alignment.BottomCenter),
+            modifier = Modifier.height(40.dp),
             shape = MaterialTheme.shapes.medium,
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
         ) {
