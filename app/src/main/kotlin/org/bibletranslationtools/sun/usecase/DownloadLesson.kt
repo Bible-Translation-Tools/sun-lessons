@@ -289,12 +289,12 @@ class DownloadLesson(
         }
     }
 
-    private fun cacheImage(url: String) {
+    private suspend fun cacheImage(url: String) {
         val request = imageRequestBuilder.data(url).build()
-        imageLoader.enqueue(request)
+        imageLoader.execute(request)
     }
 
-    private fun cacheImages(urls: List<String>) {
+    private suspend fun cacheImages(urls: List<String>) {
         urls.forEach { cacheImage(it) }
     }
 }

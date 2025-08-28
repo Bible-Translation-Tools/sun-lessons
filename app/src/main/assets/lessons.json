@@ -1,5 +1,5 @@
 {
-  "version": 5,
+  "version": 6,
   "lessons": [
     {
       "cards": [
@@ -535,7 +535,7 @@
         },
         {
           "symbol": "\uE31C",
-          "image": "5.9a.png"
+          "image": "5.9a.jpg"
         },
         {
           "symbol": "\uE24B",
@@ -635,6 +635,417 @@
     {
       "cards": [
         {
+          "symbol": "\uE301",
+          "image": "6.1a.jpg"
+        },
+        {
+          "symbol": "\uE0C3",
+          "image": "6.2a.jpg"
+        },
+        {
+          "symbol": "\uE307",
+          "image": "6.3a.jpg"
+        },
+        {
+          "symbol": "\uE306",
+          "image": "6.4a.jpg"
+        },
+        {
+          "symbol": "\uE29A",
+          "image": "6.5a.jpg"
+        },
+        {
+          "symbol": "\uE08C",
+          "image": "6.6a.jpg"
+        },
+        {
+          "symbol": "\uE25B",
+          "image": "6.7a.jpg"
+        },
+        {
+          "symbol": "\uE30D",
+          "image": "6.8a.jpg"
+        },
+        {
+          "symbol": "\uE313",
+          "image": "6.9a.jpg"
+        },
+        {
+          "symbol": "\uE268",
+          "image": "6.10a.jpg"
+        }
+      ],
+      "sentences": [
+        {
+          "symbols": [
+            {
+              "name": "\uE166"
+            },
+            {
+              "name": "\uE24E"
+            },
+            {
+              "name": "\uE302"
+            },
+            {
+              "name": "\uE29E"
+            }
+          ],
+          "image": "6.1a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE15F"
+            },
+            {
+              "name": "\uE301"
+            }
+          ],
+          "image": "6.2a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE304"
+            },
+            {
+              "name": "\uE25B"
+            },
+            {
+              "name": "\uE313"
+            }
+          ],
+          "image": "6.3a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE27E"
+            },
+            {
+              "name": "\uE30D"
+            }
+          ],
+          "image": "6.4a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE000"
+            },
+            {
+              "name": "\uE238"
+            },
+            {
+              "name": "\uE302"
+            },
+            {
+              "name": "\uE307"
+            }
+          ],
+          "image": "6.5a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE301"
+            },
+            {
+              "name": "\uE315"
+            },
+            {
+              "name": "\uE306"
+            }
+          ],
+          "image": "6.6a.jpg"
+        }
+      ]
+    },
+    {
+      "cards": [
+        {
+          "symbol": "\uE0B2",
+          "image": "7.1a.jpg"
+        },
+        {
+          "symbol": "\uE288",
+          "image": "7.2a.jpg"
+        },
+        {
+          "symbol": "\uE30F",
+          "image": "7.3a.jpg"
+        },
+        {
+          "symbol": "\uE153",
+          "image": "7.4a.jpg"
+        },
+        {
+          "symbol": "\uE388",
+          "image": "7.5a.jpg"
+        },
+        {
+          "symbol": "\uE310",
+          "image": "7.6a.jpg"
+        },
+        {
+          "symbol": "\uE305",
+          "image": "7.7a.jpg"
+        },
+        {
+          "symbol": "\uE0F4",
+          "image": "7.8a.jpg"
+        },
+        {
+          "symbol": "\uE16A",
+          "image": "7.9a.jpg"
+        },
+        {
+          "symbol": "\uE038",
+          "image": "7.10a.jpg"
+        }
+      ],
+      "sentences": [
+        {
+          "symbols": [
+            {
+              "name": "\uE263"
+            },
+            {
+              "name": "\uE17C"
+            },
+            {
+              "name": "\uE0B2"
+            }
+          ],
+          "image": "7.1a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE102"
+            },
+            {
+              "name": "\uE08C"
+            },
+            {
+              "name": "\uE279"
+            },
+            {
+              "name": "\uE153"
+            }
+          ],
+          "image": "7.2a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE30F"
+            },
+            {
+              "name": "\uE0F4"
+            },
+            {
+              "name": "\uE288"
+            }
+          ],
+          "image": "7.3a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE166"
+            },
+            {
+              "name": "\uE310"
+            },
+            {
+              "name": "\uE303"
+            }
+          ],
+          "image": "7.4a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE000"
+            },
+            {
+              "name": "\uE305"
+            },
+            {
+              "name": "\uE398"
+            }
+          ],
+          "image": "7.5a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE166"
+            },
+            {
+              "name": "\uE17C"
+            },
+            {
+              "name": "\uE16A"
+            },
+            {
+              "name": "\uE29C"
+            }
+          ],
+          "image": "7.6a.jpg"
+        }
+      ]
+    },
+    {
+      "cards": [
+        {
+          "symbol": "\uE29B",
+          "image": "8.1a.jpg"
+        },
+        {
+          "symbol": "\uE251",
+          "image": "8.2a.jpg"
+        },
+        {
+          "symbol": "\uE284",
+          "image": "8.3a.jpg"
+        },
+        {
+          "symbol": "\uE096",
+          "image": "8.4a.jpg"
+        },
+        {
+          "symbol": "\uE231",
+          "image": "8.5a.jpg"
+        },
+        {
+          "symbol": "\uE31A",
+          "image": "8.6a.jpg"
+        },
+        {
+          "symbol": "\uE312",
+          "image": "8.7a.jpg"
+        },
+        {
+          "symbol": "\uE01A",
+          "image": "8.8a.jpg"
+        },
+        {
+          "symbol": "\uE062",
+          "image": "8.9a.jpg"
+        },
+        {
+          "symbol": "\uE308",
+          "image": "8.10a.jpg"
+        }
+      ],
+      "sentences": [
+        {
+          "symbols": [
+            {
+              "name": "\uE028"
+            },
+            {
+              "name": "\uE01A"
+            },
+            {
+              "name": "\uE028\uE390"
+            },
+            {
+              "name": "\uE303"
+            }
+          ],
+          "image": "8.1a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE000"
+            },
+            {
+              "name": "\uE096"
+            },
+            {
+              "name": "\uE29A"
+            }
+          ],
+          "image": "8.2a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE166"
+            },
+            {
+              "name": "\uE238"
+            },
+            {
+              "name": "\uE251"
+            },
+            {
+              "name": "\uE284"
+            }
+          ],
+          "image": "8.3a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE17C"
+            },
+            {
+              "name": "\uE312"
+            },
+            {
+              "name": "\uE31A"
+            },
+            {
+              "name": "\uE03F"
+            }
+          ],
+          "image": "8.4a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE166"
+            },
+            {
+              "name": "\uE29C"
+            },
+            {
+              "name": "\uE308"
+            },
+            {
+              "name": "\uE22A"
+            }
+          ],
+          "image": "8.5a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE166"
+            },
+            {
+              "name": "\uE17C"
+            },
+            {
+              "name": "\uE062"
+            },
+            {
+              "name": "\uE11F"
+            }
+          ],
+          "image": "8.6a.jpg"
+        }
+      ]
+    },
+    {
+      "cards": [
+        {
           "symbol": "\uE28B",
           "image": "9.1a.jpg"
         },
@@ -684,36 +1095,171 @@
     {
       "cards": [
         {
+          "symbol": "\uE105",
+          "image": "10.1a.jpg"
+        },
+        {
+          "symbol": "\uE253",
+          "image": "10.2a.jpg"
+        },
+        {
+          "symbol": "\uE0B7",
+          "image": "10.3a.jpg"
+        },
+        {
+          "symbol": "\uE296",
+          "image": "10.4a.jpg"
+        },
+        {
+          "symbol": "\uE198",
+          "image": "10.5a.jpg"
+        },
+        {
+          "symbol": "\uE300",
+          "image": "10.6a.jpg"
+        },
+        {
+          "symbol": "\uE19B",
+          "image": "10.7a.jpg"
+        },
+        {
+          "symbol": "\uE211",
+          "image": "10.8a.jpg"
+        },
+        {
+          "symbol": "\uE127",
+          "image": "10.9a.jpg"
+        },
+        {
+          "symbol": "\uE008",
+          "image": "10.10a.jpg"
+        }
+      ],
+      "sentences": []
+    },
+    {
+      "cards": [
+        {
+          "symbol": "\uE128",
+          "image": "11.1a.jpg"
+        },
+        {
+          "symbol": "\uE23F",
+          "image": "11.2a.jpg"
+        },
+        {
+          "symbol": "\uE18A",
+          "image": "11.3a.jpg"
+        },
+        {
+          "symbol": "\uE240",
+          "image": "11.4a.jpg"
+        },
+        {
+          "symbol": "\uE113",
+          "image": "11.5a.jpg"
+        },
+        {
+          "symbol": "\uE11E",
+          "image": "11.6a.jpg"
+        },
+        {
+          "symbol": "\uE191",
+          "image": "11.7a.jpg"
+        },
+        {
+          "symbol": "\uE050",
+          "image": "11.8a.jpg"
+        },
+        {
+          "symbol": "\uE07E",
+          "image": "11.9a.jpg"
+        },
+        {
+          "symbol": "\uE10C",
+          "image": "11.10a.jpg"
+        }
+      ],
+      "sentences": []
+    },
+    {
+      "cards": [
+        {
+          "symbol": "\uE088",
+          "image": "12.1a.jpg"
+        },
+        {
+          "symbol": "\uE045",
+          "image": "12.2a.jpg"
+        },
+        {
+          "symbol": "\uE048",
+          "image": "12.3a.jpg"
+        },
+        {
+          "symbol": "\uE047",
+          "image": "12.4a.jpg"
+        },
+        {
+          "symbol": "\uE260",
+          "image": "12.5a.jpg"
+        },
+        {
+          "symbol": "\uE020",
+          "image": "12.6a.jpg"
+        },
+        {
+          "symbol": "\uE21E",
+          "image": "12.7a.jpg"
+        },
+        {
+          "symbol": "\uE037",
+          "image": "12.8a.jpg"
+        },
+        {
+          "symbol": "\uE003",
+          "image": "12.9a.jpg"
+        },
+        {
+          "symbol": "\uE036",
+          "image": "12.10a.jpg"
+        }
+      ],
+      "sentences": []
+    },
+    {
+      "cards": [
+        {
           "symbol": "\uE37E",
-          "image": "13.1a.png"
+          "image": "13.1a.jpg"
         },
         {
           "symbol": ",",
-          "image": "13.2a.png"
+          "image": "13.2a.jpg"
         },
         {
           "symbol": "\uEE02",
-          "image": "13.3a.png"
+          "image": "13.3a.jpg"
         },
         {
           "symbol": "\uE316",
-          "image": "13.4a.png"
+          "image": "13.4a.jpg"
         },
         {
           "symbol": "“",
-          "image": "13.5a.png"
+          "image": "13.5a.jpg"
         },
         {
           "symbol": "'",
-          "image": "13.6a.png"
+          "image": "13.6a.jpg"
         },
         {
           "symbol": "\uE390",
-          "image": "13.7a.png"
+          "image": "13.7a.jpg"
         },
         {
           "symbol": "\uEA47",
-          "image": "13.8a.png"
+          "image": "13.8a.jpg"
         }
       ],
       "sentences": [
@@ -804,10 +1350,7 @@
               "name": "\uE000\uE390"
             },
             {
-              "name": "\uE299\uE299"
-            },
-            {
-              "name": "\uE37E"
+              "name": "\uE299\uE299\uE37E"
             }
           ],
           "image": "13.4a.jpg"
@@ -880,10 +1423,7 @@
               "name": "“\uE18A"
             },
             {
-              "name": "\uEE02“"
-            },
-            {
-              "name": "\uE37E"
+              "name": "\uEE02“\uE37E"
             }
           ],
           "image": "13.9a.jpg"
@@ -929,6 +1469,167 @@
             }
           ],
           "image": "13.12a.jpg"
+        }
+      ]
+    },
+    {
+      "cards": [
+        {
+          "symbol": "\uE17D",
+          "image": "14.1a.jpg"
+        },
+        {
+          "symbol": "\uE08F",
+          "image": "14.2a.jpg"
+        },
+        {
+          "symbol": "\uE029",
+          "image": "14.3a.jpg"
+        },
+        {
+          "symbol": "\uE32A",
+          "image": "14.4a.jpg"
+        },
+        {
+          "symbol": "\uE181",
+          "image": "14.5a.jpg"
+        },
+        {
+          "symbol": "\uE072",
+          "image": "14.6a.jpg"
+        },
+        {
+          "symbol": "\uE086",
+          "image": "14.7a.jpg"
+        },
+        {
+          "symbol": "\uE223",
+          "image": "14.8a.jpg"
+        },
+        {
+          "symbol": "\uE004",
+          "image": "14.9a.jpg"
+        },
+        {
+          "symbol": "\uE06F",
+          "image": "14.10a.jpg"
+        },
+        {
+          "symbol": "\uE09F",
+          "image": "14.11a.jpg"
+        },
+        {
+          "symbol": "\uE252",
+          "image": "14.12a.jpg"
+        }
+      ],
+      "sentences": [
+        {
+          "symbols": [
+            {
+              "name": "\uE251"
+            },
+            {
+              "name": "\uE127"
+            },
+            {
+              "name": "\uE08F\uE37E"
+            }
+          ],
+          "image": "14.1a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE08F\uE390"
+            },
+            {
+              "name": "\uE32A"
+            },
+            {
+              "name": "\uE24B"
+            },
+            {
+              "name": "\uE181\uE37E"
+            }
+          ],
+          "image": "14.2a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE036"
+            },
+            {
+              "name": "\uE01A"
+            },
+            {
+              "name": "\uE127\uE37E"
+            }
+          ],
+          "image": "14.3a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE036"
+            },
+            {
+              "name": "\uE086"
+            },
+            {
+              "name": "\uE223"
+            },
+            {
+              "name": "\uE004\uE37E"
+            }
+          ],
+          "image": "14.4a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE11F"
+            },
+            {
+              "name": "\uE06F"
+            },
+            {
+              "name": "\uE036\uE390"
+            },
+            {
+              "name": "\uE004\uE37E"
+            }
+          ],
+          "image": "14.5a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE11F"
+            },
+            {
+              "name": "\uE17C"
+            },
+            {
+              "name": "\uE181\uE37E"
+            }
+          ],
+          "image": "14.6a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE11F"
+            },
+            {
+              "name": "\uE09F"
+            },
+            {
+              "name": "\uE252\uE37E"
+            }
+          ],
+          "image": "14.7a.jpg"
         }
       ]
     }

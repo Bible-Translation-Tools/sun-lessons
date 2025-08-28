@@ -5,6 +5,7 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.backhandler.BackCallback
@@ -127,10 +128,15 @@ class DefaultMainComponent(
         }
 
     private fun onNavigateBack() {
-        val config = stack.value.active.configuration
-        when (config) {
-            !is Config.Home -> navigation.replaceAll(Config.Home)
-            else -> onFinished()
+        val backStack = stack.value.backStack
+        if (backStack.isEmpty()) {
+            val config = stack.value.active.configuration
+            when (config) {
+                !is Config.Home -> navigation.replaceAll(Config.Home)
+                else -> onFinished()
+            }
+        } else {
+            navigation.pop()
         }
     }
 
