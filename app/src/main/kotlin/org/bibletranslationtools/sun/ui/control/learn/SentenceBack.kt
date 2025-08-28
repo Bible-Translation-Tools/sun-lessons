@@ -6,7 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -37,7 +37,8 @@ fun SentenceBack(
 ) {
     Box(
         modifier = modifier
-            .fillMaxSize()
+            .fillMaxHeight()
+            .width(250.dp)
             .background(MaterialTheme.colorScheme.surface)
             .padding(12.dp)
             .clickable(
@@ -49,9 +50,7 @@ fun SentenceBack(
         AsyncImage(
             model = sentence.image ?: "file:///android_asset/images/sentences/0.jpg",
             contentDescription = sentence.image,
-            modifier = Modifier
-                .height(260.dp)
-                .align(Alignment.Center),
+            modifier = Modifier.align(Alignment.Center),
             contentScale = ContentScale.Fit
         )
         OutlinedButton(

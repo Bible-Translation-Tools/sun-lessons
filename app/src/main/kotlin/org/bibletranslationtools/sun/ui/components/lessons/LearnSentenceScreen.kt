@@ -1,6 +1,7 @@
 package org.bibletranslationtools.sun.ui.components.lessons
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -115,13 +116,18 @@ fun LearnSentenceScreen(component: LearnSentenceComponent) {
                             .weight(1f)
                             .height(400.dp)
                     ) { pageIndex ->
-                        SentencePage(
-                            sentence = model.sentences[pageIndex],
-                            onFrontFlipped = {
-                                component.onCardFlipped(it)
-                                nextEnabled = true
-                            }
-                        )
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            SentencePage(
+                                sentence = model.sentences[pageIndex],
+                                onFrontFlipped = {
+                                    component.onCardFlipped(it)
+                                    nextEnabled = true
+                                }
+                            )
+                        }
                     }
 
                     PagerNavButton(

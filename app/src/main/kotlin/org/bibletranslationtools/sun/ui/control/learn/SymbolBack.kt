@@ -6,8 +6,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -37,7 +37,8 @@ fun CardBack(
 ) {
     Box(
         modifier = modifier
-            .fillMaxSize()
+            .fillMaxHeight()
+            .width(250.dp)
             .background(MaterialTheme.colorScheme.surface)
             .padding(12.dp)
             .clickable(
@@ -50,14 +51,13 @@ fun CardBack(
             model = card.image,
             contentDescription = "card image",
             modifier = Modifier
-                .height(260.dp)
+                .fillMaxSize()
                 .align(Alignment.Center),
             contentScale = ContentScale.Fit
         )
         OutlinedButton(
             onClick = onFlip,
             modifier = Modifier
-                .fillMaxWidth(0.8f)
                 .height(40.dp)
                 .align(Alignment.BottomCenter),
             shape = MaterialTheme.shapes.medium,

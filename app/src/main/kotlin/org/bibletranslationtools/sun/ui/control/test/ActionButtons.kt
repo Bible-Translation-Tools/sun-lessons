@@ -51,13 +51,14 @@ fun ActionButtons(
     questionDone: Boolean,
     showCorrectAnswer: Boolean,
     onShowCorrectAnswer: (Boolean?) -> Unit,
-    onNextSentence: () -> Unit
+    onNextSentence: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var correctAnswerRevealed by remember { mutableStateOf(false) }
 
     if (questionDone) {
         Row(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
                 .height(50.dp),

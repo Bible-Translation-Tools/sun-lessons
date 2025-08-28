@@ -88,6 +88,8 @@ fun StartScreen(component: StartComponent) {
 
                 NextButton(
                     modifier = Modifier
+                        .width(420.dp)
+                        .align(Alignment.CenterHorizontally)
                         .padding(horizontal = 60.dp)
                         .padding(bottom = 50.dp),
                     onClick = component::onNextClicked

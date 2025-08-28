@@ -1,6 +1,7 @@
 package org.bibletranslationtools.sun.ui.components.lessons
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -95,6 +96,7 @@ fun LearnSymbolScreen(component: LearnSymbolComponent) {
                         .weight(1f)
                         .padding(top = 20.dp)
                         .graphicsLayer { clip = false },
+                    horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     if (pagerState.currentPage > 0) {
@@ -117,13 +119,18 @@ fun LearnSymbolScreen(component: LearnSymbolComponent) {
                             .weight(1f)
                             .height(400.dp)
                     ) { pageIndex ->
-                        SymbolPage(
-                            card = model.cards[pageIndex],
-                            onFrontFlipped = {
-                                component.onCardFlipped(it)
-                                nextEnabled = true
-                            }
-                        )
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            SymbolPage(
+                                card = model.cards[pageIndex],
+                                onFrontFlipped = {
+                                    component.onCardFlipped(it)
+                                    nextEnabled = true
+                                }
+                            )
+                        }
                     }
 
                     PagerNavButton(

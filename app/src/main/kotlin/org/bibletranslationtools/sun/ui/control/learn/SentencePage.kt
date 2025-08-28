@@ -2,7 +2,6 @@ package org.bibletranslationtools.sun.ui.control.learn
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -31,7 +30,6 @@ fun SentencePage(
 
     Card(
         modifier = Modifier
-            .fillMaxSize()
             .padding(horizontal = 8.dp)
             .graphicsLayer {
                 rotationY = rotation

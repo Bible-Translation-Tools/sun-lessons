@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -63,6 +64,7 @@ fun TestSentenceScreen(component: TestSentenceComponent) {
                     showCorrectAnswer = showCorrectAnswer,
                     onSymbolSelected = component::onSymbolSelected,
                     modifier = Modifier.weight(1f)
+                        .width(360.dp)
                 )
 
                 ActionButtons(
@@ -72,7 +74,8 @@ fun TestSentenceScreen(component: TestSentenceComponent) {
                     showCorrectAnswer = showCorrectAnswer,
                     onShowCorrectAnswer = { show ->
                         showCorrectAnswer = show ?: !showCorrectAnswer
-                    }
+                    },
+                    modifier = Modifier.width(360.dp)
                 )
             }
         }

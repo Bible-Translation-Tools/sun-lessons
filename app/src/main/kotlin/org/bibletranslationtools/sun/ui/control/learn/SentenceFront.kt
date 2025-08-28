@@ -6,7 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -68,7 +68,8 @@ fun SentenceFront(symbols: List<SymbolItem>, onFlip: () -> Unit) {
 
     Box(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxHeight()
+            .width(250.dp)
             .background(MaterialTheme.colorScheme.surface)
             .padding(12.dp)
             .clickable(
@@ -79,8 +80,7 @@ fun SentenceFront(symbols: List<SymbolItem>, onFlip: () -> Unit) {
     ) {
         BasicText(
             text = text,
-            modifier = Modifier.fillMaxWidth()
-                .align(Alignment.Center),
+            modifier = Modifier.align(Alignment.Center),
             style = TextStyle(
                 fontFamily = sunFontFamily(),
                 fontWeight = FontWeight.Bold,
