@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import org.bibletranslationtools.sun.data.entity.SentenceEntity
 import org.bibletranslationtools.sun.data.entity.SentenceWithSymbols
@@ -35,15 +36,18 @@ interface SentenceDao {
     @Query("SELECT * FROM sentences WHERE lessonId = :lessonId")
     suspend fun getByLesson(lessonId: Long): List<SentenceEntity>
 
+    @Transaction
     @Query("SELECT * FROM sentences WHERE lessonId = :lessonId")
     suspend fun getByLessonWithSymbols(lessonId: Long): List<SentenceWithSymbols>
 
+    @Transaction
     @Query("SELECT * FROM sentences WHERE tested = 1")
     suspend fun getAllTestedWithSymbols(): List<SentenceWithSymbols>
 
     @Query("SELECT COUNT(*) FROM sentences WHERE tested = 1")
     suspend fun allTestedCount(): Int
 
+    @Transaction
     @Query("SELECT * FROM sentences WHERE learned = 1")
     suspend fun getAllLearnedWithSymbols(): List<SentenceWithSymbols>
 

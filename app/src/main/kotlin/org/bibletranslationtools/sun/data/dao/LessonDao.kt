@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import org.bibletranslationtools.sun.data.entity.LessonEntity
 import org.bibletranslationtools.sun.data.entity.LessonWithData
@@ -50,6 +51,7 @@ interface LessonDao {
         author: String?
     ): List<LessonEntity>
 
+    @Transaction
     @Query("""
         SELECT * FROM lessons 
         WHERE book IS NOT NULL 
@@ -80,6 +82,7 @@ interface LessonDao {
         author: String?
     ): List<LessonEntity>
 
+    @Transaction
     @Query(
         """
     SELECT * FROM lessons

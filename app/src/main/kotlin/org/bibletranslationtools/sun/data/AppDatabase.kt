@@ -27,7 +27,7 @@ import kotlin.concurrent.Volatile
         SymbolEntity::class
     ],
     version = 2,
-    exportSchema = true
+    exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
 

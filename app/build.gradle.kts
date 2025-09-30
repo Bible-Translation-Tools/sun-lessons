@@ -6,7 +6,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.kapt")
     id("org.jetbrains.kotlin.plugin.serialization")
-    id("org.jetbrains.kotlin.plugin.compose") version "2.2.10"
+    id("org.jetbrains.kotlin.plugin.compose") version "2.2.20"
     // id("org.jlleitschuh.gradle.ktlint") version "12.1.2"
 }
 
@@ -18,8 +18,8 @@ android {
         applicationId = "org.bibletranslationtools.sun"
         minSdk = 24
         targetSdk = 36
-        versionCode = 20
-        versionName = "0.3.1"
+        versionCode = 21
+        versionName = "0.3.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -62,8 +62,8 @@ tasks.withType<JavaCompile>().configureEach {
 
 dependencies {
     // Compose BOM
-    implementation(platform("androidx.compose:compose-bom:2025.08.00"))
-    implementation("androidx.activity:activity-compose:1.10.1")
+    implementation(platform("androidx.compose:compose-bom:2025.09.01"))
+    implementation("androidx.activity:activity-compose:1.11.0")
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
@@ -74,23 +74,23 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     // Koin
-    implementation("io.insert-koin:koin-core:4.1.0")
-    implementation("io.insert-koin:koin-android:4.1.0")
-    implementation("io.insert-koin:koin-androidx-compose:4.1.0")
+    implementation("io.insert-koin:koin-core:4.1.1")
+    implementation("io.insert-koin:koin-android:4.1.1")
+    implementation("io.insert-koin:koin-androidx-compose:4.1.1")
 
     // Decompose
-    implementation("com.arkivanov.decompose:decompose:3.3.0")
-    implementation("com.arkivanov.decompose:extensions-compose:3.3.0")
+    implementation("com.arkivanov.decompose:decompose:3.4.0")
+    implementation("com.arkivanov.decompose:extensions-compose:3.4.0")
 
     // Kotlinx Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
 
     // Room database
-    implementation("androidx.room:room-runtime:2.7.2")
-    implementation("androidx.room:room-ktx:2.7.2")
+    implementation("androidx.room:room-runtime:2.8.1")
+    implementation("androidx.room:room-ktx:2.8.1")
     // noinspection KaptUsageInsteadOfKsp
-    kapt("androidx.room:room-compiler:2.7.2")
+    kapt("androidx.room:room-compiler:2.8.1")
 
     // Coil image loading
     implementation("io.coil-kt.coil3:coil-compose:3.3.0")
@@ -101,10 +101,10 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
 
     // ktor
-    implementation("io.ktor:ktor-client-core:3.2.3")
-    implementation("io.ktor:ktor-client-android:3.2.3")
-    implementation("io.ktor:ktor-client-content-negotiation:3.2.3")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:3.2.3")
+    implementation("io.ktor:ktor-client-core:3.3.0")
+    implementation("io.ktor:ktor-client-android:3.3.0")
+    implementation("io.ktor:ktor-client-content-negotiation:3.3.0")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:3.3.0")
 
     // Testing
     testImplementation("junit:junit:4.13.2")
