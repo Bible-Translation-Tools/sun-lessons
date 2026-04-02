@@ -21,12 +21,12 @@ import org.bibletranslationtools.sun.ui.model.LessonItem
 fun ProgressSection(lessons: List<LessonItem>) {
 
     val scoreProgress = if (lessons.isNotEmpty()) {
-        lessons.sumOf { it.totalProgress }.toFloat() / lessons.size
+        lessons.sumOf { it.totalProgress.toDouble() }.toFloat() / lessons.size
     } else 0f
 
     val learnedCount = lessons.sumOf { it.cardsLearned }.toString()
     val learnedProgress = if (lessons.isNotEmpty()) {
-        lessons.sumOf { it.cardsLearnedProgress }.toFloat() / lessons.size
+        lessons.sumOf { it.cardsLearnedProgress.toDouble() }.toFloat() / lessons.size
     } else 0f
 
     Row(
@@ -55,7 +55,7 @@ fun ProgressSection(lessons: List<LessonItem>) {
         ProgressIndicatorItem(
             label = stringResource(id = R.string.test_score),
             progress = scoreProgress,
-            count = "${scoreProgress.toInt()}%"
+            count = "${(scoreProgress * 100).toInt()}%"
         )
     }
 }

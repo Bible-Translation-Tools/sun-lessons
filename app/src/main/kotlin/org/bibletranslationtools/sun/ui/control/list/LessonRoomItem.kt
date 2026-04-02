@@ -31,7 +31,7 @@ fun LessonRoomItem(
     icon: Painter,
     text: String,
     status: LessonStatus,
-    progress: Double,
+    progress: Float,
     onClick: () -> Unit
 ) {
     val enabled = status != LessonStatus.LOCKED
@@ -83,7 +83,7 @@ fun LessonRoomItem(
             when (status) {
                 LessonStatus.IN_PROGRESS -> {
                     CircularProgressIndicator(
-                        progress = { progress.toFloat() / 100 },
+                        progress = { progress },
                         modifier = Modifier.size(22.dp),
                         color = MaterialTheme.colorScheme.primary,
                         trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),

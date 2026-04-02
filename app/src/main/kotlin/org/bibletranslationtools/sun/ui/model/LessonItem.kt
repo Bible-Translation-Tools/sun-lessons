@@ -1,31 +1,71 @@
 package org.bibletranslationtools.sun.ui.model
 
-import org.bibletranslationtools.sun.data.model.CardEntity
-import org.bibletranslationtools.sun.data.model.LessonEntity
-import org.bibletranslationtools.sun.data.model.LessonWithData
-import org.bibletranslationtools.sun.data.model.SentenceEntity
-import java.util.Objects
+import kotlinx.datetime.LocalDateTime
+
+const val SYSTEM_USER = "system"
+
+enum class DownloadStatus {
+    DOWNLOAD,
+    UPDATE,
+    DONE
+}
+
+data class UniqueId(
+    val book: String?,
+    val chapter: Int?,
+    val verse: Int?,
+    val sort: Int,
+    val author: String
+)
 
 data class LessonItem(
-    val lesson: LessonEntity,
-    val cards: List<CardEntity>,
-    val sentences: List<SentenceEntity>,
-    val isAvailable: Boolean,
-    val isSelected: Boolean
+    val book: BookItem?,
+    val chapter: Int?,
+    val verse: Int?,
+    val sort: Int,
+    val author: String,
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime,
+    val downloadStatus: DownloadStatus = DownloadStatus.DONE,
+    val downloadProgress: Float = -1f,
+    val cards: List<CardItem> = emptyList(),
+    val sentences: List<SentenceItem> = emptyList(),
+    val isAvailable: Boolean = false,
+    val isSelected: Boolean = false,
+    val name: String = "default",
+    val id: Long = 0
 ) {
+    val uniqueId = UniqueId(
+        book = book?.slug,
+        chapter = chapter,
+        verse = verse,
+        sort = sort,
+        author = author
+    )
+
+    val groupId = GroupId(
+        book = book?.slug,
+        chapter = chapter,
+        verse = verse,
+        author = author
+    )
+
+    val isScripture = groupId.isScripture
+    val fingerprint = "$name|$sort|$author"
+
     val cardsLearned get() = cards.count { it.learned }
-    val cardsLearnedProgress get() = cardsLearned.toDouble() / cards.size * 100
+    val cardsLearnedProgress get() = cardsLearned.toFloat() / cards.size
 
     val cardsTested get() = cards.count { it.tested }
-    val cardsTestedProgress get() = cardsTested.toDouble() / cards.size * 100
+    val cardsTestedProgress get() = cardsTested.toFloat() / cards.size
 
     val sentencesLearned get() = sentences.count { it.learned }
     val sentencesLearnedProgress get() = run {
         // If there are no sentences, return 100% progress
         if (sentences.isNotEmpty()) {
-            sentencesLearned.toDouble() / sentences.size * 100
+            sentencesLearned.toFloat() / sentences.size
         } else {
-            100.0
+            1f
         }
     }
 
@@ -33,41 +73,17 @@ data class LessonItem(
     val sentencesTestedProgress get() = run {
         // If there are no sentences, return 100% progress
         if (sentences.isNotEmpty()) {
-            sentencesTested.toDouble() / sentences.size * 100
+            sentencesTested.toFloat() / sentences.size
         } else {
-            100.0
+            1f
         }
     }
 
-    val totalProgress: Double
+    val totalProgress: Float
         get() {
             // Size times 2, because we have learned and tested cards/sentences
             val total = (cards.size * 2) + (sentences.size * 2)
             val completed = cardsLearned + cardsTested + sentencesLearned + sentencesTested
-            return (completed.toDouble() / total) * 100
+            return if (total > 0) (completed.toFloat() / total) else 0f
         }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || javaClass != other.javaClass) return false
-        val lessonItem = other as LessonItem
-        return lesson == lessonItem.lesson &&
-                totalProgress == lessonItem.totalProgress &&
-                isAvailable == lessonItem.isAvailable &&
-                isSelected == lessonItem.isSelected
-    }
-
-    override fun hashCode(): Int {
-        return Objects.hash(lesson, totalProgress, isAvailable, isSelected)
-    }
-}
-
-fun LessonWithData.toItem(): LessonItem {
-    return LessonItem(
-        lesson = lesson,
-        cards = cards,
-        sentences = sentences,
-        isAvailable = false,
-        isSelected = false
-    )
 }

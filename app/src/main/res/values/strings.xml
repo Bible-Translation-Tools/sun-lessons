@@ -12,9 +12,8 @@
     <string name="learn_sentences">Learn Sentences</string>
     <string name="learn_sentences_completed">Learn Sentences Completed!</string>
     <string name="test_sentences">Test Sentences</string>
-    <string name="lesson_completed">Lesson %1$d Completed!</string>
+    <string name="lesson_completed">%1$s Completed!</string>
     <string name="lesson_name">Lesson %1$d</string>
-    <string name="unknown" translatable="false">example</string>
     <string name="sun_example_sentence" translatable="false">\uE000\uE000\uE000\uE000</string>
     <string name="sun_example_symbol" translatable="false">\uE000</string>
     <string name="tally_example" translatable="false">5</string>
@@ -38,4 +37,20 @@
     <string name="start_lesson">Start</string>
     <string name="continue_lesson">Continue</string>
     <string name="initialization">Loading lessons…</string>
+    <string name="downloads">Downloads</string>
+    <string name="check_updates">Check for Updates</string>
+    <string name="search_book_name">Book name or identifier</string>
+    <string name="search_verse_username">Verse or username</string>
+    <string name="old_testament">Old Testament</string>
+    <string name="new_testament">New Testament</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="internet_usage">Internet Data Usage</string>
+    <string name="internet_usage_hint">Your download will use internet data.</string>
+    <string name="confirm_download">Do you wish to continue downloading?</string>
+    <string name="download">Download</string>
+    <string name="updates">Updates</string>
+    <string name="delete">Delete</string>
+    <string name="delete_lesson_warning">You are deleting a lesson.</string>
+    <string name="delete_lesson_continue">Would you like to continue deleting?</string>
 </resources>

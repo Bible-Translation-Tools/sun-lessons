@@ -1,0 +1,140 @@
+package org.bibletranslationtools.sun.ui.components.settings
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.RestartAlt
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.SystemUpdateAlt
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import org.bibletranslationtools.sun.R
+import org.bibletranslationtools.sun.ui.control.ConfirmDialog
+import org.bibletranslationtools.sun.ui.control.TopAppBar
+import org.bibletranslationtools.sun.ui.control.settings.DownloadCard
+
+@Composable
+fun DownloadLessonsScreen(component: DownloadLessonsComponent) {
+
+    val model by component.model.subscribeAsState()
+
+    var searchQuery by rememberSaveable { mutableStateOf("") }
+    var filteredLessons by remember { mutableStateOf(model.lessons) }
+
+    val (headerIcon, headerText) = if (model.groupId == null) {
+        Icons.Default.RestartAlt to stringResource(R.string.updates)
+    } else {
+        Icons.Default.SystemUpdateAlt to stringResource(R.string.downloads)
+    }
+
+    LaunchedEffect(searchQuery, model.lessons) {
+        filteredLessons = model.lessons.filter { lesson ->
+            lesson.verse.toString().contains(searchQuery, ignoreCase = true)
+                    || lesson.author.contains(searchQuery, ignoreCase = true)
+        }
+    }
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        TopAppBar(onBackClick = component::onBackClick) {
+            Spacer(modifier = Modifier.weight(1f))
+            Icon(
+                imageVector = headerIcon,
+                contentDescription = headerText
+            )
+            Text(
+                text = headerText,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        Column(modifier = Modifier.weight(1f)) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier.padding(16.dp)
+            ) {
+                OutlinedTextField(
+                    value = searchQuery,
+                    onValueChange = { searchQuery = it },
+                    placeholder = {
+                        Text(stringResource(R.string.search_verse_username))
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = "search"
+                        )
+                    },
+                    trailingIcon = {
+                        if (searchQuery.isNotEmpty()) {
+                            IconButton(onClick = { searchQuery = "" }) {
+                                Icon(
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = "clear"
+                                )
+                            }
+                        }
+                    },
+                    shape = MaterialTheme.shapes.medium,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                model.downloadName?.let {
+                    Text(
+                        text = it,
+                        fontSize = 28.sp
+                    )
+                }
+
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(filteredLessons, key = { it.fingerprint }) { lesson ->
+                        DownloadCard(
+                            lesson = lesson,
+                            onClick = {
+                                component.onLessonSelected(lesson)
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
+            }
+        }
+
+        model.selectedLesson?.let { filteredLessons ->
+            ConfirmDialog(
+                onDismiss = component::dismissSelectedLesson,
+                onCancel = component::dismissSelectedLesson,
+                onConfirm = component::onDownloadLessonClick,
+                title = stringResource(R.string.internet_usage),
+                message = "${stringResource(R.string.internet_usage_hint)}\n" +
+                        stringResource(R.string.confirm_download),
+                confirmButtonText = stringResource(R.string.download)
+            )
+        }
+    }
+}

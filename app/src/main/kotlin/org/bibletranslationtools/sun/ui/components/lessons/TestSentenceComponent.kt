@@ -8,18 +8,19 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import org.bibletranslationtools.sun.data.model.SettingEntity
+import org.bibletranslationtools.sun.data.entity.SettingEntity
 import org.bibletranslationtools.sun.data.repositories.CardRepository
+import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.data.repositories.SentenceRepository
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
 import org.bibletranslationtools.sun.ui.model.CardItem
+import org.bibletranslationtools.sun.ui.model.DataMapper
+import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.ui.model.LessonMode
 import org.bibletranslationtools.sun.ui.model.SentenceItem
 import org.bibletranslationtools.sun.ui.model.SymbolItem
-import org.bibletranslationtools.sun.ui.model.toEntity
-import org.bibletranslationtools.sun.ui.model.toItem
 import org.bibletranslationtools.sun.utils.Section
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -29,7 +30,7 @@ interface TestSentenceComponent : ParentContext {
     val model: Value<Model>
 
     data class Model(
-        val lessonId: Int = 1,
+        val lesson: LessonItem? = null,
         val currentSentence: SentenceItem? = null,
         val sentences: List<SentenceItem> = emptyList(),
         val cards: List<CardItem> = emptyList(),
@@ -50,10 +51,12 @@ interface TestSentenceComponent : ParentContext {
 class DefaultTestSentenceComponent(
     componentContext: ComponentContext,
     parentContext: ParentContext,
-    private val lessonId: Int,
-    private val onFinishSection: (Int, Section) -> Unit
+    private val lessonId: Long,
+    private val onFinishSection: (Long, Section) -> Unit
 ) : TestSentenceComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
+    private val dataMapper: DataMapper by inject()
+    private val lessonRepository: LessonRepository by inject()
     private val sentenceRepository: SentenceRepository by inject()
     private val cardsRepository: CardRepository by inject()
     private val settingsRepository: SettingsRepository by inject()
@@ -66,23 +69,38 @@ class DefaultTestSentenceComponent(
     private var lastAnswerPosition = -1
 
     init {
-        _model.update { it.copy(lessonId = lessonId) }
-
-        initialize()
+        componentScope.launch {
+            initialize()
+        }
     }
 
-    private fun initialize() {
-        componentScope.launch {
-            val sentences = sentenceRepository.getAllWithSymbols(lessonId).map {
-                it.sentence.toItem().copy(symbols = it.symbols.map { symbol -> symbol.toItem() })
-            }
-            val cards = cardsRepository.getByLesson(lessonId).map { it.toItem() }
+    private suspend fun initialize() {
+        val lesson = lessonRepository.get(lessonId)?.let(dataMapper::toItem)
 
-            _model.update { it.copy(sentences = sentences, cards = cards) }
-
-            initializeLessonMode()
-            setNextSentence()
+        val sentences = sentenceRepository.getAllWithSymbols(lessonId).map {
+            it.sentence.let(dataMapper::toItem).copy(
+                symbols = it.symbols.map(dataMapper::toItem)
+            )
         }
+        val cards = cardsRepository.getByLesson(lessonId).map(dataMapper::toItem)
+
+        val allSentencesCount = sentenceRepository.getByLessonCount(lessonId)
+        val testedSentencesCount = sentenceRepository.getTestedByLessonCount(lessonId)
+        val mode = if (allSentencesCount > 0 && allSentencesCount == testedSentencesCount) {
+            LessonMode.REPEAT
+        } else {
+            LessonMode.NORMAL
+        }
+
+        _model.update {
+            it.copy(
+                lesson = lesson,
+                sentences = sentences,
+                cards = cards,
+                mode = mode
+            )
+        }
+        setNextSentence()
     }
 
     override fun setNextSentence() {
@@ -105,7 +123,7 @@ class DefaultTestSentenceComponent(
         val options = buildOptions(correctSymbols)
         val answerSlots = correctSymbols.map { it.copy(name = "") }
 
-        val imageUri = "file:///android_asset/images/sentences/${correctSentence.correct}"
+        val imageUri = correctSentence.image ?: "file:///android_asset/images/sentences/0.jpg"
 
         _model.update {
             it.copy(
@@ -189,12 +207,12 @@ class DefaultTestSentenceComponent(
 
         val cardSymbols = model.value.cards.map {
             SymbolItem(
-                0,
-                it.symbol,
-                0,
-                null,
+                name = it.symbol,
+                sort = 0,
+                sentenceId = 0,
                 selected = false,
-                correct = false
+                correct = false,
+                id = 0,
             )
         }
         val sentenceSymbols = model.value.sentences.flatMap { it.symbols }
@@ -214,24 +232,18 @@ class DefaultTestSentenceComponent(
     }
 
     private suspend fun updateSentence(sentence: SentenceItem) {
-        sentenceRepository.update(sentence.toEntity())
+        val lesson = model.value.lesson ?: return
+        sentenceRepository.update(sentence.let(dataMapper::toEntity))
 
-        val lastSection = SettingEntity(SettingEntity.LAST_SECTION, Section.TEST_SYMBOLS.id)
-        val lastLesson = SettingEntity(SettingEntity.LAST_LESSON, lessonId.toString())
+        val lastSection = SettingEntity(
+            SettingEntity.lastSection(lesson.groupId.id),
+            Section.TEST_SENTENCES.id
+        )
+        val lastLesson = SettingEntity(
+            SettingEntity.lastLesson(lesson.groupId.id),
+            lessonId.toString()
+        )
         settingsRepository.insertOrUpdate(lastSection)
         settingsRepository.insertOrUpdate(lastLesson)
-    }
-
-    private suspend fun initializeLessonMode() {
-        val all = sentenceRepository.getByLessonCount(lessonId)
-        val done = sentenceRepository.getTestedByLessonCount(lessonId)
-
-        val mode = if (all == done) {
-            LessonMode.REPEAT
-        } else {
-            LessonMode.NORMAL
-        }
-
-        _model.update { it.copy(mode = mode) }
     }
 }

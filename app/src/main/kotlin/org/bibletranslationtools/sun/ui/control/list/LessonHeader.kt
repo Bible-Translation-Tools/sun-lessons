@@ -18,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -36,8 +35,8 @@ fun LessonHeader(
 ) {
 
     val status = when {
-        lesson.isAvailable && lesson.totalProgress == 100.0 -> LessonStatus.COMPLETED
-        lesson.isAvailable && lesson.totalProgress < 100.0 -> LessonStatus.IN_PROGRESS
+        lesson.isAvailable && lesson.totalProgress == 1f -> LessonStatus.COMPLETED
+        lesson.isAvailable && lesson.totalProgress < 1f -> LessonStatus.IN_PROGRESS
         else -> LessonStatus.LOCKED
     }
 
@@ -57,7 +56,7 @@ fun LessonHeader(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = stringResource(R.string.lesson_name, lesson.lesson.id),
+                text = lesson.name,
                 fontSize = 24.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -67,7 +66,7 @@ fun LessonHeader(
                 } else MaterialTheme.colorScheme.onBackground
             )
             Text(
-                text = TallyMarkConverter.toText(lesson.lesson.id),
+                text = TallyMarkConverter.toText(lesson.sort),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = tallyFontFamily(),
@@ -85,7 +84,7 @@ fun LessonHeader(
                 when (status) {
                     LessonStatus.IN_PROGRESS -> {
                         CircularProgressIndicator(
-                            progress = { lesson.totalProgress.toFloat() / 100 },
+                            progress = { lesson.totalProgress },
                             modifier = Modifier.size(24.dp),
                             color = MaterialTheme.colorScheme.primary,
                             trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),

@@ -1,9 +1,7 @@
 package org.bibletranslationtools.sun.ui.components.lessons
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,12 +11,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -31,16 +28,17 @@ import org.bibletranslationtools.sun.ui.control.TopAppBar
 import org.bibletranslationtools.sun.ui.control.list.LessonCard
 
 @Composable
-fun ListScreen(component: ListComponent, parentPadding: PaddingValues) {
+fun ListScreen(component: ListComponent) {
     val model by component.model.subscribeAsState()
 
-    var expandedLessonId by rememberSaveable {
-        mutableIntStateOf(model.selectedId)
+    var expandedLessonId by remember(model.selectedId) {
+        mutableLongStateOf(model.selectedId)
     }
 
-    val (topIcon, topText) = when (model.lessonType) {
-        LessonType.BASIC -> R.drawable.home to R.string.home
-        LessonType.SCRIPTURE -> R.drawable.book to R.string.lessons
+    val (topIcon, topText) = if (model.groupId?.isScripture != true) {
+        R.drawable.home to R.string.home
+    } else {
+        R.drawable.book to R.string.lessons
     }
 
     val continueLessonText = if (model.nextState == SectionState.NOT_STARTED) {
@@ -49,39 +47,32 @@ fun ListScreen(component: ListComponent, parentPadding: PaddingValues) {
         stringResource(R.string.continue_lesson)
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                onBackClick = if (model.lessonType == LessonType.SCRIPTURE) {
-                    component::onBackClick
-                } else null
-            ) {
-                if (model.lessonType == LessonType.SCRIPTURE) {
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-                Icon(
-                    painter = painterResource(topIcon),
-                    contentDescription = "Lessons"
-                )
-                Text(
-                    text = stringResource(topText),
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        },
-        modifier = Modifier.padding(parentPadding),
-        containerColor = MaterialTheme.colorScheme.surface,
-        contentWindowInsets = WindowInsets()
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier.fillMaxSize()
-                .padding(innerPadding)
+    Column(modifier = Modifier.fillMaxSize()) {
+        TopAppBar(
+            onBackClick = if (model.groupId?.isScripture == true) {
+                component::onBackClick
+            } else null
         ) {
+            if (model.groupId?.isScripture == true) {
+                Spacer(modifier = Modifier.weight(1f))
+            }
+            Icon(
+                painter = painterResource(topIcon),
+                contentDescription = "Lessons"
+            )
+            Text(
+                text = stringResource(topText),
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        Column(modifier = Modifier.weight(1f)) {
             Column(
                 modifier = Modifier.fillMaxSize()
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
                 Button(
+                    enabled = model.lessons.isNotEmpty(),
                     onClick = component::onLearnClicked,
                     shape = MaterialTheme.shapes.medium,
                     colors = ButtonDefaults.buttonColors(
@@ -96,14 +87,14 @@ fun ListScreen(component: ListComponent, parentPadding: PaddingValues) {
                     items(model.lessons) { lesson ->
                         LessonCard(
                             lesson = lesson,
-                            isExpanded = lesson.lesson.id == expandedLessonId,
+                            isExpanded = lesson.id == expandedLessonId,
                             onClick = {
-                                expandedLessonId = if (expandedLessonId != lesson.lesson.id) {
-                                    lesson.lesson.id
+                                expandedLessonId = if (expandedLessonId != lesson.id) {
+                                    lesson.id
                                 } else 0
                             },
                             onAction = {
-                                component.onLessonAction(lesson.lesson.id, it)
+                                component.onLessonAction(lesson.id, it)
                             }
                         )
                     }

@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -37,7 +38,10 @@ fun SplashScreen(component: SplashComponent) {
             contentAlignment = Alignment.Center
         ) {
             Column(
-                verticalArrangement = Arrangement.Center,
+                verticalArrangement = Arrangement.spacedBy(
+                    32.dp,
+                    Alignment.CenterVertically
+                ),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxSize()
                     .background(
@@ -50,10 +54,11 @@ fun SplashScreen(component: SplashComponent) {
                     )
             ) {
                 Image(
-                    painter = painterResource(R.drawable.ic_launcher_foreground),
+                    painter = painterResource(R.drawable.sun_logo),
                     contentDescription = "logo",
                     contentScale = ContentScale.FillWidth,
-                    modifier = Modifier.width(200.dp)
+                    modifier = Modifier.width(200.dp),
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
                 )
                 Text(
                     text = stringResource(R.string.initialization),

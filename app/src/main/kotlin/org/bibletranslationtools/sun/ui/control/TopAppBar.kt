@@ -25,21 +25,22 @@ fun TopAppBar(
     content: @Composable RowScope.() -> Unit = {}
 ) {
     TopAppBar(
+        navigationIcon = {
+            if (onBackClick != null) {
+                IconButton(onClick = onBackClick) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back"
+                    )
+                }
+            }
+        },
         title = {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
-                modifier = Modifier.padding(end = 8.dp)
+                modifier = Modifier.padding(end = 16.dp)
             ) {
-                if (onBackClick != null) {
-                    IconButton(onClick = onBackClick) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
-                    }
-                }
-
                 content()
             }
         },

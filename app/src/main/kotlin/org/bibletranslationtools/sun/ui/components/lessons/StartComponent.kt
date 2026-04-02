@@ -9,9 +9,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.bibletranslationtools.sun.R
+import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.data.repositories.SentenceRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
+import org.bibletranslationtools.sun.ui.model.DataMapper
+import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.utils.Section
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -21,9 +24,9 @@ interface StartComponent : ParentContext {
     val model: Value<Model>
 
     data class Model(
-        val lessonId: Int = 0,
-        val sectionTitle: Int = 0,
-        val imageResource: Int = 0,
+        val lesson: LessonItem? = null,
+        val sectionTitle: Int = R.string.learn_symbols,
+        val imageResource: Int = R.drawable.learn,
         val onNext: () -> Unit = {}
     )
 
@@ -33,12 +36,14 @@ interface StartComponent : ParentContext {
 class DefaultStartComponent(
     componentContext: ComponentContext,
     parentContext: ParentContext,
-    private val lessonId: Int,
+    private val lessonId: Long,
     private val section: Section,
-    private val onFinishLesson: (Int, Section) -> Unit,
+    private val onFinishLesson: (Long, Section) -> Unit,
     private val onNextSection: (LessonsComponent.Intent) -> Unit
 ) : StartComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
+    private val dataMapper: DataMapper by inject()
+    private val lessonRepository: LessonRepository by inject()
     private val sentenceRepository: SentenceRepository by inject()
 
     private val componentScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
@@ -47,32 +52,25 @@ class DefaultStartComponent(
     override val model: Value<StartComponent.Model> = _model
 
     init {
-        _model.update { it.copy(lessonId = lessonId) }
-
         componentScope.launch {
-            if ((section == Section.LEARN_SENTENCES || section == Section.TEST_SENTENCES) &&
-                sentencesByLessonCount(lessonId) == 0
-            ) {
-                finishLesson()
-                return@launch
+            val lesson = lessonRepository.get(lessonId)
+            val sentenceCount = sentenceRepository.getByLessonCount(lessonId)
+            _model.update { it.copy(lesson = lesson?.let(dataMapper::toItem)) }
+
+            val shouldSkipSection = (section == Section.LEARN_SENTENCES
+                    || section == Section.TEST_SENTENCES)
+                    && sentenceCount == 0
+
+            if (shouldSkipSection) {
+                onFinishLesson(lessonId, Section.TEST_SENTENCES)
+            } else {
+                setupNextAction()
             }
         }
-
-        setupNextAction()
     }
 
     override fun onNextClicked() {
         _model.value.onNext()
-    }
-
-    suspend fun sentencesByLessonCount(lessonId: Int): Int {
-        return sentenceRepository.getByLessonCount(lessonId)
-    }
-
-    private suspend fun finishLesson() {
-        if (sentencesByLessonCount(lessonId) == 0) {
-            onFinishLesson(lessonId, Section.TEST_SENTENCES)
-        }
     }
 
     private fun setupNextAction() {

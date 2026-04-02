@@ -1,7 +1,14 @@
 package org.bibletranslationtools.sun.utils
 
-import android.content.Intent
-import android.os.Bundle
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atTime
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
+import org.bibletranslationtools.sun.utils.Utils.getCurrentTime
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 enum class Section(val id: String) {
     LEARN_SYMBOLS("learn_symbols"),
@@ -16,20 +23,34 @@ enum class Section(val id: String) {
     }
 }
 
-enum class AnswerType {
-    OPTION,
-    ANSWER,
-    RESULT
+@OptIn(ExperimentalTime::class)
+fun Long.toLocalDateTime(): LocalDateTime {
+    val timeZone = TimeZone.currentSystemDefault()
+    val instant = Instant.fromEpochSeconds(this)
+    return instant.toLocalDateTime(timeZone)
 }
 
-inline fun <reified T : Enum<T>> Bundle.getEnum(key: String, default: T) =
-    getInt(key).let { if (it >= 0) enumValues<T>()[it] else default }
+@OptIn(ExperimentalTime::class)
+fun LocalDateTime.toTimestamp(): Long {
+    val timeZone = TimeZone.currentSystemDefault()
+    return this.toInstant(timeZone).epochSeconds
+}
 
-fun <T : Enum<T>> Bundle.putEnum(key: String, value: T) =
-    putInt(key, value.ordinal)
+@OptIn(ExperimentalTime::class)
+fun String.toLocalDateTime(): LocalDateTime {
+    runCatching {
+        val instant = Instant.parse(this)
+        return instant.toLocalDateTime(TimeZone.UTC)
+    }
 
-inline fun <reified T : Enum<T>> Intent.getEnumExtra(key: String, default: T) =
-    getIntExtra(key, default.ordinal).let { enumValues<T>()[it] }
+    runCatching {
+        return LocalDateTime.parse(this)
+    }
 
-fun <T : Enum<T>> Intent.putEnumExtra(key: String, value: T) =
-    putExtra(key, value.ordinal)
+    runCatching {
+        val date = LocalDate.parse(this)
+        return date.atTime(0, 0)
+    }
+
+    return getCurrentTime()
+}

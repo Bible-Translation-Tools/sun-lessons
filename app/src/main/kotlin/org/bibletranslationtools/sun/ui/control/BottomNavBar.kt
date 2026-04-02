@@ -10,18 +10,21 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import org.bibletranslationtools.sun.ui.components.RootComponent
+import org.bibletranslationtools.sun.ui.components.main.MainComponent
 import org.bibletranslationtools.sun.ui.navigation.MainTab
 
 @Composable
-fun BottomNavBar(currentTab: RootComponent.Child, onTabSelected: (MainTab) -> Unit) {
+fun BottomNavBar(
+    currentTab: MainComponent.Child,
+    onTabSelected: (MainTab) -> Unit
+) {
     val tabs = MainTab.entries
     val borderColor = MaterialTheme.colorScheme.outlineVariant
 
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surface,
         modifier = Modifier
-            .height(80.dp)
+            .height(60.dp)
             .drawBehind {
                 val strokeWidth = 1.dp.toPx()
                 drawLine(
@@ -34,11 +37,11 @@ fun BottomNavBar(currentTab: RootComponent.Child, onTabSelected: (MainTab) -> Un
     ) {
         tabs.forEach { tab ->
             val isSelected = when (currentTab) {
-                is RootComponent.Child.Home -> tab == MainTab.Home
-                is RootComponent.Child.Progress -> tab == MainTab.Progress
-                is RootComponent.Child.Lessons -> tab == MainTab.Lessons
-                is RootComponent.Child.Settings -> tab == MainTab.Settings
-                else -> false
+                is MainComponent.Child.Home -> tab == MainTab.Home
+                is MainComponent.Child.Progress -> tab == MainTab.Progress
+                is MainComponent.Child.Lessons,
+                is MainComponent.Child.ScriptureLessons -> tab == MainTab.Lessons
+                is MainComponent.Child.Settings -> tab == MainTab.Settings
             }
             NavigationItem(
                 label = stringResource(tab.title),

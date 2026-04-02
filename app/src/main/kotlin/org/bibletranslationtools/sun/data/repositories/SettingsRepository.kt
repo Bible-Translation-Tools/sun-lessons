@@ -1,7 +1,7 @@
 package org.bibletranslationtools.sun.data.repositories
 
 import org.bibletranslationtools.sun.data.dao.SettingsDao
-import org.bibletranslationtools.sun.data.model.SettingEntity
+import org.bibletranslationtools.sun.data.entity.SettingEntity
 
 interface SettingsRepository {
     suspend fun insert(setting: SettingEntity)

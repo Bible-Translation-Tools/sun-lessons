@@ -5,7 +5,7 @@ object TallyMarkConverter {
         var text = ""
         val fivesCount = number / 5
 
-        for (i in 1..fivesCount) {
+        repeat(fivesCount) {
             text += "5"
         }
 

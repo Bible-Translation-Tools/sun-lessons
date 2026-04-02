@@ -1,11 +1,10 @@
 package org.bibletranslationtools.sun.ui.components.lessons
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,8 +15,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,12 +26,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import kotlinx.coroutines.launch
-import org.bibletranslationtools.sun.R
 import org.bibletranslationtools.sun.ui.control.TallyText
 import org.bibletranslationtools.sun.ui.control.TopAppBar
 import org.bibletranslationtools.sun.ui.control.learn.PagerIndicator
@@ -43,7 +38,7 @@ import org.bibletranslationtools.sun.ui.control.learn.SymbolPage
 import org.bibletranslationtools.sun.ui.model.LessonMode
 
 @Composable
-fun LearnSymbolScreen(component: LearnSymbolComponent, parentPadding: PaddingValues) {
+fun LearnSymbolScreen(component: LearnSymbolComponent) {
 
     val model by component.model.subscribeAsState()
 
@@ -75,30 +70,22 @@ fun LearnSymbolScreen(component: LearnSymbolComponent, parentPadding: PaddingVal
         }
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(onBackClick = component::onBackClick) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(
-                        text = stringResource(R.string.lesson_name, model.lessonId),
-                        fontWeight = FontWeight.Bold
-                    )
-                    TallyText(model.lessonId)
-                }
+    Column(modifier = Modifier.fillMaxSize()) {
+        TopAppBar(onBackClick = component::onBackClick) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = model.lesson?.name ?: "error",
+                    fontWeight = FontWeight.Bold
+                )
+                TallyText(model.lesson?.sort ?: 0)
             }
-        },
-        modifier = Modifier.padding(parentPadding),
-        containerColor = MaterialTheme.colorScheme.surface,
-        contentWindowInsets = WindowInsets()
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier.fillMaxSize()
-                .padding(innerPadding)
-        ) {
+        }
+
+        Column(modifier = Modifier.weight(1f)) {
             Column(
                 modifier = Modifier.fillMaxSize()
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
@@ -109,6 +96,7 @@ fun LearnSymbolScreen(component: LearnSymbolComponent, parentPadding: PaddingVal
                         .weight(1f)
                         .padding(top = 20.dp)
                         .graphicsLayer { clip = false },
+                    horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     if (pagerState.currentPage > 0) {
@@ -131,13 +119,18 @@ fun LearnSymbolScreen(component: LearnSymbolComponent, parentPadding: PaddingVal
                             .weight(1f)
                             .height(400.dp)
                     ) { pageIndex ->
-                        SymbolPage(
-                            card = model.cards[pageIndex],
-                            onFrontFlipped = {
-                                component.onCardFlipped(it)
-                                nextEnabled = true
-                            }
-                        )
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            SymbolPage(
+                                card = model.cards[pageIndex],
+                                onFrontFlipped = {
+                                    component.onCardFlipped(it)
+                                    nextEnabled = true
+                                }
+                            )
+                        }
                     }
 
                     PagerNavButton(

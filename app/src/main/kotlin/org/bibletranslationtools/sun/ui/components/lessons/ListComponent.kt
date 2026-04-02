@@ -4,19 +4,22 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.update
+import com.arkivanov.essenty.lifecycle.doOnResume
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import org.bibletranslationtools.sun.data.entity.SettingEntity
 import org.bibletranslationtools.sun.data.repositories.CardRepository
 import org.bibletranslationtools.sun.data.repositories.LessonRepository
 import org.bibletranslationtools.sun.data.repositories.SentenceRepository
 import org.bibletranslationtools.sun.data.repositories.SettingsRepository
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
+import org.bibletranslationtools.sun.ui.model.DataMapper
+import org.bibletranslationtools.sun.ui.model.GroupId
 import org.bibletranslationtools.sun.ui.model.LessonItem
 import org.bibletranslationtools.sun.ui.model.LessonMode
-import org.bibletranslationtools.sun.ui.model.toItem
 import org.bibletranslationtools.sun.utils.Section
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -27,25 +30,26 @@ interface ListComponent : ParentContext {
 
     data class Model(
         val lessons: List<LessonItem> = emptyList(),
-        val selectedId: Int = 1,
-        val nextLessonId: Int = 1,
+        val selectedId: Long = 1,
+        val nextLessonId: Long = 1,
         val nextSection: Section = Section.LEARN_SYMBOLS,
         val nextState: SectionState = SectionState.NOT_STARTED,
-        val lessonType: LessonType = LessonType.BASIC
+        val groupId: GroupId? = null
     )
 
     fun onLearnClicked()
-    fun onLessonAction(lessonId: Int, action: Section)
+    fun onLessonAction(lessonId: Long, action: Section)
 }
 
 class DefaultListComponent(
     componentContext: ComponentContext,
     parentContext: ParentContext,
-    private val lessonType: LessonType,
-    private val onContinueLesson: (Int, Section, SectionState) -> Unit,
-    private val onStartLesson: (Int, Section, LessonMode) -> Unit
+    private val groupId: GroupId,
+    private val onContinueLesson: (Long, Section, SectionState) -> Unit,
+    private val onStartLesson: (Long, Section, LessonMode) -> Unit
 ) : ListComponent, KoinComponent, AppComponent(componentContext, parentContext) {
 
+    private val dataMapper: DataMapper by inject()
     private val settingsRepository: SettingsRepository by inject()
     private val lessonRepository: LessonRepository by inject()
     private val cardRepository: CardRepository by inject()
@@ -57,12 +61,14 @@ class DefaultListComponent(
     override val model: Value<ListComponent.Model> = _model
 
     init {
-        _model.update { it.copy(lessonType = lessonType) }
+        _model.update { it.copy(groupId = groupId) }
 
-        componentScope.launch {
-            defineNextSection()
-            loadLessons()
-            setSelectedLesson()
+        doOnResume {
+            componentScope.launch {
+                loadLessons()
+                setSelectedLesson()
+                defineNextSection()
+            }
         }
     }
 
@@ -74,39 +80,55 @@ class DefaultListComponent(
         )
     }
 
-    override fun onLessonAction(lessonId: Int, action: Section) {
+    override fun onLessonAction(lessonId: Long, action: Section) {
         onStartLesson(lessonId, action, LessonMode.REPEAT)
     }
 
     private suspend fun loadLessons() {
-        val lessons = lessonRepository.getAllWithData().map { it.toItem() }
+        val lessons = lessonRepository.getGroupWithData(groupId)
+            .map(dataMapper::toItem)
+
         _model.update {
             it.copy(lessons = lessons.mapIndexed { index, lesson ->
                 lesson.copy(
                     isAvailable = lessonAvailable(lessons, index),
-                    isSelected = lesson.lesson.id == model.value.selectedId
+                    isSelected = lesson.id == model.value.selectedId
                 )
             })
         }
     }
 
     private suspend fun setSelectedLesson() {
-        val lastLesson = settingsRepository.get("last_lesson")?.value?.toInt() ?: 1
+        val defaultLesson = model.value.lessons.firstOrNull()
+        val defaultId = defaultLesson?.id ?: 1
+        val defaultGroupId = defaultLesson?.groupId?.id ?: "0"
+        val lastLesson = settingsRepository
+            .get(SettingEntity.lastLesson(defaultGroupId))
+            ?.value
+            ?.toLong() ?: defaultId
         _model.update { it.copy(selectedId = lastLesson) }
     }
 
     private fun lessonAvailable(lessons: List<LessonItem>, position: Int): Boolean {
         if (position == 0) return true
         val prevLesson = lessons[position - 1]
-        return prevLesson.totalProgress == 100.0
+        return prevLesson.totalProgress == 1f
     }
 
     private suspend fun defineNextSection() {
+        val defaultLesson = model.value.lessons.firstOrNull()
+        val defaultId = defaultLesson?.id ?: 1
+        val defaultGroupId = defaultLesson?.groupId?.id ?: "0"
+
         val lastSection = settingsRepository
-            .get("last_section")
+            .get(SettingEntity.lastSection(defaultGroupId))
             ?.value
             ?.let { Section.of(it) } ?: Section.LEARN_SYMBOLS
-        val lastLesson = settingsRepository.get("last_lesson")?.value?.toInt() ?: 1
+
+        val lastLesson = settingsRepository
+            .get(SettingEntity.lastLesson(defaultGroupId))
+            ?.value
+            ?.toLong() ?: defaultId
 
         val all: Int
         val done: Int
@@ -116,14 +138,17 @@ class DefaultListComponent(
                 all = cardRepository.getByLessonCount(lastLesson)
                 done = cardRepository.getLearnedByLessonCount(lastLesson)
             }
+
             Section.TEST_SYMBOLS -> {
                 all = cardRepository.getByLessonCount(lastLesson)
                 done = cardRepository.getTestedByLessonCount(lastLesson)
             }
+
             Section.LEARN_SENTENCES -> {
                 all = sentenceRepository.getByLessonCount(lastLesson)
                 done = sentenceRepository.getLearnedByLessonCount(lastLesson)
             }
+
             else -> {
                 all = sentenceRepository.getByLessonCount(lastLesson)
                 done = sentenceRepository.getTestedByLessonCount(lastLesson)
@@ -138,7 +163,7 @@ class DefaultListComponent(
 
         _model.update {
             it.copy(
-                nextLessonId = lastLesson + 1,
+                nextLessonId = lastLesson,
                 nextSection = lastSection,
                 nextState = sectionState
             )

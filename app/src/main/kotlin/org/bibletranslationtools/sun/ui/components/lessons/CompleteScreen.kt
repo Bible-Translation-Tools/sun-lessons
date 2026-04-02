@@ -3,17 +3,14 @@ package org.bibletranslationtools.sun.ui.components.lessons
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,7 +32,7 @@ import org.bibletranslationtools.sun.ui.control.TopAppBar
 import org.bibletranslationtools.sun.utils.Section
 
 @Composable
-fun CompleteScreen(component: CompleteComponent, parentPadding: PaddingValues) {
+fun CompleteScreen(component: CompleteComponent) {
     val model by component.model.subscribeAsState()
 
     val image = if (model.section == Section.TEST_SENTENCES) {
@@ -44,30 +41,22 @@ fun CompleteScreen(component: CompleteComponent, parentPadding: PaddingValues) {
         R.drawable.track_progress
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(onBackClick = component::onBackClick) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(
-                        text = stringResource(R.string.lesson_name, model.lessonId),
-                        fontWeight = FontWeight.Bold
-                    )
-                    TallyText(model.lessonId)
-                }
+    Column(modifier = Modifier.fillMaxSize()) {
+        TopAppBar(onBackClick = component::onBackClick) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = model.lesson?.name ?: "error",
+                    fontWeight = FontWeight.Bold
+                )
+                TallyText(model.lesson?.sort ?: 0)
             }
-        },
-        modifier = Modifier.padding(parentPadding),
-        containerColor = MaterialTheme.colorScheme.surface,
-        contentWindowInsets = WindowInsets()
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier.fillMaxSize()
-                .padding(innerPadding)
-        ) {
+        }
+
+        Column(modifier = Modifier.weight(1f)) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -91,7 +80,10 @@ fun CompleteScreen(component: CompleteComponent, parentPadding: PaddingValues) {
                     )
 
                     Text(
-                        text = stringResource(model.sectionTitle, model.lessonId),
+                        text = stringResource(
+                            model.sectionTitle,
+                            model.lesson?.name ?: "error"
+                        ),
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.tertiary,
@@ -104,6 +96,8 @@ fun CompleteScreen(component: CompleteComponent, parentPadding: PaddingValues) {
 
                 NextButton(
                     modifier = Modifier
+                        .width(420.dp)
+                        .align(Alignment.CenterHorizontally)
                         .padding(horizontal = 60.dp)
                         .padding(bottom = 50.dp),
                     onClick = component::onNextClicked

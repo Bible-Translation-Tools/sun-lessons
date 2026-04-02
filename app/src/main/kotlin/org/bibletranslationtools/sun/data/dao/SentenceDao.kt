@@ -7,37 +7,43 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import org.bibletranslationtools.sun.data.model.SentenceEntity
-import org.bibletranslationtools.sun.data.model.SentenceWithSymbols
+import org.bibletranslationtools.sun.data.entity.SentenceEntity
+import org.bibletranslationtools.sun.data.entity.SentenceWithSymbols
 
 @Dao
 interface SentenceDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(sentence: SentenceEntity)
+    suspend fun insert(sentence: SentenceEntity): Long
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertAll(sentences: List<SentenceEntity>)
 
     @Delete
     suspend fun delete(sentence: SentenceEntity)
 
+    @Delete
+    suspend fun deleteAll(sentences: List<SentenceEntity>)
+
     @Update
     suspend fun update(sentence: SentenceEntity)
 
-    @Transaction
+    @Update
+    suspend fun updateAll(sentences: List<SentenceEntity>)
+
     @Query("SELECT * FROM sentences WHERE id = :id")
-    suspend fun get(id: String): SentenceEntity?
+    suspend fun get(id: Long): SentenceEntity?
+
+    @Query("SELECT * FROM sentences WHERE lessonId = :lessonId")
+    suspend fun getByLesson(lessonId: Long): List<SentenceEntity>
 
     @Transaction
-    @Query("SELECT * FROM sentences WHERE lesson_id = :lessonId")
-    suspend fun getByLesson(lessonId: Int): List<SentenceEntity>
-
-    @Transaction
-    @Query("SELECT * FROM sentences WHERE lesson_id = :lessonId")
-    suspend fun getByLessonWithSymbols(lessonId: Int): List<SentenceWithSymbols>
+    @Query("SELECT * FROM sentences WHERE lessonId = :lessonId")
+    suspend fun getByLessonWithSymbols(lessonId: Long): List<SentenceWithSymbols>
 
     @Transaction
     @Query("SELECT * FROM sentences WHERE tested = 1")
     suspend fun getAllTestedWithSymbols(): List<SentenceWithSymbols>
 
-    @Transaction
     @Query("SELECT COUNT(*) FROM sentences WHERE tested = 1")
     suspend fun allTestedCount(): Int
 
@@ -45,23 +51,18 @@ interface SentenceDao {
     @Query("SELECT * FROM sentences WHERE learned = 1")
     suspend fun getAllLearnedWithSymbols(): List<SentenceWithSymbols>
 
-    @Transaction
     @Query("SELECT COUNT(*) FROM sentences WHERE learned = 1")
     suspend fun allLearnedCount(): Int
 
-    @Transaction
-    @Query("SELECT * FROM sentences WHERE learned = 1 AND lesson_id = :lessonId")
-    suspend fun getLearnedByLesson(lessonId: Int): List<SentenceEntity>
+    @Query("SELECT * FROM sentences WHERE learned = 1 AND lessonId = :lessonId")
+    suspend fun getLearnedByLesson(lessonId: Long): List<SentenceEntity>
 
-    @Transaction
-    @Query("SELECT COUNT(*) FROM sentences WHERE lesson_id = :lessonId")
-    suspend fun getByLessonCount(lessonId: Int): Int
+    @Query("SELECT COUNT(*) FROM sentences WHERE lessonId = :lessonId")
+    suspend fun getByLessonCount(lessonId: Long): Int
 
-    @Transaction
-    @Query("SELECT COUNT(*) FROM sentences WHERE learned = 1 AND lesson_id = :lessonId")
-    suspend fun getLearnedByLessonCount(lessonId: Int): Int
+    @Query("SELECT COUNT(*) FROM sentences WHERE learned = 1 AND lessonId = :lessonId")
+    suspend fun getLearnedByLessonCount(lessonId: Long): Int
 
-    @Transaction
-    @Query("SELECT COUNT(*) FROM sentences WHERE tested = 1 AND lesson_id = :lessonId")
-    suspend fun getTestedByLessonCount(lessonId: Int): Int
+    @Query("SELECT COUNT(*) FROM sentences WHERE tested = 1 AND lessonId = :lessonId")
+    suspend fun getTestedByLessonCount(lessonId: Long): Int
 }

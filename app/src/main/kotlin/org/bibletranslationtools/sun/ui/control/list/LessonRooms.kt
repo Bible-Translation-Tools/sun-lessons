@@ -19,35 +19,35 @@ fun LessonRooms(
     onAction: (Section) -> Unit
 ) {
     val cardsLearnedProgress = lesson.cardsLearnedProgress
-    val testSymbolsAvailable = cardsLearnedProgress == 100.0
+    val testSymbolsAvailable = cardsLearnedProgress == 1f
     val cardsTestedProgress = lesson.cardsTestedProgress
-    val learnSentencesAvailable = cardsTestedProgress == 100.0
+    val learnSentencesAvailable = cardsTestedProgress == 1f
     val sentencesLearnedProgress = lesson.sentencesLearnedProgress
     val sentencesTestedProgress = lesson.sentencesTestedProgress
-    val testSentencesAvailable = sentencesLearnedProgress == 100.0
+    val testSentencesAvailable = sentencesLearnedProgress == 1f
     val hasSentences = lesson.sentences.isNotEmpty()
 
-    val learnSymbolsStatus = if (cardsLearnedProgress == 100.0) {
+    val learnSymbolsStatus = if (cardsLearnedProgress == 1f) {
         LessonStatus.COMPLETED
     } else LessonStatus.IN_PROGRESS
 
     val testSymbolsStatus = when {
-        testSymbolsAvailable && cardsTestedProgress == 100.0 -> LessonStatus.COMPLETED
-        testSymbolsAvailable && cardsTestedProgress < 100.0 -> LessonStatus.IN_PROGRESS
+        testSymbolsAvailable && cardsTestedProgress == 1f -> LessonStatus.COMPLETED
+        testSymbolsAvailable && cardsTestedProgress < 1f -> LessonStatus.IN_PROGRESS
         else -> LessonStatus.LOCKED
     }
 
     val learnSentencesStatus = when {
         !hasSentences -> null
-        learnSentencesAvailable && sentencesLearnedProgress == 100.0 -> LessonStatus.COMPLETED
-        learnSentencesAvailable && sentencesLearnedProgress < 100.0 -> LessonStatus.IN_PROGRESS
+        learnSentencesAvailable && sentencesLearnedProgress == 1f -> LessonStatus.COMPLETED
+        learnSentencesAvailable && sentencesLearnedProgress < 1f -> LessonStatus.IN_PROGRESS
         else -> LessonStatus.LOCKED
     }
 
     val testSentencesStatus = when {
         !hasSentences -> null
-        testSentencesAvailable && sentencesTestedProgress == 100.0 -> LessonStatus.COMPLETED
-        testSentencesAvailable && sentencesTestedProgress < 100.0 -> LessonStatus.IN_PROGRESS
+        testSentencesAvailable && sentencesTestedProgress == 1f -> LessonStatus.COMPLETED
+        testSentencesAvailable && sentencesTestedProgress < 1f -> LessonStatus.IN_PROGRESS
         else -> LessonStatus.LOCKED
     }
 

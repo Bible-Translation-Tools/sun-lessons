@@ -8,15 +8,12 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackCallback
 import kotlinx.serialization.Serializable
 import org.bibletranslationtools.sun.ui.components.AppComponent
 import org.bibletranslationtools.sun.ui.components.ParentContext
+import org.bibletranslationtools.sun.ui.model.GroupId
 import org.bibletranslationtools.sun.utils.Section
-
-enum class LessonType {
-    BASIC,
-    SCRIPTURE
-}
 
 enum class SectionState {
     NOT_STARTED,
@@ -41,25 +38,26 @@ interface LessonsComponent: ParentContext {
     @Serializable
     sealed class Intent {
         @Serializable
-        data class List(val selected: Int) : Intent()
+        data class List(val selected: Long) : Intent()
         @Serializable
-        data class LearnSymbol(val lessonId: Int) : Intent()
+        data class LearnSymbol(val lessonId: Long) : Intent()
         @Serializable
-        data class TestSymbol(val lessonId: Int) : Intent()
+        data class TestSymbol(val lessonId: Long) : Intent()
         @Serializable
-        data class LearnSentence(val lessonId: Int) : Intent()
+        data class LearnSentence(val lessonId: Long) : Intent()
         @Serializable
-        data class TestSentence(val lessonId: Int) : Intent()
+        data class TestSentence(val lessonId: Long) : Intent()
     }
 }
 
 class DefaultLessonsComponent(
     componentContext: ComponentContext,
     parentContext: ParentContext,
-    private val lessonType: LessonType
+    private val groupId: GroupId
 ) : LessonsComponent, AppComponent(componentContext, parentContext) {
 
     private val navigation = StackNavigation<Config>()
+    private val backCallback = BackCallback(onBack = ::onBackClick)
 
     override val stack: Value<ChildStack<*, LessonsComponent.Child>> =
         childStack(
@@ -69,6 +67,10 @@ class DefaultLessonsComponent(
             handleBackButton = true,
             childFactory = ::createChild
         )
+
+    init {
+        backHandler.register(backCallback)
+    }
 
     override fun onBackClick() {
         if (stack.value.backStack.isEmpty()) {
@@ -84,7 +86,7 @@ class DefaultLessonsComponent(
                 DefaultListComponent(
                     componentContext = context,
                     parentContext = this,
-                    lessonType = lessonType,
+                    groupId = groupId,
                     onContinueLesson = ::navigateContinueLesson,
                     onStartLesson = { id, section, mode ->
                         navigation.bringToFront(Config.Start(id, section))
@@ -157,6 +159,7 @@ class DefaultLessonsComponent(
                     parentContext = this,
                     lessonId = config.lessonId,
                     section = config.section,
+                    groupId = groupId,
                     onStartLesson = { id, section ->
                         navigation.replaceCurrent(Config.Start(id, section))
                     },
@@ -165,7 +168,7 @@ class DefaultLessonsComponent(
             )
         }
 
-    private fun navigateContinueLesson(lessonId: Int, section: Section, state: SectionState) {
+    private fun navigateContinueLesson(lessonId: Long, section: Section, state: SectionState) {
         val config = when (state) {
             SectionState.NOT_STARTED -> Config.Start(lessonId, section)
 
@@ -227,16 +230,16 @@ class DefaultLessonsComponent(
         @Serializable
         data object List : Config
         @Serializable
-        data class Start(val lessonId: Int, val section: Section) : Config
+        data class Start(val lessonId: Long, val section: Section) : Config
         @Serializable
-        data class LearnSymbol(val lessonId: Int) : Config
+        data class LearnSymbol(val lessonId: Long) : Config
         @Serializable
-        data class TestSymbol(val lessonId: Int) : Config
+        data class TestSymbol(val lessonId: Long) : Config
         @Serializable
-        data class LearnSentence(val lessonId: Int) : Config
+        data class LearnSentence(val lessonId: Long) : Config
         @Serializable
-        data class TestSentence(val lessonId: Int) : Config
+        data class TestSentence(val lessonId: Long) : Config
         @Serializable
-        data class Complete(val lessonId: Int, val section: Section) : Config
+        data class Complete(val lessonId: Long, val section: Section) : Config
     }
 }

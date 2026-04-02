@@ -1,1297 +1,1635 @@
 {
-  "version": 5,
+  "version": 6,
   "lessons": [
     {
-      "id": 1,
       "cards": [
         {
-          "id": "1a",
           "symbol": "\uE29C",
-          "primary": "1.1a.jpg",
-          "secondary": "1.1b.jpg"
+          "image": "1.1a.jpg"
         },
         {
-          "id": "1b",
           "symbol": "\uE22A",
-          "primary": "1.2a.jpg",
-          "secondary": "1.2b.jpg"
+          "image": "1.2a.jpg"
         },
         {
-          "id": "1c",
           "symbol": "\uE247",
-          "primary": "1.3a.jpg",
-          "secondary": "1.3b.jpg"
+          "image": "1.3a.jpg"
         },
         {
-          "id": "1d",
           "symbol": "\uE274",
-          "primary": "1.4a.jpg",
-          "secondary": "1.4b.jpg"
+          "image": "1.4a.jpg"
         },
         {
-          "id": "1e",
           "symbol": "\uE298",
-          "primary": "1.5a.jpg",
-          "secondary": "1.5b.jpg"
+          "image": "1.5a.jpg"
         },
         {
-          "id": "1f",
           "symbol": "\uE23E",
-          "primary": "1.6a.jpg",
-          "secondary": "1.6b.jpg"
+          "image": "1.6a.jpg"
         },
         {
-          "id": "1g",
           "symbol": "\uE311",
-          "primary": "1.7a.jpg",
-          "secondary": "1.7b.jpg"
+          "image": "1.7a.jpg"
         },
         {
-          "id": "1h",
           "symbol": "\uE11F",
-          "primary": "1.8a.jpg",
-          "secondary": "1.8b.jpg"
+          "image": "1.8a.jpg"
         },
         {
-          "id": "1i",
           "symbol": "\uE071",
-          "primary": "1.9a.jpg",
-          "secondary": "1.9b.jpg"
+          "image": "1.9a.jpg"
         },
         {
-          "id": "1j",
           "symbol": "\uE263",
-          "primary": "1.10a.jpg",
-          "secondary": "1.10b.jpg"
+          "image": "1.10a.jpg"
         }
       ],
       "sentences": [
         {
-          "id": "1a",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE11F"
             },
             {
-              "sort": 2,
               "name": "\uE274"
             }
           ],
-          "correct": "1.1a.jpg",
-          "incorrect": "1.1b.jpg"
+          "image": "1.1a.jpg"
         },
         {
-          "id": "1b",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE11F"
             },
             {
-              "sort": 2,
               "name": "\uE29C"
             }
           ],
-          "correct": "1.2a.jpg",
-          "incorrect": "1.2b.jpg"
+          "image": "1.2a.jpg"
         },
         {
-          "id": "1c",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE11F"
             },
             {
-              "sort": 2,
               "name": "\uE22A"
             }
           ],
-          "correct": "1.3a.jpg",
-          "incorrect": "1.3b.jpg"
+          "image": "1.3a.jpg"
         },
         {
-          "id": "1d",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE11F"
             },
             {
-              "sort": 2,
               "name": "\uE298"
             }
           ],
-          "correct": "1.4a.jpg",
-          "incorrect": "1.4b.jpg"
+          "image": "1.4a.jpg"
         }
       ]
     },
     {
-      "id": 2,
       "cards": [
         {
-          "id": "2a",
           "symbol": "\uE299",
-          "primary": "2.1a.jpg",
-          "secondary": "2.1b.jpg"
+          "image": "2.1a.jpg"
         },
         {
-          "id": "2b",
           "symbol": "\uE309",
-          "primary": "2.2a.jpg",
-          "secondary": "2.2b.jpg"
+          "image": "2.2a.jpg"
         },
         {
-          "id": "2c",
           "symbol": "\uE238",
-          "primary": "2.3a.jpg",
-          "secondary": "2.3b.jpg"
+          "image": "2.3a.jpg"
         },
         {
-          "id": "2d",
           "symbol": "\uE03F",
-          "primary": "2.4a.jpg",
-          "secondary": "2.4b.jpg"
+          "image": "2.4a.jpg"
         },
         {
-          "id": "2e",
           "symbol": "\uE000",
-          "primary": "2.5a.jpg",
-          "secondary": "2.5b.jpg"
+          "image": "2.5a.jpg"
         },
         {
-          "id": "2f",
           "symbol": "\uE272",
-          "primary": "2.6a.jpg",
-          "secondary": "2.6b.jpg"
+          "image": "2.6a.jpg"
         },
         {
-          "id": "2g",
           "symbol": "\uE15F",
-          "primary": "2.7a.jpg",
-          "secondary": "2.7b.jpg"
+          "image": "2.7a.jpg"
         },
         {
-          "id": "2h",
           "symbol": "\uE384",
-          "primary": "2.8a.jpg",
-          "secondary": "2.8b.jpg"
+          "image": "2.8a.jpg"
         },
         {
-          "id": "2i",
           "symbol": "\uE23C",
-          "primary": "2.9a.jpg",
-          "secondary": "2.9b.jpg"
+          "image": "2.9a.jpg"
         },
         {
-          "id": "2j",
           "symbol": "\uE315",
-          "primary": "2.10a.jpg",
-          "secondary": "2.10b.jpg"
+          "image": "2.10a.jpg"
         }
       ],
       "sentences": [
         {
-          "id": "2a",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE000"
             },
             {
-              "sort": 2,
               "name": "\uE309"
             },
             {
-              "sort": 3,
               "name": "\uE263"
             }
           ],
-          "correct": "2.1a.jpg",
-          "incorrect": "2.1b.jpg"
+          "image": "2.1a.jpg"
         },
         {
-          "id": "2b",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE000"
             },
             {
-              "sort": 2,
               "name": "\uE238"
             },
             {
-              "sort": 3,
               "name": "\uE272"
             }
           ],
-          "correct": "2.2a.jpg",
-          "incorrect": "2.2b.jpg"
+          "image": "2.2a.jpg"
         },
         {
-          "id": "2c",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE15F"
             },
             {
-              "sort": 2,
               "name": "\uE315"
             }
           ],
-          "correct": "2.3a.jpg",
-          "incorrect": "2.3b.png"
+          "image": "2.3a.jpg"
         },
         {
-          "id": "2d",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE11F"
             },
             {
-              "sort": 2,
               "name": "\uE238"
             },
             {
-              "sort": 3,
               "name": "\uE23C"
             }
           ],
-          "correct": "2.4a.jpg",
-          "incorrect": "2.4b.jpg"
+          "image": "2.4a.jpg"
         },
         {
-          "id": "2f",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE000"
             },
             {
-              "sort": 2,
               "name": "\uE238"
             },
             {
-              "sort": 3,
               "name": "\uE15F"
             },
             {
-              "sort": 4,
               "name": "\uE315"
             }
           ],
-          "correct": "2.5a.jpg",
-          "incorrect": "2.5b.jpg"
+          "image": "2.5a.jpg"
         },
         {
-          "id": "2g",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE000"
             },
             {
-              "sort": 2,
               "name": "\uE299"
             },
             {
-              "sort": 3,
               "name": "\uE11F"
             },
             {
-              "sort": 4,
               "name": "\uE03F"
             }
           ],
-          "correct": "2.6a.jpg",
-          "incorrect": "2.6b.png"
+          "image": "2.6a.jpg"
         }
       ]
     },
     {
-      "id": 3,
       "cards": [
         {
-          "id": "3a",
           "symbol": "\uE166",
-          "primary": "3.1a.jpg",
-          "secondary": "3.1a.jpg"
+          "image": "3.1a.jpg"
         },
         {
-          "id": "3b",
           "symbol": "\uE203",
-          "primary": "3.2a.jpg",
-          "secondary": "3.2a.jpg"
+          "image": "3.2a.gif"
         },
         {
-          "id": "3c",
           "symbol": "\uE280",
-          "primary": "3.3a.jpg",
-          "secondary": "3.3a.jpg"
+          "image": "3.3a.jpg"
         },
         {
-          "id": "3d",
           "symbol": "\uE171",
-          "primary": "3.4a.jpg",
-          "secondary": "3.4a.jpg"
+          "image": "3.4a.jpg"
         },
         {
-          "id": "3e",
           "symbol": "\uE244",
-          "primary": "3.5a.jpg",
-          "secondary": "3.5a.jpg"
+          "image": "3.5a.jpg"
         },
         {
-          "id": "3f",
           "symbol": "\uE27E",
-          "primary": "3.6a.jpg",
-          "secondary": "3.6a.jpg"
+          "image": "3.6a.jpg"
         },
         {
-          "id": "3g",
           "symbol": "\uE29E",
-          "primary": "3.7a.jpg",
-          "secondary": "3.7a.jpg"
+          "image": "3.7a.jpg"
         },
         {
-          "id": "3h",
           "symbol": "\uE25F",
-          "primary": "3.8a.jpg",
-          "secondary": "3.8a.jpg"
+          "image": "3.8a.gif"
         },
         {
-          "id": "3i",
           "symbol": "\uE17C",
-          "primary": "3.9a.jpg",
-          "secondary": "3.9a.jpg"
+          "image": "3.9a.gif"
         },
         {
-          "id": "3j",
           "symbol": "\uE028",
-          "primary": "3.10a.jpg",
-          "secondary": "3.10a.jpg"
+          "image": "3.10a.jpg"
         }
       ],
       "sentences": [
         {
-          "id": "3a",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE028"
             },
             {
-              "sort": 2,
               "name": "\uE03F"
             },
             {
-              "sort": 3,
               "name": "\uE166"
             }
           ],
-          "correct": "3.1a.jpg",
-          "incorrect": "3.1b.jpg"
+          "image": "3.1a.jpg"
         },
         {
-          "id": "3b",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE166"
             },
             {
-              "sort": 2,
               "name": "\uE17C"
             },
             {
-              "sort": 3,
               "name": "\uE238"
             },
             {
-              "sort": 4,
               "name": "\uE171"
             }
           ],
-          "correct": "3.2a.jpg",
-          "incorrect": "3.2b.jpg"
+          "image": "3.2a.jpg"
         },
         {
-          "id": "3c",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE11F"
             },
             {
-              "sort": 2,
               "name": "\uE25F"
             },
             {
-              "sort": 3,
               "name": "\uE244"
             }
           ],
-          "correct": "3.3a.jpg",
-          "incorrect": "3.3b.jpg"
+          "image": "3.3a.jpg"
         },
         {
-          "id": "3d",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE280"
             },
             {
-              "sort": 2,
               "name": "\uE29E"
             },
             {
-              "sort": 3,
               "name": "\uE27E"
             }
           ],
-          "correct": "3.4a.jpg",
-          "incorrect": "3.4b.jpg"
+          "image": "3.4a.jpg"
         },
         {
-          "id": "3e",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE166"
             },
             {
-              "sort": 2,
               "name": "\uE238"
             },
             {
-              "sort": 3,
               "name": "\uE244"
             },
             {
-              "sort": 4,
               "name": "\uE23C"
             }
           ],
-          "correct": "3.5a.jpg",
-          "incorrect": "3.5b.jpg"
+          "image": "3.5a.jpg"
         },
         {
-          "id": "3f",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE171"
             },
             {
-              "sort": 2,
               "name": "\uE17C"
             },
             {
-              "sort": 3,
               "name": "\uE311"
             }
           ],
-          "correct": "3.6a.jpg",
-          "incorrect": "3.6b.jpg"
+          "image": "3.6a.jpg"
         }
       ]
     },
     {
-      "id": 4,
       "cards": [
         {
-          "id": "4a",
           "symbol": "\uE30B",
-          "primary": "4.1a.jpg",
-          "secondary": "4.1a.jpg"
+          "image": "4.1a.gif"
         },
         {
-          "id": "4b",
           "symbol": "\uE265",
-          "primary": "4.2a.jpg",
-          "secondary": "4.2a.jpg"
+          "image": "4.2a.gif"
         },
         {
-          "id": "4c",
           "symbol": "\uE27C",
-          "primary": "4.3a.jpg",
-          "secondary": "4.3a.jpg"
+          "image": "4.3a.jpg"
         },
         {
-          "id": "4d",
           "symbol": "\uE256",
-          "primary": "4.4a.gif",
-          "secondary": "4.4a.gif"
+          "image": "4.4a.gif"
         },
         {
-          "id": "4e",
           "symbol": "\uE24E",
-          "primary": "4.5a.jpg",
-          "secondary": "4.5a.jpg"
+          "image": "4.5a.gif"
         },
         {
-          "id": "4f",
           "symbol": "\uE282",
-          "primary": "4.6a.jpg",
-          "secondary": "4.6a.jpg"
+          "image": "4.6a.jpg"
         },
         {
-          "id": "4g",
           "symbol": "\uE29D",
-          "primary": "4.7a.jpg",
-          "secondary": "4.7a.jpg"
+          "image": "4.7a.jpg"
         },
         {
-          "id": "4h",
           "symbol": "\uE398",
-          "primary": "4.8a.jpg",
-          "secondary": "4.8a.jpg"
+          "image": "4.8a.jpg"
         },
         {
-          "id": "4i",
           "symbol": "\uE279",
-          "primary": "4.9a.jpg",
-          "secondary": "4.9a.jpg"
+          "image": "4.9a.gif"
         },
         {
-          "id": "4j",
           "symbol": "\uE0D9",
-          "primary": "4.10a.jpg",
-          "secondary": "4.10a.jpg"
+          "image": "4.10a.jpg"
         }
       ],
       "sentences": [
         {
-          "id": "4a",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE166"
             },
             {
-              "sort": 2,
               "name": "\uE256"
             },
             {
-              "sort": 3,
               "name": "\uE23C"
             },
             {
-              "sort": 4,
               "name": "\uE171"
             }
           ],
-          "correct": "4.1a.jpg",
-          "incorrect": "4.1b.jpg"
+          "image": "4.1a.jpg"
         },
         {
-          "id": "4b",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE17C"
             },
             {
-              "sort": 2,
               "name": "\uE265"
             },
             {
-              "sort": 3,
               "name": "\uE27C"
             }
           ],
-          "correct": "4.2a.jpg",
-          "incorrect": "4.2b.jpg"
+          "image": "4.2a.jpg"
         },
         {
-          "id": "4c",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE11F"
             },
             {
-              "sort": 2,
               "name": "\uE256"
             },
             {
-              "sort": 3,
               "name": "\uE315"
             },
             {
-              "sort": 4,
               "name": "\uE0D9"
             }
           ],
-          "correct": "4.3a.jpg",
-          "incorrect": "4.3b.jpg"
+          "image": "4.3a.jpg"
         },
         {
-          "id": "4d",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE000"
             },
             {
-              "sort": 2,
               "name": "\uE24E"
             },
             {
-              "sort": 3,
               "name": "\uE27E"
             },
             {
-              "sort": 4,
               "name": "\uE280"
             }
           ],
-          "correct": "4.4a.jpg",
-          "incorrect": "4.4b.jpg"
+          "image": "4.4a.jpg"
         },
         {
-          "id": "4e",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE028"
             },
             {
-              "sort": 2,
               "name": "\uE17C"
             },
             {
-              "sort": 3,
               "name": "\uE29D"
             }
           ],
-          "correct": "4.5a.jpg",
-          "incorrect": "4.5b.jpg"
+          "image": "4.5a.jpg"
         },
         {
-          "id": "4f",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE000"
             },
             {
-              "sort": 2,
               "name": "\uE24E"
             },
             {
-              "sort": 3,
               "name": "\uE279"
             }
           ],
-          "correct": "4.6a.jpg",
-          "incorrect": "4.6b.jpg"
+          "image": "4.6a.jpg"
         }
       ]
     },
     {
-      "id": 5,
       "cards": [
         {
-          "id": "5a",
           "symbol": "\uE102",
-          "primary": "5.1a.jpg",
-          "secondary": "5.1a.jpg"
+          "image": "5.1a.jpg"
         },
         {
-          "id": "5b",
           "symbol": "\uE30A",
-          "primary": "5.2a.jpg",
-          "secondary": "5.2a.jpg"
+          "image": "5.2a.jpg"
         },
         {
-          "id": "5c",
           "symbol": "\uE30C",
-          "primary": "5.3a.jpg",
-          "secondary": "5.3a.jpg"
+          "image": "5.3a.jpg"
         },
         {
-          "id": "5d",
           "symbol": "\uE29F",
-          "primary": "5.4a.jpg",
-          "secondary": "5.4a.jpg"
+          "image": "5.4a.jpg"
         },
         {
-          "id": "5e",
           "symbol": "\uE303",
-          "primary": "5.5a.jpg",
-          "secondary": "5.5a.jpg"
+          "image": "5.5a.jpg"
         },
         {
-          "id": "5f",
           "symbol": "\uE304",
-          "primary": "5.6a.jpg",
-          "secondary": "5.6a.jpg"
+          "image": "5.6a.jpg"
         },
         {
-          "id": "5g",
           "symbol": "\uE302",
-          "primary": "5.7a.jpg",
-          "secondary": "5.7a.jpg"
+          "image": "5.7a.jpg"
         },
         {
-          "id": "5h",
           "symbol": "\uE30E",
-          "primary": "5.8a.jpg",
-          "secondary": "5.8a.jpg"
+          "image": "5.8a.jpg"
         },
         {
-          "id": "5i",
           "symbol": "\uE31C",
-          "primary": "5.9a.png",
-          "secondary": "5.9a.png"
+          "image": "5.9a.jpg"
         },
         {
-          "id": "5j",
           "symbol": "\uE24B",
-          "primary": "5.10a.gif",
-          "secondary": "5.10a.gif"
+          "image": "5.10a.gif"
         }
       ],
       "sentences": [
         {
-          "id": "5a",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE000"
             },
             {
-              "sort": 2,
               "name": "\uE31C"
             },
             {
-              "sort": 3,
               "name": "\uE29D"
             }
           ],
-          "correct": "5.1a.jpg",
-          "incorrect": "5.1b.jpg"
+          "image": "5.1a.jpg"
         },
         {
-          "id": "5b",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE303"
             },
             {
-              "sort": 2,
               "name": "\uE30E"
             },
             {
-              "sort": 3,
               "name": "\uE244"
             }
           ],
-          "correct": "5.2a.jpg",
-          "incorrect": "5.2b.jpg"
+          "image": "5.2a.jpg"
         },
         {
-          "id": "5c",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE30A"
             },
             {
-              "sort": 2,
               "name": "\uE17C"
             },
             {
-              "sort": 3,
               "name": "\uE256"
             }
           ],
-          "correct": "5.3a.jpg",
-          "incorrect": "5.3b.jpg"
+          "image": "5.3a.jpg"
         },
         {
-          "id": "5d",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE303"
             },
             {
-              "sort": 2,
               "name": "\uE17C"
             },
             {
-              "sort": 3,
               "name": "\uE24B"
             },
             {
-              "sort": 4,
               "name": "\uE29F"
             }
           ],
-          "correct": "5.4a.jpg",
-          "incorrect": "5.4b.jpg"
+          "image": "5.4a.jpg"
         },
         {
-          "id": "5e",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE11F"
             },
             {
-              "sort": 2,
               "name": "\uE30E"
             },
             {
-              "sort": 3,
               "name": "\uE29D"
             }
           ],
-          "correct": "5.5a.jpg",
-          "incorrect": "5.5b.jpg"
+          "image": "5.5a.jpg"
         },
         {
-          "id": "5f",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE171"
             },
             {
-              "sort": 2,
               "name": "\uE17C"
             },
             {
-              "sort": 3,
               "name": "\uE102"
             }
           ],
-          "correct": "5.6a.jpg",
-          "incorrect": "5.6b.jpg"
+          "image": "5.6a.jpg"
         }
       ]
     },
     {
-      "id": 9,
       "cards": [
         {
-          "id": "9a",
+          "symbol": "\uE301",
+          "image": "6.1a.jpg"
+        },
+        {
+          "symbol": "\uE0C3",
+          "image": "6.2a.jpg"
+        },
+        {
+          "symbol": "\uE307",
+          "image": "6.3a.jpg"
+        },
+        {
+          "symbol": "\uE306",
+          "image": "6.4a.jpg"
+        },
+        {
+          "symbol": "\uE29A",
+          "image": "6.5a.jpg"
+        },
+        {
+          "symbol": "\uE08C",
+          "image": "6.6a.jpg"
+        },
+        {
+          "symbol": "\uE25B",
+          "image": "6.7a.jpg"
+        },
+        {
+          "symbol": "\uE30D",
+          "image": "6.8a.jpg"
+        },
+        {
+          "symbol": "\uE313",
+          "image": "6.9a.jpg"
+        },
+        {
+          "symbol": "\uE268",
+          "image": "6.10a.jpg"
+        }
+      ],
+      "sentences": [
+        {
+          "symbols": [
+            {
+              "name": "\uE166"
+            },
+            {
+              "name": "\uE24E"
+            },
+            {
+              "name": "\uE302"
+            },
+            {
+              "name": "\uE29E"
+            }
+          ],
+          "image": "6.1a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE15F"
+            },
+            {
+              "name": "\uE301"
+            }
+          ],
+          "image": "6.2a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE304"
+            },
+            {
+              "name": "\uE25B"
+            },
+            {
+              "name": "\uE313"
+            }
+          ],
+          "image": "6.3a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE27E"
+            },
+            {
+              "name": "\uE30D"
+            }
+          ],
+          "image": "6.4a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE000"
+            },
+            {
+              "name": "\uE238"
+            },
+            {
+              "name": "\uE302"
+            },
+            {
+              "name": "\uE307"
+            }
+          ],
+          "image": "6.5a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE301"
+            },
+            {
+              "name": "\uE315"
+            },
+            {
+              "name": "\uE306"
+            }
+          ],
+          "image": "6.6a.jpg"
+        }
+      ]
+    },
+    {
+      "cards": [
+        {
+          "symbol": "\uE0B2",
+          "image": "7.1a.jpg"
+        },
+        {
+          "symbol": "\uE288",
+          "image": "7.2a.jpg"
+        },
+        {
+          "symbol": "\uE30F",
+          "image": "7.3a.jpg"
+        },
+        {
+          "symbol": "\uE153",
+          "image": "7.4a.jpg"
+        },
+        {
+          "symbol": "\uE388",
+          "image": "7.5a.jpg"
+        },
+        {
+          "symbol": "\uE310",
+          "image": "7.6a.jpg"
+        },
+        {
+          "symbol": "\uE305",
+          "image": "7.7a.jpg"
+        },
+        {
+          "symbol": "\uE0F4",
+          "image": "7.8a.jpg"
+        },
+        {
+          "symbol": "\uE16A",
+          "image": "7.9a.jpg"
+        },
+        {
+          "symbol": "\uE038",
+          "image": "7.10a.jpg"
+        }
+      ],
+      "sentences": [
+        {
+          "symbols": [
+            {
+              "name": "\uE263"
+            },
+            {
+              "name": "\uE17C"
+            },
+            {
+              "name": "\uE0B2"
+            }
+          ],
+          "image": "7.1a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE102"
+            },
+            {
+              "name": "\uE08C"
+            },
+            {
+              "name": "\uE279"
+            },
+            {
+              "name": "\uE153"
+            }
+          ],
+          "image": "7.2a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE30F"
+            },
+            {
+              "name": "\uE0F4"
+            },
+            {
+              "name": "\uE288"
+            }
+          ],
+          "image": "7.3a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE166"
+            },
+            {
+              "name": "\uE310"
+            },
+            {
+              "name": "\uE303"
+            }
+          ],
+          "image": "7.4a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE000"
+            },
+            {
+              "name": "\uE305"
+            },
+            {
+              "name": "\uE398"
+            }
+          ],
+          "image": "7.5a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE166"
+            },
+            {
+              "name": "\uE17C"
+            },
+            {
+              "name": "\uE16A"
+            },
+            {
+              "name": "\uE29C"
+            }
+          ],
+          "image": "7.6a.jpg"
+        }
+      ]
+    },
+    {
+      "cards": [
+        {
+          "symbol": "\uE29B",
+          "image": "8.1a.jpg"
+        },
+        {
+          "symbol": "\uE251",
+          "image": "8.2a.jpg"
+        },
+        {
+          "symbol": "\uE284",
+          "image": "8.3a.jpg"
+        },
+        {
+          "symbol": "\uE096",
+          "image": "8.4a.jpg"
+        },
+        {
+          "symbol": "\uE231",
+          "image": "8.5a.jpg"
+        },
+        {
+          "symbol": "\uE31A",
+          "image": "8.6a.jpg"
+        },
+        {
+          "symbol": "\uE312",
+          "image": "8.7a.jpg"
+        },
+        {
+          "symbol": "\uE01A",
+          "image": "8.8a.jpg"
+        },
+        {
+          "symbol": "\uE062",
+          "image": "8.9a.jpg"
+        },
+        {
+          "symbol": "\uE308",
+          "image": "8.10a.jpg"
+        }
+      ],
+      "sentences": [
+        {
+          "symbols": [
+            {
+              "name": "\uE028"
+            },
+            {
+              "name": "\uE01A"
+            },
+            {
+              "name": "\uE028\uE390"
+            },
+            {
+              "name": "\uE303"
+            }
+          ],
+          "image": "8.1a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE000"
+            },
+            {
+              "name": "\uE096"
+            },
+            {
+              "name": "\uE29A"
+            }
+          ],
+          "image": "8.2a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE166"
+            },
+            {
+              "name": "\uE238"
+            },
+            {
+              "name": "\uE251"
+            },
+            {
+              "name": "\uE284"
+            }
+          ],
+          "image": "8.3a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE17C"
+            },
+            {
+              "name": "\uE312"
+            },
+            {
+              "name": "\uE31A"
+            },
+            {
+              "name": "\uE03F"
+            }
+          ],
+          "image": "8.4a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE166"
+            },
+            {
+              "name": "\uE29C"
+            },
+            {
+              "name": "\uE308"
+            },
+            {
+              "name": "\uE22A"
+            }
+          ],
+          "image": "8.5a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE166"
+            },
+            {
+              "name": "\uE17C"
+            },
+            {
+              "name": "\uE062"
+            },
+            {
+              "name": "\uE11F"
+            }
+          ],
+          "image": "8.6a.jpg"
+        }
+      ]
+    },
+    {
+      "cards": [
+        {
           "symbol": "\uE28B",
-          "primary": "9.1a.jpg",
-          "secondary": "9.1b.jpg"
+          "image": "9.1a.gif"
         },
         {
-          "id": "9b",
           "symbol": "\uE28C",
-          "primary": "9.2a.jpg",
-          "secondary": "9.2b.jpg"
+          "image": "9.2a.gif"
         },
         {
-          "id": "9c",
           "symbol": "\uE28D",
-          "primary": "9.3a.jpg",
-          "secondary": "9.3b.jpg"
+          "image": "9.3a.gif"
         },
         {
-          "id": "9d",
           "symbol": "\uE28E",
-          "primary": "9.4a.jpg",
-          "secondary": "9.4b.jpg"
+          "image": "9.4a.gif"
         },
         {
-          "id": "9e",
           "symbol": "\uE28F",
-          "primary": "9.5a.jpg",
-          "secondary": "9.5b.jpg"
+          "image": "9.5a.gif"
         },
         {
-          "id": "9f",
           "symbol": "\uE290",
-          "primary": "9.6a.jpg",
-          "secondary": "9.6b.jpg"
+          "image": "9.6a.gif"
         },
         {
-          "id": "9g",
           "symbol": "\uE291",
-          "primary": "9.7a.jpg",
-          "secondary": "9.7b.jpg"
+          "image": "9.7a.gif"
         },
         {
-          "id": "9h",
           "symbol": "\uE292",
-          "primary": "9.8a.jpg",
-          "secondary": "9.8b.jpg"
+          "image": "9.8a.gif"
         },
         {
-          "id": "9i",
           "symbol": "\uE293",
-          "primary": "9.9a.jpg",
-          "secondary": "9.9b.jpg"
+          "image": "9.9a.gif"
         },
         {
-          "id": "9j",
           "symbol": "\uE294",
-          "primary": "9.10a.jpg",
-          "secondary": "9.10b.jpg"
+          "image": "9.10a.gif"
         },
         {
-          "id": "9k",
           "symbol": "\uE295",
-          "primary": "9.11a.jpg",
-          "secondary": "9.11b.jpg"
+          "image": "9.11a.gif"
         }
       ],
       "sentences": []
     },
     {
-      "id": 13,
       "cards": [
         {
-          "id": "13a",
+          "symbol": "\uE105",
+          "image": "10.1a.jpg"
+        },
+        {
+          "symbol": "\uE253",
+          "image": "10.2a.jpg"
+        },
+        {
+          "symbol": "\uE0B7",
+          "image": "10.3a.jpg"
+        },
+        {
+          "symbol": "\uE296",
+          "image": "10.4a.jpg"
+        },
+        {
+          "symbol": "\uE198",
+          "image": "10.5a.jpg"
+        },
+        {
+          "symbol": "\uE300",
+          "image": "10.6a.jpg"
+        },
+        {
+          "symbol": "\uE19B",
+          "image": "10.7a.jpg"
+        },
+        {
+          "symbol": "\uE211",
+          "image": "10.8a.jpg"
+        },
+        {
+          "symbol": "\uE127",
+          "image": "10.9a.jpg"
+        },
+        {
+          "symbol": "\uE008",
+          "image": "10.10a.jpg"
+        }
+      ],
+      "sentences": []
+    },
+    {
+      "cards": [
+        {
+          "symbol": "\uE128",
+          "image": "11.1a.jpg"
+        },
+        {
+          "symbol": "\uE23F",
+          "image": "11.2a.jpg"
+        },
+        {
+          "symbol": "\uE18A",
+          "image": "11.3a.jpg"
+        },
+        {
+          "symbol": "\uE240",
+          "image": "11.4a.jpg"
+        },
+        {
+          "symbol": "\uE113",
+          "image": "11.5a.jpg"
+        },
+        {
+          "symbol": "\uE11E",
+          "image": "11.6a.jpg"
+        },
+        {
+          "symbol": "\uE191",
+          "image": "11.7a.jpg"
+        },
+        {
+          "symbol": "\uE050",
+          "image": "11.8a.jpg"
+        },
+        {
+          "symbol": "\uE07E",
+          "image": "11.9a.jpg"
+        },
+        {
+          "symbol": "\uE10C",
+          "image": "11.10a.jpg"
+        }
+      ],
+      "sentences": []
+    },
+    {
+      "cards": [
+        {
+          "symbol": "\uE088",
+          "image": "12.1a.jpg"
+        },
+        {
+          "symbol": "\uE045",
+          "image": "12.2a.jpg"
+        },
+        {
+          "symbol": "\uE048",
+          "image": "12.3a.jpg"
+        },
+        {
+          "symbol": "\uE047",
+          "image": "12.4a.jpg"
+        },
+        {
+          "symbol": "\uE260",
+          "image": "12.5a.jpg"
+        },
+        {
+          "symbol": "\uE020",
+          "image": "12.6a.jpg"
+        },
+        {
+          "symbol": "\uE21E",
+          "image": "12.7a.jpg"
+        },
+        {
+          "symbol": "\uE037",
+          "image": "12.8a.jpg"
+        },
+        {
+          "symbol": "\uE003",
+          "image": "12.9a.jpg"
+        },
+        {
+          "symbol": "\uE036",
+          "image": "12.10a.jpg"
+        }
+      ],
+      "sentences": []
+    },
+    {
+      "cards": [
+        {
           "symbol": "\uE37E",
-          "primary": "13.1a.png",
-          "secondary": "13.1a.png"
+          "image": "13.1a.jpg"
         },
         {
-          "id": "13b",
           "symbol": ",",
-          "primary": "13.2a.png",
-          "secondary": "13.2a.png"
+          "image": "13.2a.jpg"
         },
         {
-          "id": "13c",
           "symbol": "\uEE02",
-          "primary": "13.3a.png",
-          "secondary": "13.3a.png"
+          "image": "13.3a.jpg"
         },
         {
-          "id": "13d",
           "symbol": "\uE316",
-          "primary": "13.4a.png",
-          "secondary": "13.4a.png"
+          "image": "13.4a.jpg"
         },
         {
-          "id": "13e",
           "symbol": "“",
-          "primary": "13.5a.png",
-          "secondary": "13.5a.png"
+          "image": "13.5a.jpg"
         },
         {
-          "id": "13f",
           "symbol": "'",
-          "primary": "13.6a.png",
-          "secondary": "13.6a.png"
+          "image": "13.6a.jpg"
         },
         {
-          "id": "13g",
           "symbol": "\uE390",
-          "primary": "13.7a.png",
-          "secondary": "13.7a.png"
+          "image": "13.7a.jpg"
         },
         {
-          "id": "13h",
           "symbol": "\uEA47",
-          "primary": "13.8a.png",
-          "secondary": "13.8a.png"
+          "image": "13.8a.jpg"
         }
       ],
       "sentences": [
         {
-          "id": "13a",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE11F\uE11F"
             },
             {
-              "sort": 2,
               "name": "\uE088"
             },
             {
-              "sort": 3,
               "name": "\uE191"
             },
             {
-              "sort": 4,
               "name": "\uE050"
             },
             {
-              "sort": 5,
               "name": "\uE000"
             },
             {
-              "sort": 6,
               "name": "\uE037\uE37E"
             }
           ],
-          "correct": "13.1a.jpg",
-          "incorrect": "13.1a.jpg"
+          "image": "13.1a.jpg"
         },
         {
-          "id": "13b",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE11F\uE11F"
             },
             {
-              "sort": 2,
               "name": "\uE21E"
             },
             {
-              "sort": 3,
               "name": "\uE037"
             },
             {
-              "sort": 4,
               "name": "\uE07E"
             },
             {
-              "sort": 5,
               "name": "\uE071"
             },
             {
-              "sort": 6,
               "name": "\uE113"
             },
             {
-              "sort": 7,
               "name": "\uE000\uE37E"
             }
           ],
-          "correct": "13.2a.jpg",
-          "incorrect": "13.2a.jpg"
+          "image": "13.2a.jpg"
         },
         {
-          "id": "13c",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE037"
             },
             {
-              "sort": 2,
               "name": "\uE088"
             },
             {
-              "sort": 3,
               "name": "\uE000"
             },
             {
-              "sort": 4,
               "name": "\uE11E"
             },
             {
-              "sort": 5,
               "name": "\uE128\uE37E"
             }
           ],
-          "correct": "13.3a.jpg",
-          "incorrect": "13.3a.jpg"
+          "image": "13.3a.jpg"
         },
         {
-          "id": "13d",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE037"
             },
             {
-              "sort": 2,
               "name": "\uE07E"
             },
             {
-              "sort": 3,
               "name": "\uE071\uE071"
             },
             {
-              "sort": 4,
               "name": "\uE240"
             },
             {
-              "sort": 5,
               "name": "\uE000\uE390"
             },
             {
-              "sort": 6,
-              "name": "\uE299\uE299"
-            },
-            {
-              "sort": 7,
-              "name": "\uE37E"
+              "name": "\uE299\uE299\uE37E"
             }
           ],
-          "correct": "13.4a.jpg",
-          "incorrect": "13.4a.jpg"
+          "image": "13.4a.jpg"
         },
         {
-          "id": "13e",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE037"
             },
             {
-              "sort": 2,
               "name": "\uE048\uE37E"
             }
           ],
-          "correct": "13.5a.jpg",
-          "incorrect": "13.5a.jpg"
+          "image": "13.5a.jpg"
         },
         {
-          "id": "13f",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE037"
             },
             {
-              "sort": 2,
               "name": "\uE10C"
             },
             {
-              "sort": 3,
               "name": "\uE000\uE390"
             },
             {
-              "sort": 4,
               "name": "\uE045\uE37E"
             }
           ],
-          "correct": "13.6a.jpg",
-          "incorrect": "13.6a.jpg"
+          "image": "13.6a.jpg"
         },
         {
-          "id": "13g",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE037"
             },
             {
-              "sort": 2,
               "name": "\uE238"
             },
             {
-              "sort": 3,
               "name": "\uE315"
             },
             {
-              "sort": 4,
               "name": "\uE380\uE37E"
             }
           ],
-          "correct": "13.7a.jpg",
-          "incorrect": "13.7a.jpg"
+          "image": "13.7a.jpg"
         },
         {
-          "id": "13h",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE037"
             },
             {
-              "sort": 2,
               "name": "\uE047\uE37E"
             }
           ],
-          "correct": "13.8a.jpg",
-          "incorrect": "13.8a.jpg"
+          "image": "13.8a.jpg"
         },
         {
-          "id": "13i",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE037"
             },
             {
-              "sort": 2,
               "name": "\uE03F,"
             },
             {
-              "sort": 3,
               "name": "“\uE18A"
             },
             {
-              "sort": 4,
-              "name": "\uEE02“"
-            },
-            {
-              "sort": 5,
-              "name": "\uE37E"
+              "name": "\uEE02“\uE37E"
             }
           ],
-          "correct": "13.9a.jpg",
-          "incorrect": "13.9a.jpg"
+          "image": "13.9a.jpg"
         },
         {
-          "id": "13j",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE000\uE390"
             },
             {
-              "sort": 2,
               "name": "\uE299\uE299"
             },
             {
-              "sort": 3,
               "name": "\uE18A\uE37E"
             }
           ],
-          "correct": "13.10a.jpg",
-          "incorrect": "13.10a.jpg"
+          "image": "13.10a.jpg"
         },
         {
-          "id": "13k",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE000\uE390"
             },
             {
-              "sort": 2,
               "name": "\uE045"
             },
             {
-              "sort": 3,
               "name": "\uE260\uE37E"
             }
           ],
-          "correct": "13.11a.jpg",
-          "incorrect": "13.11a.jpg"
+          "image": "13.11a.jpg"
         },
         {
-          "id": "13l",
           "symbols": [
             {
-              "sort": 1,
               "name": "\uE000"
             },
             {
-              "sort": 2,
               "name": "\uE03F"
             },
             {
-              "sort": 3,
               "name": "\uE096\uE37E"
             }
           ],
-          "correct": "13.12a.jpg",
-          "incorrect": "13.12a.jpg"
+          "image": "13.12a.jpg"
+        }
+      ]
+    },
+    {
+      "cards": [
+        {
+          "symbol": "\uE17D",
+          "image": "14.1a.jpg"
+        },
+        {
+          "symbol": "\uE08F",
+          "image": "14.2a.jpg"
+        },
+        {
+          "symbol": "\uE029",
+          "image": "14.3a.jpg"
+        },
+        {
+          "symbol": "\uE32A",
+          "image": "14.4a.jpg"
+        },
+        {
+          "symbol": "\uE181",
+          "image": "14.5a.jpg"
+        },
+        {
+          "symbol": "\uE072",
+          "image": "14.6a.jpg"
+        },
+        {
+          "symbol": "\uE086",
+          "image": "14.7a.jpg"
+        },
+        {
+          "symbol": "\uE223",
+          "image": "14.8a.jpg"
+        },
+        {
+          "symbol": "\uE004",
+          "image": "14.9a.jpg"
+        },
+        {
+          "symbol": "\uE06F",
+          "image": "14.10a.jpg"
+        },
+        {
+          "symbol": "\uE09F",
+          "image": "14.11a.jpg"
+        },
+        {
+          "symbol": "\uE252",
+          "image": "14.12a.jpg"
+        }
+      ],
+      "sentences": [
+        {
+          "symbols": [
+            {
+              "name": "\uE251"
+            },
+            {
+              "name": "\uE127"
+            },
+            {
+              "name": "\uE08F\uE37E"
+            }
+          ],
+          "image": "14.1a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE08F\uE390"
+            },
+            {
+              "name": "\uE32A"
+            },
+            {
+              "name": "\uE24B"
+            },
+            {
+              "name": "\uE181\uE37E"
+            }
+          ],
+          "image": "14.2a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE036"
+            },
+            {
+              "name": "\uE01A"
+            },
+            {
+              "name": "\uE127\uE37E"
+            }
+          ],
+          "image": "14.3a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE036"
+            },
+            {
+              "name": "\uE086"
+            },
+            {
+              "name": "\uE223"
+            },
+            {
+              "name": "\uE004\uE37E"
+            }
+          ],
+          "image": "14.4a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE11F"
+            },
+            {
+              "name": "\uE06F"
+            },
+            {
+              "name": "\uE036\uE390"
+            },
+            {
+              "name": "\uE004\uE37E"
+            }
+          ],
+          "image": "14.5a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE11F"
+            },
+            {
+              "name": "\uE17C"
+            },
+            {
+              "name": "\uE181\uE37E"
+            }
+          ],
+          "image": "14.6a.jpg"
+        },
+        {
+          "symbols": [
+            {
+              "name": "\uE11F"
+            },
+            {
+              "name": "\uE09F"
+            },
+            {
+              "name": "\uE252\uE37E"
+            }
+          ],
+          "image": "14.7a.jpg"
         }
       ]
     }

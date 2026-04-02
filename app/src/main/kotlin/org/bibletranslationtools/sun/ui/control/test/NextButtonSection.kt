@@ -19,13 +19,14 @@ import org.bibletranslationtools.sun.R
 @Composable
 fun NextButtonSection(
     isVisible: Boolean,
-    onNextClicked: () -> Unit
+    onNextClicked: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     if (isVisible) {
         Button(
             onClick = onNextClicked,
             shape = MaterialTheme.shapes.medium,
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .height(40.dp)
         ) {

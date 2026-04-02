@@ -55,12 +55,12 @@ fun LessonBox(
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = lesson.lesson.id.toString(),
+                    text = lesson.id.toString(),
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = TallyMarkConverter.toText(lesson.lesson.id),
+                    text = TallyMarkConverter.toText(lesson.sort),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = tallyFontFamily()
