@@ -2,12 +2,11 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.kapt")
-    id("org.jetbrains.kotlin.plugin.serialization")
-    id("org.jetbrains.kotlin.plugin.compose") version "2.3.20"
-    // id("org.jlleitschuh.gradle.ktlint") version "12.1.2"
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.kapt)
 }
 
 android {
@@ -43,11 +42,6 @@ android {
     buildFeatures {
         compose = true
     }
-
-//    lint {
-//        disable.add("NullSafeMutableLiveData")
-//        disable.add("RememberInComposition")
-//    }
 }
 
 tasks.withType<KotlinCompile>().configureEach {
@@ -62,52 +56,52 @@ tasks.withType<JavaCompile>().configureEach {
 
 dependencies {
     // Compose BOM
-    implementation(platform("androidx.compose:compose-bom:2026.03.01"))
-    implementation("androidx.activity:activity-compose:1.13.0")
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.material:material-icons-extended")
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.material.icons.extended)
 
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 
     // Koin
-    implementation("io.insert-koin:koin-core:4.2.0")
-    implementation("io.insert-koin:koin-android:4.2.0")
-    implementation("io.insert-koin:koin-androidx-compose:4.2.0")
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
 
     // Decompose
-    implementation("com.arkivanov.decompose:decompose:3.5.0")
-    implementation("com.arkivanov.decompose:extensions-compose:3.5.0")
+    implementation(libs.decompose)
+    implementation(libs.extensions1.compose)
 
     // Kotlinx Serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.coroutines.core)
 
     // Room database
-    implementation("androidx.room:room-runtime:2.8.4")
-    implementation("androidx.room:room-ktx:2.8.4")
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
     // noinspection KaptUsageInsteadOfKsp
-    kapt("androidx.room:room-compiler:2.8.4")
+    kapt(libs.androidx.room.compiler)
 
     // Coil image loading
-    implementation("io.coil-kt.coil3:coil-compose:3.4.0")
-    implementation("io.coil-kt.coil3:coil-gif:3.4.0")
-    implementation("io.coil-kt.coil3:coil-network-okhttp:3.4.0")
+    implementation(libs.coil.compose)
+    implementation(libs.coil.gif)
+    implementation(libs.coil.network.okhttp)
 
     // kotlin datetime
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
+    implementation(libs.kotlinx.datetime)
 
     // ktor
-    implementation("io.ktor:ktor-client-core:3.4.2")
-    implementation("io.ktor:ktor-client-android:3.4.2")
-    implementation("io.ktor:ktor-client-content-negotiation:3.4.2")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:3.4.2")
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
 
     // Testing
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.3.0")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 }
