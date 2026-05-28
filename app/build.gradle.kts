@@ -1,29 +1,28 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.legacy.kapt)
+    alias(libs.plugins.ksp)
 }
 
 android {
     namespace = "org.bibletranslationtools.sun"
-    compileSdk = 36
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "org.bibletranslationtools.sun"
-        minSdk = 24
-        targetSdk = 36
-        versionCode = 23
-        versionName = "0.3.4"
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
+        versionCode = libs.versions.versionCode.get().toInt()
+        versionName = libs.versions.versionName.get()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
-        release {
+        getByName("release") {
             isMinifyEnabled = true
+            isShrinkResources = true
             isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -43,9 +42,7 @@ android {
 }
 
 kotlin {
-    compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_17)
-    }
+    jvmToolchain(17)
 }
 
 tasks.withType<JavaCompile>().configureEach {
@@ -81,8 +78,7 @@ dependencies {
     // Room database
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
-    // noinspection KaptUsageInsteadOfKsp
-    kapt(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
 
     // Coil image loading
     implementation(libs.coil.compose)

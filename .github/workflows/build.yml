@@ -1,0 +1,119 @@
+name: Build
+
+on: [ push, pull_request ]
+
+env:
+  GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4096M -Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.caching=true"
+
+jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Gradle setup
+        uses: ./.github/actions/gradle-setup
+
+      - name: Run tests
+        run: ./gradlew test
+
+      - name: Upload test reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-reports
+          path: "**/build/reports/tests/"
+
+  build-android:
+    name: Build Android
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Gradle setup
+        uses: ./.github/actions/gradle-setup
+
+      - name: Decode signing keystore
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$ANDROID_KEYSTORE_BASE64" ]; then
+            echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.keystore"
+            echo "ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/release.keystore" >> "$GITHUB_ENV"
+          else
+            echo "ANDROID_KEYSTORE_BASE64 secret not set; APK will be unsigned." >&2
+          fi
+
+      - name: Build Android release APK
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASS }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ALIAS_NAME }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ALIAS_PASS }}
+        run: ./gradlew :androidApp:assembleRelease
+
+      - name: Upload Android release APK
+        uses: ./.github/actions/upload-release-artifact
+        with:
+          source-dir: androidApp/build/outputs/apk/release
+          extension: apk
+          platform-suffix: android
+
+  publish:
+    name: Publish artifacts
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    needs:
+      - build-android
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download release artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release
+          pattern: sun-lessons-*
+          merge-multiple: true
+
+      - name: Read app version
+        id: app-version
+        run: |
+          versionName=$(grep -E '^versionName' gradle/libs.versions.toml | sed -E 's/.*"([^"]+)".*/\1/')
+          versionCode=$(grep -E '^versionCode' gradle/libs.versions.toml | sed -E 's/.*"([^"]+)".*/\1/')
+          echo "version-name=$versionName" >> "$GITHUB_OUTPUT"
+          echo "version-code=$versionCode" >> "$GITHUB_OUTPUT"
+
+#      - name: Set S3 destination
+#        run: echo "CURRENT_S3_DESTINATION=${{ github.repository_owner }}/${{ github.event.repository.name }}/${{ github.ref_name }}/${{ github.run_number }}" >> $GITHUB_ENV
+
+      - name: Set release tag
+        if: github.ref == 'refs/heads/main'
+        run: echo "GIT_RELEASE_TAG=v${{ steps.app-version.outputs.version-name }}+${{ steps.app-version.outputs.version-code }}" >> $GITHUB_ENV
+
+#      - name: Upload artifacts to S3
+#        uses: shallwefootball/s3-upload-action@v1.1.3
+#        with:
+#          aws_key_id: ${{ secrets.AWS_KEY_ID }}
+#          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws_bucket: ${{ secrets.AWS_BUCKET }}
+#          source_dir: ./release
+#          destination_dir: ${{ env.CURRENT_S3_DESTINATION }}
+
+      - name: Publish GitHub release
+        if: github.ref == 'refs/heads/main'
+        uses: marvinpinto/action-automatic-releases@v1.2.1
+        with:
+          automatic_release_tag: ${{ env.GIT_RELEASE_TAG }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: false
+          files: release/*.*
+
+#      - name: Delete workflow artifacts
+#        if: always()
+#        uses: geekyeggo/delete-artifact@v5
+#        with:
+#          name: sun-lessons-*
