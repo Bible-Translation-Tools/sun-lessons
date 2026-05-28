@@ -53,12 +53,12 @@ jobs:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASS }}
           ANDROID_KEY_ALIAS: ${{ secrets.ALIAS_NAME }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ALIAS_PASS }}
-        run: ./gradlew :androidApp:assembleRelease
+        run: ./gradlew :app:assembleRelease
 
       - name: Upload Android release APK
         uses: ./.github/actions/upload-release-artifact
         with:
-          source-dir: androidApp/build/outputs/apk/release
+          source-dir: app/build/outputs/apk/release
           extension: apk
           platform-suffix: android
 
