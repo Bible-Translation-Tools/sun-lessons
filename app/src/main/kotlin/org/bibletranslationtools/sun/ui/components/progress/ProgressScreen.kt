@@ -5,13 +5,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -46,36 +46,42 @@ fun ProgressScreen(component: ProgressComponent) {
             }
         }
 
-        Column(modifier = Modifier.weight(1f)) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 16.dp)
-            ) {
-                ScreenHeader()
+        ScreenHeader()
 
-                Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-                ProgressSection(model.lessons)
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
+            contentPadding = PaddingValues(bottom = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            item { ProgressSection(model.lessons) }
 
-                Spacer(modifier = Modifier.height(12.dp))
+            item { LessonsLearnedHeader() }
 
-                LessonsLearnedHeader()
+            val rows = model.lessons.chunked(5)
 
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(5),
+            items(rows) { rowLessons ->
+                Row(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(18.dp),
-                    contentPadding = PaddingValues(vertical = 12.dp)
+                    modifier = Modifier.widthIn(max = 500.dp)
                 ) {
-                    items(model.lessons.size) { index ->
-                        val lesson = model.lessons[index]
+                    for (lesson in rowLessons) {
                         LessonBox(
                             lesson = lesson,
-                            modifier = Modifier.size(60.dp)
+                            modifier = Modifier
+                                .weight(1f)
+                                .aspectRatio(1f)
                         )
+                    }
+
+                    val emptySlots = 5 - rowLessons.size
+                    if (emptySlots > 0) {
+                        repeat(emptySlots) {
+                            Spacer(modifier = Modifier.weight(1f))
+                        }
                     }
                 }
             }
