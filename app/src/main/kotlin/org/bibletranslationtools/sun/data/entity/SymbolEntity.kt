@@ -22,5 +22,6 @@ data class SymbolEntity(
     val id: Long = 0,
     val sort: Int,
     val name: String,
+    val prefill: Boolean = false,
     val sentenceId: Long = 0
 )

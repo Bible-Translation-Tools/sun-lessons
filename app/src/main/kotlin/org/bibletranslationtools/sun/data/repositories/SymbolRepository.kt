@@ -10,6 +10,8 @@ interface SymbolRepository {
     suspend fun deleteAll(symbols: List<SymbolEntity>)
     suspend fun update(symbol: SymbolEntity)
     suspend fun updateAll(symbols: List<SymbolEntity>)
+    suspend fun getBySentence(sentenceId: Long): List<SymbolEntity>
+    suspend fun updatePrefill(id: Long, prefill: Boolean)
 }
 
 class SymbolRepositoryImpl(
@@ -37,5 +39,13 @@ class SymbolRepositoryImpl(
 
     override suspend fun updateAll(symbols: List<SymbolEntity>) {
         symbolDao.updateAll(symbols)
+    }
+
+    override suspend fun getBySentence(sentenceId: Long): List<SymbolEntity> {
+        return symbolDao.getBySentence(sentenceId)
+    }
+
+    override suspend fun updatePrefill(id: Long, prefill: Boolean) {
+        symbolDao.updatePrefill(id, prefill)
     }
 }

@@ -39,5 +39,6 @@ data class SentenceData(
 @Serializable
 data class SymbolData(
     val name: String,
-    val sort: Int = 0
+    val sort: Int = 0,
+    val prefill: Boolean = false
 )

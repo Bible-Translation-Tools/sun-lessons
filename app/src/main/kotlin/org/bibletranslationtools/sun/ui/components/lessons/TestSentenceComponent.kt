@@ -66,8 +66,6 @@ class DefaultTestSentenceComponent(
 
     private val componentScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
-    private var lastAnswerPosition = -1
-
     init {
         componentScope.launch {
             initialize()
@@ -104,8 +102,6 @@ class DefaultTestSentenceComponent(
     }
 
     override fun setNextSentence() {
-        lastAnswerPosition = -1
-
         val inProgressSentences = model.value.sentences.filter {
             if (model.value.mode == LessonMode.REPEAT) !it.passed else !it.tested
         }
@@ -120,8 +116,13 @@ class DefaultTestSentenceComponent(
         val correctSentence = inProgressSentences.random()
         val correctSymbols = correctSentence.symbols
 
-        val options = buildOptions(correctSymbols)
-        val answerSlots = correctSymbols.map { it.copy(name = "") }
+        // Symbols flagged prefill are shown filled; user only fills the rest.
+        val symbolsToFill = correctSymbols.filter { !it.prefill }
+
+        val options = buildOptions(symbolsToFill, correctSymbols)
+        val answerSlots = correctSymbols.map { symbol ->
+            if (symbol.prefill) symbol.copy(selected = true) else symbol.copy(name = "")
+        }
 
         val imageUri = correctSentence.image ?: "file:///android_asset/images/sentences/0.jpg"
 
@@ -144,23 +145,24 @@ class DefaultTestSentenceComponent(
         componentScope.launch {
             val currentAnswer = model.value.answerSlots.toMutableList()
 
-            lastAnswerPosition++
-            if (lastAnswerPosition < currentAnswer.size) {
-                currentAnswer[lastAnswerPosition] = symbol.copy(selected = true)
+            // Fill next empty slot, skipping prefilled ones.
+            val emptyIndex = currentAnswer.indexOfFirst { it.name.isEmpty() }
+            if (emptyIndex == -1) return@launch
 
-                val newOptions = model.value.optionChoices.map {
-                    if (it == symbol) it.copy(selected = true) else it
-                }
+            currentAnswer[emptyIndex] = symbol.copy(selected = true)
 
-                _model.update {
-                    it.copy(
-                        answerSlots = currentAnswer.toList(),
-                        optionChoices = newOptions
-                    )
-                }
+            val newOptions = model.value.optionChoices.map {
+                if (it == symbol) it.copy(selected = true) else it
             }
 
-            if (lastAnswerPosition >= currentAnswer.size - 1) {
+            _model.update {
+                it.copy(
+                    answerSlots = currentAnswer.toList(),
+                    optionChoices = newOptions
+                )
+            }
+
+            if (currentAnswer.none { it.name.isEmpty() }) {
                 checkAnswer()
             }
         }
@@ -202,8 +204,11 @@ class DefaultTestSentenceComponent(
         }
     }
 
-    private fun buildOptions(correctSymbols: List<SymbolItem>): List<SymbolItem> {
-        val totalOptions = if (correctSymbols.size > 4) 8 else 4
+    private fun buildOptions(
+        symbolsToChoose: List<SymbolItem>,
+        correctSymbols: List<SymbolItem>
+    ): List<SymbolItem> {
+        val totalOptions = if (symbolsToChoose.size > 4) 8 else 4
 
         val cardSymbols = model.value.cards.map {
             SymbolItem(
@@ -224,9 +229,9 @@ class DefaultTestSentenceComponent(
             .filter { it.name !in correctSymbolNames }
             .distinctBy { it.name }
             .shuffled()
-            .take(totalOptions - correctSymbols.size)
+            .take(totalOptions - symbolsToChoose.size)
 
-        val finalOptions = (correctSymbols + incorrectSymbols).shuffled()
+        val finalOptions = (symbolsToChoose + incorrectSymbols).shuffled()
 
         return finalOptions.map { it.copy(selected = false, correct = null) }
     }

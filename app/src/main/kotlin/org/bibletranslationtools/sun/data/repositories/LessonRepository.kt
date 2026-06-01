@@ -15,6 +15,7 @@ interface LessonRepository {
     suspend fun getScriptureWithData(): List<LessonWithData>
     suspend fun getGroupWithData(id: GroupId): List<LessonWithData>
     suspend fun get(id: Long): LessonEntity?
+    suspend fun getAll(): List<LessonEntity>
 }
 class LessonRepositoryImpl(private val lessonDao: LessonDao) : LessonRepository {
     override suspend fun insert(lesson: LessonEntity): Long {
@@ -71,5 +72,9 @@ class LessonRepositoryImpl(private val lessonDao: LessonDao) : LessonRepository 
 
     override suspend fun get(id: Long): LessonEntity? {
         return lessonDao.get(id)
+    }
+
+    override suspend fun getAll(): List<LessonEntity> {
+        return lessonDao.getAll()
     }
 }
