@@ -1,5 +1,5 @@
 {
-  "version": 6,
+  "version": 7,
   "lessons": [
     {
       "cards": [
@@ -48,10 +48,12 @@
         {
           "symbols": [
             {
-              "name": "\uE11F"
+              "name": "\uE11F",
+              "prefill": true
             },
             {
-              "name": "\uE274"
+              "name": "\uE274",
+              "prefill": false
             }
           ],
           "image": "1.1a.jpg"
@@ -59,10 +61,12 @@
         {
           "symbols": [
             {
-              "name": "\uE11F"
+              "name": "\uE11F",
+              "prefill": true
             },
             {
-              "name": "\uE29C"
+              "name": "\uE29C",
+              "prefill": false
             }
           ],
           "image": "1.2a.jpg"
@@ -70,10 +74,12 @@
         {
           "symbols": [
             {
-              "name": "\uE11F"
+              "name": "\uE11F",
+              "prefill": true
             },
             {
-              "name": "\uE22A"
+              "name": "\uE22A",
+              "prefill": false
             }
           ],
           "image": "1.3a.jpg"
@@ -81,10 +87,12 @@
         {
           "symbols": [
             {
-              "name": "\uE11F"
+              "name": "\uE11F",
+              "prefill": true
             },
             {
-              "name": "\uE298"
+              "name": "\uE298",
+              "prefill": false
             }
           ],
           "image": "1.4a.jpg"
@@ -138,13 +146,16 @@
         {
           "symbols": [
             {
-              "name": "\uE000"
+              "name": "\uE000",
+              "prefill": true
             },
             {
-              "name": "\uE309"
+              "name": "\uE309",
+              "prefill": false
             },
             {
-              "name": "\uE263"
+              "name": "\uE263",
+              "prefill": true
             }
           ],
           "image": "2.1a.jpg"
@@ -152,13 +163,16 @@
         {
           "symbols": [
             {
-              "name": "\uE000"
+              "name": "\uE000",
+              "prefill": true
             },
             {
-              "name": "\uE238"
+              "name": "\uE238",
+              "prefill": false
             },
             {
-              "name": "\uE272"
+              "name": "\uE272",
+              "prefill": true
             }
           ],
           "image": "2.2a.jpg"
@@ -166,10 +180,12 @@
         {
           "symbols": [
             {
-              "name": "\uE15F"
+              "name": "\uE15F",
+              "prefill": true
             },
             {
-              "name": "\uE315"
+              "name": "\uE315",
+              "prefill": false
             }
           ],
           "image": "2.3a.jpg"
@@ -177,13 +193,16 @@
         {
           "symbols": [
             {
-              "name": "\uE11F"
+              "name": "\uE11F",
+              "prefill": true
             },
             {
-              "name": "\uE238"
+              "name": "\uE238",
+              "prefill": false
             },
             {
-              "name": "\uE23C"
+              "name": "\uE23C",
+              "prefill": true
             }
           ],
           "image": "2.4a.jpg"
@@ -191,16 +210,20 @@
         {
           "symbols": [
             {
-              "name": "\uE000"
+              "name": "\uE000",
+              "prefill": true
             },
             {
-              "name": "\uE238"
+              "name": "\uE238",
+              "prefill": false
             },
             {
-              "name": "\uE15F"
+              "name": "\uE15F",
+              "prefill": true
             },
             {
-              "name": "\uE315"
+              "name": "\uE315",
+              "prefill": false
             }
           ],
           "image": "2.5a.jpg"
@@ -208,16 +231,20 @@
         {
           "symbols": [
             {
-              "name": "\uE000"
+              "name": "\uE000",
+              "prefill": true
             },
             {
-              "name": "\uE299"
+              "name": "\uE299",
+              "prefill": false
             },
             {
-              "name": "\uE11F"
+              "name": "\uE11F",
+              "prefill": true
             },
             {
-              "name": "\uE03F"
+              "name": "\uE03F",
+              "prefill": false
             }
           ],
           "image": "2.6a.jpg"
@@ -271,13 +298,16 @@
         {
           "symbols": [
             {
-              "name": "\uE028"
+              "name": "\uE028",
+              "prefill": true
             },
             {
-              "name": "\uE03F"
+              "name": "\uE03F",
+              "prefill": false
             },
             {
-              "name": "\uE166"
+              "name": "\uE166",
+              "prefill": true
             }
           ],
           "image": "3.1a.jpg"
@@ -285,16 +315,20 @@
         {
           "symbols": [
             {
-              "name": "\uE166"
+              "name": "\uE166",
+              "prefill": true
             },
             {
-              "name": "\uE17C"
+              "name": "\uE17C",
+              "prefill": false
             },
             {
-              "name": "\uE238"
+              "name": "\uE238",
+              "prefill": true
             },
             {
-              "name": "\uE171"
+              "name": "\uE171",
+              "prefill": false
             }
           ],
           "image": "3.2a.jpg"
@@ -302,13 +336,16 @@
         {
           "symbols": [
             {
-              "name": "\uE11F"
+              "name": "\uE11F",
+              "prefill": true
             },
             {
-              "name": "\uE25F"
+              "name": "\uE25F",
+              "prefill": false
             },
             {
-              "name": "\uE244"
+              "name": "\uE244",
+              "prefill": true
             }
           ],
           "image": "3.3a.jpg"
@@ -316,13 +353,16 @@
         {
           "symbols": [
             {
-              "name": "\uE280"
+              "name": "\uE280",
+              "prefill": true
             },
             {
-              "name": "\uE29E"
+              "name": "\uE29E",
+              "prefill": false
             },
             {
-              "name": "\uE27E"
+              "name": "\uE27E",
+              "prefill": true
             }
           ],
           "image": "3.4a.jpg"
@@ -330,16 +370,20 @@
         {
           "symbols": [
             {
-              "name": "\uE166"
+              "name": "\uE166",
+              "prefill": true
             },
             {
-              "name": "\uE238"
+              "name": "\uE238",
+              "prefill": false
             },
             {
-              "name": "\uE244"
+              "name": "\uE244",
+              "prefill": false
             },
             {
-              "name": "\uE23C"
+              "name": "\uE23C",
+              "prefill": true
             }
           ],
           "image": "3.5a.jpg"
@@ -347,13 +391,16 @@
         {
           "symbols": [
             {
-              "name": "\uE171"
+              "name": "\uE171",
+              "prefill": true
             },
             {
-              "name": "\uE17C"
+              "name": "\uE17C",
+              "prefill": false
             },
             {
-              "name": "\uE311"
+              "name": "\uE311",
+              "prefill": false
             }
           ],
           "image": "3.6a.jpg"
@@ -407,16 +454,20 @@
         {
           "symbols": [
             {
-              "name": "\uE166"
+              "name": "\uE166",
+              "prefill": true
             },
             {
-              "name": "\uE256"
+              "name": "\uE256",
+              "prefill": false
             },
             {
-              "name": "\uE23C"
+              "name": "\uE23C",
+              "prefill": true
             },
             {
-              "name": "\uE171"
+              "name": "\uE171",
+              "prefill": false
             }
           ],
           "image": "4.1a.jpg"
@@ -424,13 +475,16 @@
         {
           "symbols": [
             {
-              "name": "\uE17C"
+              "name": "\uE17C",
+              "prefill": true
             },
             {
-              "name": "\uE265"
+              "name": "\uE265",
+              "prefill": false
             },
             {
-              "name": "\uE27C"
+              "name": "\uE27C",
+              "prefill": true
             }
           ],
           "image": "4.2a.jpg"
@@ -438,16 +492,20 @@
         {
           "symbols": [
             {
-              "name": "\uE11F"
+              "name": "\uE11F",
+              "prefill": false
             },
             {
-              "name": "\uE256"
+              "name": "\uE256",
+              "prefill": true
             },
             {
-              "name": "\uE315"
+              "name": "\uE315",
+              "prefill": true
             },
             {
-              "name": "\uE0D9"
+              "name": "\uE0D9",
+              "prefill": false
             }
           ],
           "image": "4.3a.jpg"
@@ -455,16 +513,20 @@
         {
           "symbols": [
             {
-              "name": "\uE000"
+              "name": "\uE000",
+              "prefill": false
             },
             {
-              "name": "\uE24E"
+              "name": "\uE24E",
+              "prefill": true
             },
             {
-              "name": "\uE27E"
+              "name": "\uE27E",
+              "prefill": true
             },
             {
-              "name": "\uE280"
+              "name": "\uE280",
+              "prefill": false
             }
           ],
           "image": "4.4a.jpg"
@@ -472,13 +534,16 @@
         {
           "symbols": [
             {
-              "name": "\uE028"
+              "name": "\uE028",
+              "prefill": true
             },
             {
-              "name": "\uE17C"
+              "name": "\uE17C",
+              "prefill": true
             },
             {
-              "name": "\uE29D"
+              "name": "\uE29D",
+              "prefill": false
             }
           ],
           "image": "4.5a.jpg"
@@ -486,13 +551,16 @@
         {
           "symbols": [
             {
-              "name": "\uE000"
+              "name": "\uE000",
+              "prefill": true
             },
             {
-              "name": "\uE24E"
+              "name": "\uE24E",
+              "prefill": false
             },
             {
-              "name": "\uE279"
+              "name": "\uE279",
+              "prefill": true
             }
           ],
           "image": "4.6a.jpg"
@@ -546,13 +614,16 @@
         {
           "symbols": [
             {
-              "name": "\uE000"
+              "name": "\uE000",
+              "prefill": true
             },
             {
-              "name": "\uE31C"
+              "name": "\uE31C",
+              "prefill": true
             },
             {
-              "name": "\uE29D"
+              "name": "\uE29D",
+              "prefill": false
             }
           ],
           "image": "5.1a.jpg"
@@ -560,13 +631,16 @@
         {
           "symbols": [
             {
-              "name": "\uE303"
+              "name": "\uE303",
+              "prefill": true
             },
             {
-              "name": "\uE30E"
+              "name": "\uE30E",
+              "prefill": false
             },
             {
-              "name": "\uE244"
+              "name": "\uE244",
+              "prefill": true
             }
           ],
           "image": "5.2a.jpg"
@@ -574,13 +648,16 @@
         {
           "symbols": [
             {
-              "name": "\uE30A"
+              "name": "\uE30A",
+              "prefill": false
             },
             {
-              "name": "\uE17C"
+              "name": "\uE17C",
+              "prefill": true
             },
             {
-              "name": "\uE256"
+              "name": "\uE256",
+              "prefill": false
             }
           ],
           "image": "5.3a.jpg"
@@ -588,16 +665,20 @@
         {
           "symbols": [
             {
-              "name": "\uE303"
+              "name": "\uE303",
+              "prefill": true
             },
             {
-              "name": "\uE17C"
+              "name": "\uE17C",
+              "prefill": false
             },
             {
-              "name": "\uE24B"
+              "name": "\uE24B",
+              "prefill": true
             },
             {
-              "name": "\uE29F"
+              "name": "\uE29F",
+              "prefill": false
             }
           ],
           "image": "5.4a.jpg"
@@ -605,13 +686,16 @@
         {
           "symbols": [
             {
-              "name": "\uE11F"
+              "name": "\uE11F",
+              "prefill": false
             },
             {
-              "name": "\uE30E"
+              "name": "\uE30E",
+              "prefill": true
             },
             {
-              "name": "\uE29D"
+              "name": "\uE29D",
+              "prefill": true
             }
           ],
           "image": "5.5a.jpg"
@@ -619,13 +703,16 @@
         {
           "symbols": [
             {
-              "name": "\uE171"
+              "name": "\uE171",
+              "prefill": false
             },
             {
-              "name": "\uE17C"
+              "name": "\uE17C",
+              "prefill": false
             },
             {
-              "name": "\uE102"
+              "name": "\uE102",
+              "prefill": true
             }
           ],
           "image": "5.6a.jpg"
@@ -679,16 +766,20 @@
         {
           "symbols": [
             {
-              "name": "\uE166"
+              "name": "\uE166",
+              "prefill": false
             },
             {
-              "name": "\uE24E"
+              "name": "\uE24E",
+              "prefill": true
             },
             {
-              "name": "\uE302"
+              "name": "\uE302",
+              "prefill": true
             },
             {
-              "name": "\uE29E"
+              "name": "\uE29E",
+              "prefill": false
             }
           ],
           "image": "6.1a.jpg"
@@ -696,10 +787,12 @@
         {
           "symbols": [
             {
-              "name": "\uE15F"
+              "name": "\uE15F",
+              "prefill": false
             },
             {
-              "name": "\uE301"
+              "name": "\uE301",
+              "prefill": true
             }
           ],
           "image": "6.2a.jpg"
@@ -707,13 +800,16 @@
         {
           "symbols": [
             {
-              "name": "\uE304"
+              "name": "\uE304",
+              "prefill": false
             },
             {
-              "name": "\uE25B"
+              "name": "\uE25B",
+              "prefill": true
             },
             {
-              "name": "\uE313"
+              "name": "\uE313",
+              "prefill": false
             }
           ],
           "image": "6.3a.jpg"
@@ -721,10 +817,12 @@
         {
           "symbols": [
             {
-              "name": "\uE27E"
+              "name": "\uE27E",
+              "prefill": false
             },
             {
-              "name": "\uE30D"
+              "name": "\uE30D",
+              "prefill": true
             }
           ],
           "image": "6.4a.jpg"
@@ -732,16 +830,20 @@
         {
           "symbols": [
             {
-              "name": "\uE000"
+              "name": "\uE000",
+              "prefill": false
             },
             {
-              "name": "\uE238"
+              "name": "\uE238",
+              "prefill": true
             },
             {
-              "name": "\uE302"
+              "name": "\uE302",
+              "prefill": false
             },
             {
-              "name": "\uE307"
+              "name": "\uE307",
+              "prefill": true
             }
           ],
           "image": "6.5a.jpg"
@@ -749,13 +851,16 @@
         {
           "symbols": [
             {
-              "name": "\uE301"
+              "name": "\uE301",
+              "prefill": true
             },
             {
-              "name": "\uE315"
+              "name": "\uE315",
+              "prefill": false
             },
             {
-              "name": "\uE306"
+              "name": "\uE306",
+              "prefill": false
             }
           ],
           "image": "6.6a.jpg"
@@ -809,13 +914,16 @@
         {
           "symbols": [
             {
-              "name": "\uE263"
+              "name": "\uE263",
+              "prefill": false
             },
             {
-              "name": "\uE17C"
+              "name": "\uE17C",
+              "prefill": true
             },
             {
-              "name": "\uE0B2"
+              "name": "\uE0B2",
+              "prefill": false
             }
           ],
           "image": "7.1a.jpg"
@@ -823,16 +931,20 @@
         {
           "symbols": [
             {
-              "name": "\uE102"
+              "name": "\uE102",
+              "prefill": true
             },
             {
-              "name": "\uE08C"
+              "name": "\uE08C",
+              "prefill": false
             },
             {
-              "name": "\uE279"
+              "name": "\uE279",
+              "prefill": true
             },
             {
-              "name": "\uE153"
+              "name": "\uE153",
+              "prefill": false
             }
           ],
           "image": "7.2a.jpg"
@@ -840,13 +952,16 @@
         {
           "symbols": [
             {
-              "name": "\uE30F"
+              "name": "\uE30F",
+              "prefill": true
             },
             {
-              "name": "\uE0F4"
+              "name": "\uE0F4",
+              "prefill": false
             },
             {
-              "name": "\uE288"
+              "name": "\uE288",
+              "prefill": true
             }
           ],
           "image": "7.3a.jpg"
@@ -854,13 +969,16 @@
         {
           "symbols": [
             {
-              "name": "\uE166"
+              "name": "\uE166",
+              "prefill": false
             },
             {
-              "name": "\uE310"
+              "name": "\uE310",
+              "prefill": true
             },
             {
-              "name": "\uE303"
+              "name": "\uE303",
+              "prefill": false
             }
           ],
           "image": "7.4a.jpg"
@@ -868,13 +986,16 @@
         {
           "symbols": [
             {
-              "name": "\uE000"
+              "name": "\uE000",
+              "prefill": true
             },
             {
-              "name": "\uE305"
+              "name": "\uE305",
+              "prefill": false
             },
             {
-              "name": "\uE398"
+              "name": "\uE398",
+              "prefill": true
             }
           ],
           "image": "7.5a.jpg"
@@ -882,16 +1003,20 @@
         {
           "symbols": [
             {
-              "name": "\uE166"
+              "name": "\uE166",
+              "prefill": false
             },
             {
-              "name": "\uE17C"
+              "name": "\uE17C",
+              "prefill": true
             },
             {
-              "name": "\uE16A"
+              "name": "\uE16A",
+              "prefill": true
             },
             {
-              "name": "\uE29C"
+              "name": "\uE29C",
+              "prefill": false
             }
           ],
           "image": "7.6a.jpg"
@@ -945,16 +1070,20 @@
         {
           "symbols": [
             {
-              "name": "\uE028"
+              "name": "\uE028",
+              "prefill": false
             },
             {
-              "name": "\uE01A"
+              "name": "\uE01A",
+              "prefill": false
             },
             {
-              "name": "\uE028\uE390"
+              "name": "\uE028\uE390",
+              "prefill": true
             },
             {
-              "name": "\uE303"
+              "name": "\uE303",
+              "prefill": true
             }
           ],
           "image": "8.1a.jpg"
@@ -962,13 +1091,16 @@
         {
           "symbols": [
             {
-              "name": "\uE000"
+              "name": "\uE000",
+              "prefill": false
             },
             {
-              "name": "\uE096"
+              "name": "\uE096",
+              "prefill": true
             },
             {
-              "name": "\uE29A"
+              "name": "\uE29A",
+              "prefill": false
             }
           ],
           "image": "8.2a.jpg"
@@ -976,16 +1108,20 @@
         {
           "symbols": [
             {
-              "name": "\uE166"
+              "name": "\uE166",
+              "prefill": false
             },
             {
-              "name": "\uE238"
+              "name": "\uE238",
+              "prefill": false
             },
             {
-              "name": "\uE251"
+              "name": "\uE251",
+              "prefill": true
             },
             {
-              "name": "\uE284"
+              "name": "\uE284",
+              "prefill": false
             }
           ],
           "image": "8.3a.jpg"
@@ -993,16 +1129,20 @@
         {
           "symbols": [
             {
-              "name": "\uE17C"
+              "name": "\uE17C",
+              "prefill": true
             },
             {
-              "name": "\uE312"
+              "name": "\uE312",
+              "prefill": false
             },
             {
-              "name": "\uE31A"
+              "name": "\uE31A",
+              "prefill": true
             },
             {
-              "name": "\uE03F"
+              "name": "\uE03F",
+              "prefill": false
             }
           ],
           "image": "8.4a.jpg"
@@ -1010,16 +1150,20 @@
         {
           "symbols": [
             {
-              "name": "\uE166"
+              "name": "\uE166",
+              "prefill": false
             },
             {
-              "name": "\uE29C"
+              "name": "\uE29C",
+              "prefill": true
             },
             {
-              "name": "\uE308"
+              "name": "\uE308",
+              "prefill": false
             },
             {
-              "name": "\uE22A"
+              "name": "\uE22A",
+              "prefill": true
             }
           ],
           "image": "8.5a.jpg"
@@ -1027,16 +1171,20 @@
         {
           "symbols": [
             {
-              "name": "\uE166"
+              "name": "\uE166",
+              "prefill": true
             },
             {
-              "name": "\uE17C"
+              "name": "\uE17C",
+              "prefill": true
             },
             {
-              "name": "\uE062"
+              "name": "\uE062",
+              "prefill": false
             },
             {
-              "name": "\uE11F"
+              "name": "\uE11F",
+              "prefill": false
             }
           ],
           "image": "8.6a.jpg"
@@ -1246,7 +1394,7 @@
           "image": "13.4a.jpg"
         },
         {
-          "symbol": "“",
+          "symbol": "\u201C",
           "image": "13.5a.jpg"
         },
         {
@@ -1266,22 +1414,28 @@
         {
           "symbols": [
             {
-              "name": "\uE11F\uE11F"
+              "name": "\uE11F\uE11F",
+              "prefill": true
             },
             {
-              "name": "\uE088"
+              "name": "\uE088",
+              "prefill": false
             },
             {
-              "name": "\uE191"
+              "name": "\uE191",
+              "prefill": false
             },
             {
-              "name": "\uE050"
+              "name": "\uE050",
+              "prefill": true
             },
             {
-              "name": "\uE000"
+              "name": "\uE000",
+              "prefill": false
             },
             {
-              "name": "\uE037\uE37E"
+              "name": "\uE037\uE37E",
+              "prefill": true
             }
           ],
           "image": "13.1a.jpg"
@@ -1289,25 +1443,32 @@
         {
           "symbols": [
             {
-              "name": "\uE11F\uE11F"
+              "name": "\uE11F\uE11F",
+              "prefill": false
             },
             {
-              "name": "\uE21E"
+              "name": "\uE21E",
+              "prefill": true
             },
             {
-              "name": "\uE037"
+              "name": "\uE037",
+              "prefill": true
             },
             {
-              "name": "\uE07E"
+              "name": "\uE07E",
+              "prefill": false
             },
             {
-              "name": "\uE071"
+              "name": "\uE071",
+              "prefill": true
             },
             {
-              "name": "\uE113"
+              "name": "\uE113",
+              "prefill": false
             },
             {
-              "name": "\uE000\uE37E"
+              "name": "\uE000\uE37E",
+              "prefill": true
             }
           ],
           "image": "13.2a.jpg"
@@ -1315,19 +1476,24 @@
         {
           "symbols": [
             {
-              "name": "\uE037"
+              "name": "\uE037",
+              "prefill": true
             },
             {
-              "name": "\uE088"
+              "name": "\uE088",
+              "prefill": false
             },
             {
-              "name": "\uE000"
+              "name": "\uE000",
+              "prefill": true
             },
             {
-              "name": "\uE11E"
+              "name": "\uE11E",
+              "prefill": false
             },
             {
-              "name": "\uE128\uE37E"
+              "name": "\uE128\uE37E",
+              "prefill": true
             }
           ],
           "image": "13.3a.jpg"
@@ -1335,22 +1501,28 @@
         {
           "symbols": [
             {
-              "name": "\uE037"
+              "name": "\uE037",
+              "prefill": false
             },
             {
-              "name": "\uE07E"
+              "name": "\uE07E",
+              "prefill": true
             },
             {
-              "name": "\uE071\uE071"
+              "name": "\uE071\uE071",
+              "prefill": false
             },
             {
-              "name": "\uE240"
+              "name": "\uE240",
+              "prefill": true
             },
             {
-              "name": "\uE000\uE390"
+              "name": "\uE000\uE390",
+              "prefill": true
             },
             {
-              "name": "\uE299\uE299\uE37E"
+              "name": "\uE299\uE299\uE37E",
+              "prefill": false
             }
           ],
           "image": "13.4a.jpg"
@@ -1358,10 +1530,12 @@
         {
           "symbols": [
             {
-              "name": "\uE037"
+              "name": "\uE037",
+              "prefill": false
             },
             {
-              "name": "\uE048\uE37E"
+              "name": "\uE048\uE37E",
+              "prefill": true
             }
           ],
           "image": "13.5a.jpg"
@@ -1369,16 +1543,20 @@
         {
           "symbols": [
             {
-              "name": "\uE037"
+              "name": "\uE037",
+              "prefill": true
             },
             {
-              "name": "\uE10C"
+              "name": "\uE10C",
+              "prefill": false
             },
             {
-              "name": "\uE000\uE390"
+              "name": "\uE000\uE390",
+              "prefill": false
             },
             {
-              "name": "\uE045\uE37E"
+              "name": "\uE045\uE37E",
+              "prefill": false
             }
           ],
           "image": "13.6a.jpg"
@@ -1386,16 +1564,20 @@
         {
           "symbols": [
             {
-              "name": "\uE037"
+              "name": "\uE037",
+              "prefill": false
             },
             {
-              "name": "\uE238"
+              "name": "\uE238",
+              "prefill": true
             },
             {
-              "name": "\uE315"
+              "name": "\uE315",
+              "prefill": true
             },
             {
-              "name": "\uE380\uE37E"
+              "name": "\uE380\uE37E",
+              "prefill": false
             }
           ],
           "image": "13.7a.jpg"
@@ -1403,10 +1585,12 @@
         {
           "symbols": [
             {
-              "name": "\uE037"
+              "name": "\uE037",
+              "prefill": false
             },
             {
-              "name": "\uE047\uE37E"
+              "name": "\uE047\uE37E",
+              "prefill": true
             }
           ],
           "image": "13.8a.jpg"
@@ -1414,16 +1598,20 @@
         {
           "symbols": [
             {
-              "name": "\uE037"
+              "name": "\uE037",
+              "prefill": false
             },
             {
-              "name": "\uE03F,"
+              "name": "\uE03F,",
+              "prefill": true
             },
             {
-              "name": "“\uE18A"
+              "name": "\u201C\uE18A",
+              "prefill": false
             },
             {
-              "name": "\uEE02“\uE37E"
+              "name": "\uEE02\u201C\uE37E",
+              "prefill": false
             }
           ],
           "image": "13.9a.jpg"
@@ -1431,13 +1619,16 @@
         {
           "symbols": [
             {
-              "name": "\uE000\uE390"
+              "name": "\uE000\uE390",
+              "prefill": false
             },
             {
-              "name": "\uE299\uE299"
+              "name": "\uE299\uE299",
+              "prefill": false
             },
             {
-              "name": "\uE18A\uE37E"
+              "name": "\uE18A\uE37E",
+              "prefill": true
             }
           ],
           "image": "13.10a.jpg"
@@ -1445,13 +1636,16 @@
         {
           "symbols": [
             {
-              "name": "\uE000\uE390"
+              "name": "\uE000\uE390",
+              "prefill": true
             },
             {
-              "name": "\uE045"
+              "name": "\uE045",
+              "prefill": false
             },
             {
-              "name": "\uE260\uE37E"
+              "name": "\uE260\uE37E",
+              "prefill": false
             }
           ],
           "image": "13.11a.jpg"
@@ -1459,13 +1653,16 @@
         {
           "symbols": [
             {
-              "name": "\uE000"
+              "name": "\uE000",
+              "prefill": false
             },
             {
-              "name": "\uE03F"
+              "name": "\uE03F",
+              "prefill": false
             },
             {
-              "name": "\uE096\uE37E"
+              "name": "\uE096\uE37E",
+              "prefill": true
             }
           ],
           "image": "13.12a.jpg"
@@ -1527,13 +1724,16 @@
         {
           "symbols": [
             {
-              "name": "\uE251"
+              "name": "\uE251",
+              "prefill": false
             },
             {
-              "name": "\uE127"
+              "name": "\uE127",
+              "prefill": true
             },
             {
-              "name": "\uE08F\uE37E"
+              "name": "\uE08F\uE37E",
+              "prefill": false
             }
           ],
           "image": "14.1a.jpg"
@@ -1541,16 +1741,20 @@
         {
           "symbols": [
             {
-              "name": "\uE08F\uE390"
+              "name": "\uE08F\uE390",
+              "prefill": true
             },
             {
-              "name": "\uE32A"
+              "name": "\uE32A",
+              "prefill": false
             },
             {
-              "name": "\uE24B"
+              "name": "\uE24B",
+              "prefill": false
             },
             {
-              "name": "\uE181\uE37E"
+              "name": "\uE181\uE37E",
+              "prefill": true
             }
           ],
           "image": "14.2a.jpg"
@@ -1558,13 +1762,16 @@
         {
           "symbols": [
             {
-              "name": "\uE036"
+              "name": "\uE036",
+              "prefill": false
             },
             {
-              "name": "\uE01A"
+              "name": "\uE01A",
+              "prefill": false
             },
             {
-              "name": "\uE127\uE37E"
+              "name": "\uE127\uE37E",
+              "prefill": true
             }
           ],
           "image": "14.3a.jpg"
@@ -1572,16 +1779,20 @@
         {
           "symbols": [
             {
-              "name": "\uE036"
+              "name": "\uE036",
+              "prefill": false
             },
             {
-              "name": "\uE086"
+              "name": "\uE086",
+              "prefill": true
             },
             {
-              "name": "\uE223"
+              "name": "\uE223",
+              "prefill": false
             },
             {
-              "name": "\uE004\uE37E"
+              "name": "\uE004\uE37E",
+              "prefill": true
             }
           ],
           "image": "14.4a.jpg"
@@ -1589,16 +1800,20 @@
         {
           "symbols": [
             {
-              "name": "\uE11F"
+              "name": "\uE11F",
+              "prefill": true
             },
             {
-              "name": "\uE06F"
+              "name": "\uE06F",
+              "prefill": false
             },
             {
-              "name": "\uE036\uE390"
+              "name": "\uE036\uE390",
+              "prefill": true
             },
             {
-              "name": "\uE004\uE37E"
+              "name": "\uE004\uE37E",
+              "prefill": false
             }
           ],
           "image": "14.5a.jpg"
@@ -1606,13 +1821,16 @@
         {
           "symbols": [
             {
-              "name": "\uE11F"
+              "name": "\uE11F",
+              "prefill": false
             },
             {
-              "name": "\uE17C"
+              "name": "\uE17C",
+              "prefill": true
             },
             {
-              "name": "\uE181\uE37E"
+              "name": "\uE181\uE37E",
+              "prefill": false
             }
           ],
           "image": "14.6a.jpg"
@@ -1620,13 +1838,16 @@
         {
           "symbols": [
             {
-              "name": "\uE11F"
+              "name": "\uE11F",
+              "prefill": false
             },
             {
-              "name": "\uE09F"
+              "name": "\uE09F",
+              "prefill": true
             },
             {
-              "name": "\uE252\uE37E"
+              "name": "\uE252\uE37E",
+              "prefill": false
             }
           ],
           "image": "14.7a.jpg"

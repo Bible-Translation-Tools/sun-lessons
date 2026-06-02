@@ -162,6 +162,7 @@ class DataMapperImpl(
     override fun toEntity(item: SymbolItem) = SymbolEntity(
         name = item.name,
         sort = item.sort,
+        prefill = item.prefill,
         sentenceId = item.sentenceId,
         id = item.id
     )
@@ -169,6 +170,7 @@ class DataMapperImpl(
     override fun toItem(entity: SymbolEntity) = SymbolItem(
         name = entity.name,
         sort = entity.sort,
+        prefill = entity.prefill,
         sentenceId = entity.sentenceId,
         selected = false,
         correct = null,
@@ -178,6 +180,7 @@ class DataMapperImpl(
     override fun toItem(data: SymbolData) = SymbolItem(
         name = data.name,
         sort = data.sort,
+        prefill = data.prefill,
         sentenceId = 0
     )
 
@@ -208,7 +211,8 @@ class DataMapperImpl(
 
     override fun toEntity(data: SymbolData) = SymbolEntity(
         sort = data.sort,
-        name = data.name
+        name = data.name,
+        prefill = data.prefill
     )
 
     private fun getName(item: LessonItem): String {

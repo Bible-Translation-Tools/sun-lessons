@@ -59,32 +59,11 @@ class DefaultSplashComponent(
                 val lessonCatalog: LessonCatalog = Utils.JsonLenient.decodeFromString(json)
 
                 if (lessonCatalog.version > dbVersion) {
-                    var lessonSort = 1
-                    for (lesson in lessonCatalog.lessons) {
-                        val lessonId = insertLesson(lesson.copy(sort = lessonSort++))
-
-                        var cardSort = 1
-                        for (card in lesson.cards) {
-                            insertCard(
-                                card = card.copy(sort = cardSort++),
-                                lessonId = lessonId
-                            )
-                        }
-
-                        var sentenceSort = 1
-                        for (sentence in lesson.sentences) {
-                            val sentenceId = insertSentence(
-                                sentence = sentence.copy(sort = sentenceSort++),
-                                lessonId = lessonId
-                            )
-                            var symbolSort = 0
-                            for (symbol in sentence.symbols) {
-                                insertSymbol(
-                                    symbol = symbol.copy(sort = symbolSort++),
-                                    sentenceId = sentenceId
-                                )
-                            }
-                        }
+                    if (dbVersion == 0) {
+                        seedLessons(lessonCatalog)
+                    } else {
+                        // Existing install: run data migrations, keep progress.
+                        runMigrations(dbVersion, lessonCatalog)
                     }
 
                     insertSetting(
@@ -99,6 +78,68 @@ class DefaultSplashComponent(
             delay(2000)
 
             onInitDone()
+        }
+    }
+
+    private suspend fun seedLessons(lessonCatalog: LessonCatalog) {
+        var lessonSort = 1
+        for (lesson in lessonCatalog.lessons) {
+            val lessonId = insertLesson(lesson.copy(sort = lessonSort++))
+
+            var cardSort = 1
+            for (card in lesson.cards) {
+                insertCard(
+                    card = card.copy(sort = cardSort++),
+                    lessonId = lessonId
+                )
+            }
+
+            var sentenceSort = 1
+            for (sentence in lesson.sentences) {
+                val sentenceId = insertSentence(
+                    sentence = sentence.copy(sort = sentenceSort++),
+                    lessonId = lessonId
+                )
+                var symbolSort = 0
+                for (symbol in sentence.symbols) {
+                    insertSymbol(
+                        symbol = symbol.copy(sort = symbolSort++),
+                        sentenceId = sentenceId
+                    )
+                }
+            }
+        }
+    }
+
+    /**
+     * Ordered data migrations for existing installations. Each step runs when the
+     * stored db version is below its target version. Add future migrations here,
+     * e.g. `if (dbVersion < 8) migrateV8(lessonCatalog)`.
+     */
+    private suspend fun runMigrations(dbVersion: Int, lessonCatalog: LessonCatalog) {
+        if (dbVersion < 7) migrateV7(lessonCatalog)
+    }
+
+    // V7: add prefill flags to existing sentence symbols.
+    private suspend fun migrateV7(lessonCatalog: LessonCatalog) {
+        // Match asset hierarchy to db rows by deterministic sort order.
+        val dbLessons = lessonRepository.getAll()
+
+        lessonCatalog.lessons.forEachIndexed { lessonIndex, lessonData ->
+            val dbLesson = dbLessons.getOrNull(lessonIndex) ?: return@forEachIndexed
+            val dbSentences = sentenceRepository.getByLesson(dbLesson.id).sortedBy { it.sort }
+
+            lessonData.sentences.forEachIndexed { sentenceIndex, sentenceData ->
+                val dbSentence = dbSentences.getOrNull(sentenceIndex) ?: return@forEachIndexed
+                val dbSymbols = symbolRepository.getBySentence(dbSentence.id)
+
+                sentenceData.symbols.forEachIndexed { symbolIndex, symbolData ->
+                    val dbSymbol = dbSymbols.getOrNull(symbolIndex) ?: return@forEachIndexed
+                    if (dbSymbol.prefill != symbolData.prefill) {
+                        symbolRepository.updatePrefill(dbSymbol.id, symbolData.prefill)
+                    }
+                }
+            }
         }
     }
 

@@ -61,6 +61,9 @@ interface LessonDao {
     """)
     suspend fun getScriptureWithData(): List<LessonWithData>
 
+    @Query("SELECT * FROM lessons ORDER BY sort")
+    suspend fun getAll(): List<LessonEntity>
+
     @Query("SELECT * FROM lessons WHERE id = :id")
     suspend fun get(id: Long): LessonEntity?
 

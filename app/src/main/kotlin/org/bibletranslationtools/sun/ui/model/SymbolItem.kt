@@ -4,6 +4,7 @@ data class SymbolItem(
     val name: String,
     val sort: Int,
     val sentenceId: Long,
+    val prefill: Boolean = false,
     val selected: Boolean = false,
     val correct: Boolean? = null,
     val id: Long = 0

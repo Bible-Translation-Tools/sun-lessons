@@ -26,7 +26,7 @@ import kotlin.concurrent.Volatile
         SentenceEntity::class,
         SymbolEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -45,15 +45,7 @@ abstract class AppDatabase : RoomDatabase() {
             return INSTANCE ?: synchronized(this) {
                 INSTANCE = Room
                     .databaseBuilder(context, AppDatabase::class.java, "sun.db")
-//                    .setQueryCallback(
-//                        object : QueryCallback {
-//                            override fun onQuery(sqlQuery: String, bindArgs: List<Any?>) {
-//                                println("RoomQuery - Query: $sqlQuery, Args: $bindArgs")
-//                            }
-//                        },
-//                        Executors.newSingleThreadExecutor()
-//                    )
-                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                     .build()
                 INSTANCE!!
             }
@@ -81,6 +73,14 @@ abstract class AppDatabase : RoomDatabase() {
                 db.execSQL("DROP TABLE sentences")
                 db.execSQL("ALTER TABLE sentences_new RENAME TO sentences")
                 db.execSQL("PRAGMA foreign_keys=ON")
+            }
+        }
+
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "ALTER TABLE symbols ADD COLUMN prefill INTEGER NOT NULL DEFAULT 0"
+                )
             }
         }
     }
